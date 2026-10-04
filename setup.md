@@ -49,7 +49,7 @@ For experienced developers who want to get up and running immediately:
 ```bash
 # 1. Clone repository
 git clone <repository-url>
-cd ARVR
+cd XARC_COE
 
 # 2. Install dependencies
 npm install
@@ -73,13 +73,13 @@ Clone the repository to your local drive using Git:
 
 ```bash
 # Clone using HTTPS:
-git clone https://github.com/your-org/arvr-coe.git ARVR
+git clone https://github.com/your-org/arvr-coe.git XARC_COE
 
 # Or clone using SSH:
-git clone git@github.com:your-org/arvr-coe.git ARVR
+git clone git@github.com:your-org/arvr-coe.git XARC_COE
 
 # Navigate into the project root:
-cd ARVR
+cd XARC_COE
 ```
 
 ---
@@ -371,5 +371,5 @@ docker run -p 3005:3005 -v arvr_data:/app/data arvr-coe-image
 ---
 
 ## Need Further Help?
-- Refer to [PROJECT_CONTEXT.md](file:///s:/ARVR/PROJECT_CONTEXT.md) for architectural invariants, design decisions, and system history.
+- Refer to [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) for architectural invariants, design decisions, and system history.
 - Run `node test-e2e.mjs` anytime to verify all public and administrative subsystems are functioning at 100%.

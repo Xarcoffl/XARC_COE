@@ -34,7 +34,7 @@ export default function AboutPage() {
       </section>
 
       {/* Vision & Mission */}
-      <section className="section-spacing" style={{ background: 'var(--bg-secondary)', paddingTop: '0' }}>
+      <section className="section-spacing" style={{ paddingTop: '56px' }}>
         <div className="container">
           <div
             style={{

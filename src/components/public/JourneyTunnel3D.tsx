@@ -110,74 +110,360 @@ export default function JourneyTunnel3D({ activeStep, onSelectStep }: JourneyTun
       artGroup.position.set(0, 0, stageZ);
 
       if (i === 0) {
-        // Stage 01 (Explore): 3D Gyroscope Compass
-        const g1 = new THREE.Mesh(new THREE.TorusGeometry(0.9, 0.03, 16, 36), new THREE.MeshBasicMaterial({ color: 0x00ffff }));
-        const g2 = new THREE.Mesh(new THREE.TorusGeometry(0.65, 0.03, 16, 36), new THREE.MeshBasicMaterial({ color: 0x7b61ff }));
-        g2.rotation.x = Math.PI / 2;
-        const gCore = new THREE.Mesh(new THREE.SphereGeometry(0.2, 12, 12), new THREE.MeshBasicMaterial({ color: 0x00ffff }));
-        artGroup.add(g1);
-        artGroup.add(g2);
-        artGroup.add(gCore);
-      } else if (i === 1) {
-        // Stage 02 (Learn): Holographic Data Tome / Matrix Crystal
-        const crystalGeo = new THREE.OctahedronGeometry(0.95, 1);
-        const crystalMat = new THREE.MeshStandardMaterial({
-          color: 0x38bdf8,
-          wireframe: true,
-          emissive: 0x0284c7,
-          emissiveIntensity: 0.6,
+        // Stage 01 (Explore): Spatial XR Headset & Discovery Compass Beacon
+        const hBody = new THREE.Mesh(
+          new THREE.BoxGeometry(1.6, 0.8, 0.9),
+          new THREE.MeshStandardMaterial({ color: 0x070b18, metalness: 0.9, roughness: 0.25 })
+        );
+        artGroup.add(hBody);
+
+        const visor = new THREE.Mesh(
+          new THREE.PlaneGeometry(1.5, 0.7),
+          new THREE.MeshPhysicalMaterial({
+            color: 0x00ffff,
+            roughness: 0.05,
+            metalness: 0.95,
+            transmission: 0.5,
+            transparent: true,
+            opacity: 0.9,
+          })
+        );
+        visor.position.z = 0.46;
+        artGroup.add(visor);
+
+        [-0.35, 0.35].forEach((lx) => {
+          const lensRing = new THREE.Mesh(
+            new THREE.TorusGeometry(0.18, 0.02, 16, 32),
+            new THREE.MeshBasicMaterial({ color: 0x00ffff })
+          );
+          lensRing.position.set(lx, 0, 0.47);
+          artGroup.add(lensRing);
         });
-        const crystal = new THREE.Mesh(crystalGeo, crystalMat);
-        artGroup.add(crystal);
+
+        const strap = new THREE.Mesh(
+          new THREE.TorusGeometry(0.95, 0.07, 16, 36, Math.PI * 1.2),
+          new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.5 })
+        );
+        strap.rotation.x = Math.PI / 2;
+        strap.rotation.z = -Math.PI * 0.1;
+        strap.position.set(0, 0, -0.3);
+        artGroup.add(strap);
+
+        const compassRing1 = new THREE.Mesh(
+          new THREE.TorusGeometry(1.5, 0.02, 16, 48),
+          new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.7 })
+        );
+        compassRing1.rotation.x = Math.PI / 3;
+        artGroup.add(compassRing1);
+
+        const compassRing2 = new THREE.Mesh(
+          new THREE.TorusGeometry(1.65, 0.015, 16, 48),
+          new THREE.MeshBasicMaterial({ color: 0x7b61ff, transparent: true, opacity: 0.6 })
+        );
+        compassRing2.rotation.y = Math.PI / 4;
+        artGroup.add(compassRing2);
+
+        artGroup.userData.onAnimate = () => {
+          compassRing1.rotation.z += 0.015;
+          compassRing2.rotation.z -= 0.012;
+        };
+      } else if (i === 1) {
+        // Stage 02 (Learn): Holographic Knowledge Codex & 3D Math Matrix Tome
+        const leftPage = new THREE.Mesh(
+          new THREE.BoxGeometry(0.9, 1.2, 0.05),
+          new THREE.MeshStandardMaterial({ color: 0x0369a1, metalness: 0.8, roughness: 0.2 })
+        );
+        leftPage.position.set(-0.48, 0, 0);
+        leftPage.rotation.y = 0.35;
+        artGroup.add(leftPage);
+
+        const rightPage = new THREE.Mesh(
+          new THREE.BoxGeometry(0.9, 1.2, 0.05),
+          new THREE.MeshStandardMaterial({ color: 0x0369a1, metalness: 0.8, roughness: 0.2 })
+        );
+        rightPage.position.set(0.48, 0, 0);
+        rightPage.rotation.y = -0.35;
+        artGroup.add(rightPage);
+
+        for (let l = 0; l < 4; l++) {
+          const l1 = new THREE.Mesh(new THREE.PlaneGeometry(0.65, 0.035), new THREE.MeshBasicMaterial({ color: 0x38bdf8 }));
+          l1.position.set(-0.48, 0.35 - l * 0.18, 0.035);
+          l1.rotation.y = 0.35;
+          artGroup.add(l1);
+
+          const l2 = new THREE.Mesh(new THREE.PlaneGeometry(0.65, 0.035), new THREE.MeshBasicMaterial({ color: 0x38bdf8 }));
+          l2.position.set(0.48, 0.35 - l * 0.18, 0.035);
+          l2.rotation.y = -0.35;
+          artGroup.add(l2);
+        }
+
+        const mathCore = new THREE.Mesh(
+          new THREE.IcosahedronGeometry(0.45, 1),
+          new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true })
+        );
+        mathCore.position.set(0, 0.15, 0.45);
+        artGroup.add(mathCore);
+
+        const axisX = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.7, 8), new THREE.MeshBasicMaterial({ color: 0xef4444 }));
+        axisX.rotation.z = Math.PI / 2;
+        axisX.position.set(0, 0.15, 0.45);
+        artGroup.add(axisX);
+
+        const axisY = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.7, 8), new THREE.MeshBasicMaterial({ color: 0x10b981 }));
+        axisY.position.set(0, 0.15, 0.45);
+        artGroup.add(axisY);
+
+        const axisZ = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.7, 8), new THREE.MeshBasicMaterial({ color: 0x3b82f6 }));
+        axisZ.rotation.x = Math.PI / 2;
+        axisZ.position.set(0, 0.15, 0.45);
+        artGroup.add(axisZ);
+
+        artGroup.userData.onAnimate = () => {
+          mathCore.rotation.y += 0.02;
+          mathCore.rotation.x += 0.015;
+        };
       } else if (i === 2) {
-        // Stage 03 (Practice): Shader Prism with Refracting Beams
-        const prismGeo = new THREE.ConeGeometry(0.85, 1.4, 4);
+        // Stage 03 (Practice): Precision Laser Shader Prism & Spectrum Refractor Rig
+        const prismGeo = new THREE.ConeGeometry(0.9, 1.4, 3);
         const prismMat = new THREE.MeshPhysicalMaterial({
           color: 0x818cf8,
-          roughness: 0.1,
-          transmission: 0.8,
+          roughness: 0.05,
+          metalness: 0.9,
+          transmission: 0.85,
           transparent: true,
           opacity: 0.85,
         });
         const prism = new THREE.Mesh(prismGeo, prismMat);
+        prism.rotation.y = Math.PI / 6;
         artGroup.add(prism);
+
+        const prismBase = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.8, 0.9, 0.15, 3),
+          new THREE.MeshStandardMaterial({ color: 0x1e1b4b, metalness: 0.8, roughness: 0.2 })
+        );
+        prismBase.position.y = -0.75;
+        prismBase.rotation.y = Math.PI / 6;
+        artGroup.add(prismBase);
+
+        const inLaser = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.025, 0.025, 1.8, 8),
+          new THREE.MeshBasicMaterial({ color: 0xffffff })
+        );
+        inLaser.position.set(-1.1, 0, 0);
+        inLaser.rotation.z = Math.PI / 2;
+        artGroup.add(inLaser);
+
+        const spectralColors = [0x00ffff, 0x10b981, 0xf59e0b, 0xec4899];
+        const beamAngles = [-0.35, -0.12, 0.12, 0.35];
+        spectralColors.forEach((col, sIdx) => {
+          const outBeam = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.02, 0.02, 1.6, 8),
+            new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.85 })
+          );
+          outBeam.position.set(0.9, beamAngles[sIdx] * 0.9, 0);
+          outBeam.rotation.z = Math.PI / 2 + beamAngles[sIdx];
+          artGroup.add(outBeam);
+        });
+
+        const apRing = new THREE.Mesh(
+          new THREE.TorusGeometry(1.6, 0.02, 16, 48),
+          new THREE.MeshBasicMaterial({ color: 0x818cf8, transparent: true, opacity: 0.7 })
+        );
+        artGroup.add(apRing);
       } else if (i === 3) {
-        // Stage 04 (Build): Voxel Prototype Core with Interlocking Cubes
+        // Stage 04 (Build): Articulated Robotic Prototyping Arm & Voxel Construct
+        const robotBase = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.5, 0.65, 0.25, 16),
+          new THREE.MeshStandardMaterial({ color: 0x3b0764, metalness: 0.9, roughness: 0.2 })
+        );
+        robotBase.position.y = -0.85;
+        artGroup.add(robotBase);
+
+        const arm1 = new THREE.Mesh(
+          new THREE.BoxGeometry(0.18, 0.9, 0.18),
+          new THREE.MeshStandardMaterial({ color: 0xa855f7, metalness: 0.8, roughness: 0.25 })
+        );
+        arm1.position.set(-0.25, -0.4, 0);
+        arm1.rotation.z = 0.45;
+        artGroup.add(arm1);
+
+        const arm2 = new THREE.Mesh(
+          new THREE.BoxGeometry(0.14, 0.85, 0.14),
+          new THREE.MeshStandardMaterial({ color: 0xd8b4fe, metalness: 0.7, roughness: 0.2 })
+        );
+        arm2.position.set(-0.05, 0.25, 0);
+        arm2.rotation.z = -0.4;
+        artGroup.add(arm2);
+
+        const clawMat = new THREE.MeshStandardMaterial({ color: 0xf3e8ff, metalness: 0.9 });
+        [-0.12, 0.12].forEach((cx) => {
+          const claw = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.25, 0.08), clawMat);
+          claw.position.set(0.15 + cx, 0.62, 0);
+          artGroup.add(claw);
+        });
+
         const voxelGroup = new THREE.Group();
-        const vMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, metalness: 0.8, roughness: 0.2 });
-        [-0.4, 0.4].forEach((vx) => {
-          [-0.4, 0.4].forEach((vy) => {
-            const cube = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.45, 0.45), vMat);
+        voxelGroup.position.set(0.15, 0.42, 0);
+        const vMat = new THREE.MeshStandardMaterial({
+          color: 0xa855f7,
+          emissive: 0x9333ea,
+          emissiveIntensity: 0.5,
+          metalness: 0.85,
+          roughness: 0.15,
+        });
+
+        [-0.18, 0.18].forEach((vx) => {
+          [-0.18, 0.18].forEach((vy) => {
+            const cube = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.28, 0.28), vMat);
             cube.position.set(vx, vy, 0);
             voxelGroup.add(cube);
           });
         });
         artGroup.add(voxelGroup);
+
+        artGroup.userData.onAnimate = () => {
+          voxelGroup.rotation.y += 0.03;
+          voxelGroup.rotation.x += 0.02;
+        };
       } else if (i === 4) {
-        // Stage 05 (Compete): Gold Cyber Trophy
-        const tBase = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.7, 0.3, 16), new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9 }));
-        tBase.position.y = -0.5;
-        const tCup = new THREE.Mesh(new THREE.ConeGeometry(0.7, 0.9, 16), new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9 }));
-        tCup.rotation.x = Math.PI;
-        tCup.position.y = 0.2;
-        const tHandles = new THREE.Mesh(new THREE.TorusGeometry(0.85, 0.04, 16, 32), new THREE.MeshBasicMaterial({ color: 0xf59e0b }));
-        tHandles.position.y = 0.2;
+        // Stage 05 (Compete): Grand Hackathon Cyber Champion Trophy
+        const goldMat = new THREE.MeshStandardMaterial({
+          color: 0xf59e0b,
+          metalness: 0.95,
+          roughness: 0.18,
+          emissive: 0xd97706,
+          emissiveIntensity: 0.4,
+        });
+
+        const tBase = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.72, 0.35, 6), goldMat);
+        tBase.position.y = -0.7;
         artGroup.add(tBase);
+
+        const tStem = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.2, 0.5, 12), goldMat);
+        tStem.position.y = -0.32;
+        artGroup.add(tStem);
+
+        const tCup = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.18, 0.85, 24), goldMat);
+        tCup.position.y = 0.25;
         artGroup.add(tCup);
+
+        const tHandles = new THREE.Mesh(new THREE.TorusGeometry(0.85, 0.05, 16, 32), goldMat);
+        tHandles.position.y = 0.25;
         artGroup.add(tHandles);
-      } else if (i === 6) {
-        // Stage 07 (Industry): Spatial Spire Tower
-        const spire = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.6, 2.0, 16), new THREE.MeshStandardMaterial({ color: 0x00ffff, metalness: 0.9 }));
-        const laserPillar = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 8, 12), new THREE.MeshBasicMaterial({ color: 0x00ffff }));
-        laserPillar.position.y = 4.0;
-        artGroup.add(spire);
-        artGroup.add(laserPillar);
+
+        const star = new THREE.Mesh(
+          new THREE.OctahedronGeometry(0.3, 0),
+          new THREE.MeshStandardMaterial({
+            color: 0xfffbeb,
+            emissive: 0xf59e0b,
+            emissiveIntensity: 0.9,
+            metalness: 0.9,
+          })
+        );
+        star.position.y = 0.85;
+        artGroup.add(star);
+
+        const laurelRing = new THREE.Mesh(
+          new THREE.TorusGeometry(1.3, 0.02, 16, 48),
+          new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.75 })
+        );
+        laurelRing.rotation.x = Math.PI / 4;
+        artGroup.add(laurelRing);
+
+        artGroup.userData.onAnimate = (elapsed: number) => {
+          star.rotation.y += 0.04;
+          star.position.y = 0.85 + Math.sin(elapsed * 4.0) * 0.08;
+          laurelRing.rotation.z += 0.02;
+        };
+      } else if (i === 5) {
+        // Stage 06 (Intern): Industrial Neural Microprocessor Core & Meshing Gears
+        const chipMat = new THREE.MeshStandardMaterial({
+          color: 0x064e3b,
+          metalness: 0.85,
+          roughness: 0.2,
+          emissive: 0x059669,
+          emissiveIntensity: 0.35,
+        });
+
+        const die = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 0.15), chipMat);
+        artGroup.add(die);
+
+        const wireMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9 });
+        for (let w = 0; w < 4; w++) {
+          const sideWire = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.03, 0.05), wireMat);
+          if (w === 0) sideWire.position.set(0, 0.65, 0.08);
+          if (w === 1) sideWire.position.set(0, -0.65, 0.08);
+          if (w === 2) {
+            sideWire.rotation.z = Math.PI / 2;
+            sideWire.position.set(0.65, 0, 0.08);
+          }
+          if (w === 3) {
+            sideWire.rotation.z = Math.PI / 2;
+            sideWire.position.set(-0.65, 0, 0.08);
+          }
+          artGroup.add(sideWire);
+        }
+
+        const gear1 = new THREE.Mesh(
+          new THREE.TorusGeometry(0.55, 0.1, 16, 24),
+          new THREE.MeshStandardMaterial({ color: 0x10b981, metalness: 0.9 })
+        );
+        gear1.position.set(-0.55, -0.55, 0.2);
+        artGroup.add(gear1);
+
+        const gear2 = new THREE.Mesh(
+          new THREE.TorusGeometry(0.4, 0.08, 16, 20),
+          new THREE.MeshStandardMaterial({ color: 0x34d399, metalness: 0.85 })
+        );
+        gear2.position.set(0.5, 0.5, 0.2);
+        artGroup.add(gear2);
+
+        artGroup.userData.onAnimate = () => {
+          gear1.rotation.z += 0.025;
+          gear2.rotation.z -= 0.035;
+        };
       } else {
-        // Stage 06 (Intern): Precision Drive Gear
-        const gear = new THREE.Mesh(new THREE.TorusGeometry(0.9, 0.15, 16, 32), new THREE.MeshStandardMaterial({ color: 0x10b981, metalness: 0.85 }));
-        const teeth = new THREE.Mesh(new THREE.TorusGeometry(1.15, 0.05, 8, 16), new THREE.MeshBasicMaterial({ color: 0x10b981 }));
-        artGroup.add(gear);
-        artGroup.add(teeth);
+        // Stage 07 (Industry): Metropolitan Spatial Spire & Global Transceiver Hub
+        const spireGroup = new THREE.Group();
+
+        const b1 = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.6, 0.8, 1.0, 8),
+          new THREE.MeshStandardMaterial({ color: 0x0e7490, metalness: 0.9, roughness: 0.2 })
+        );
+        b1.position.y = -0.7;
+        spireGroup.add(b1);
+
+        const b2 = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.35, 0.55, 1.0, 8),
+          new THREE.MeshStandardMaterial({ color: 0x06b6d4, metalness: 0.85, roughness: 0.2 })
+        );
+        b2.position.y = 0.2;
+        spireGroup.add(b2);
+
+        const needle = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.04, 0.2, 1.2, 8),
+          new THREE.MeshStandardMaterial({ color: 0x22d3ee, metalness: 0.95 })
+        );
+        needle.position.y = 1.2;
+        spireGroup.add(needle);
+
+        const dish = new THREE.Mesh(
+          new THREE.SphereGeometry(0.35, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2),
+          new THREE.MeshStandardMaterial({ color: 0x00ffff, metalness: 0.8, side: THREE.DoubleSide })
+        );
+        dish.position.set(0.45, 0.5, 0.2);
+        dish.rotation.x = Math.PI / 3;
+        dish.rotation.z = Math.PI / 4;
+        spireGroup.add(dish);
+
+        const beam = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.04, 0.04, 7, 12),
+          new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.75 })
+        );
+        beam.position.y = 4.5;
+        spireGroup.add(beam);
+
+        artGroup.add(spireGroup);
       }
 
       conduitGroup.add(artGroup);
@@ -255,11 +541,12 @@ export default function JourneyTunnel3D({ activeStep, onSelectStep }: JourneyTun
 
     // 6. Animation Loop
     let animId: number;
-    const clock = new THREE.Clock();
+    const timer = new THREE.Timer();
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
-      const elapsed = clock.getElapsedTime();
+      timer.update();
+      const elapsed = timer.getElapsed();
 
       // Smooth camera glide along Z axis to target
       camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetCamZRef.current, 0.08);
@@ -281,6 +568,10 @@ export default function JourneyTunnel3D({ activeStep, onSelectStep }: JourneyTun
           art.scale.set(s, s, s);
         } else {
           art.scale.set(0.75, 0.75, 0.75);
+        }
+
+        if (art.userData.onAnimate) {
+          art.userData.onAnimate(elapsed, isCurrent);
         }
       });
 
@@ -305,6 +596,7 @@ export default function JourneyTunnel3D({ activeStep, onSelectStep }: JourneyTun
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onTouchEnd);
       window.removeEventListener('resize', onResize);
+      timer.dispose();
       renderer.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);

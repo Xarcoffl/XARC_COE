@@ -1076,7 +1076,43 @@ export function updateStudentRequestStatus(id: string, newStatus: 'NEW' | 'WAITI
   return req;
 }
 
+export function batchUpdateStudentRequestStatus(
+  ids: string[],
+  newStatus: 'NEW' | 'WAITING' | 'JOINED' | 'REJECTED',
+  internalNotes?: string
+): StudentRequest[] {
+  const db = initDb();
+  const updatedList: StudentRequest[] = [];
+  const now = new Date().toISOString();
+
+  for (const id of ids) {
+    const index = db.student_requests.findIndex((r) => r.id === id);
+    if (index !== -1) {
+      const req = db.student_requests[index];
+      req.status = newStatus;
+      req.updated_at = now;
+      if (newStatus === 'JOINED' && !req.joined_at) {
+        req.joined_at = now;
+      }
+      if (newStatus === 'REJECTED' && !req.rejected_at) {
+        req.rejected_at = now;
+      }
+      if (internalNotes !== undefined) {
+        req.internal_notes = internalNotes;
+      }
+      db.student_requests[index] = req;
+      updatedList.push(req);
+    }
+  }
+
+  if (updatedList.length > 0) {
+    saveDb(db);
+  }
+  return updatedList;
+}
+
 // Student requests cannot be deleted; they can only be rejected.
 export function deleteStudentRequest(_id: string): boolean {
   return false;
 }
+

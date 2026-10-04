@@ -38,11 +38,11 @@ export default function EventsFilterView({ events }: EventsFilterViewProps) {
       <div
         className="glass-card"
         style={{
-          padding: '20px 24px',
-          marginBottom: '32px',
+          padding: '16px 20px',
+          marginBottom: '20px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '16px',
+          gap: '14px',
         }}
       >
         <div

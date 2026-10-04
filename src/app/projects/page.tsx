@@ -31,7 +31,7 @@ export default function ProjectsPage() {
       </section>
 
       {/* Interactive Projects Grid with Category Filters (Spec #31, #99) */}
-      <section className="section-spacing" style={{ background: 'var(--bg-secondary)', paddingTop: '0' }}>
+      <section className="section-spacing" style={{ paddingTop: '20px' }}>
         <div className="container">
           {/* Interactive 3D Spatial Holodeck Previewer */}
           <ProjectHolodeck3D />

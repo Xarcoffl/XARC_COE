@@ -90,7 +90,7 @@ export default function HomePage() {
       </section>
 
       {/* 2. ABOUT PREVIEW (Spec #17) - Spatial Bento Grid */}
-      <section className="section-spacing" style={{ background: 'var(--surface-section-alt)', backdropFilter: 'blur(10px)' }}>
+      <section className="section-spacing">
         <div className="container">
           <SectionHeader
             tag="About The CoE"
@@ -130,7 +130,7 @@ export default function HomePage() {
       </section>
 
       {/* 3. FIVE VERTICALS PREVIEW (Spec #18) */}
-      <section className="section-spacing" style={{ background: 'var(--surface-section-base)', backdropFilter: 'blur(10px)' }}>
+      <section className="section-spacing">
         <div className="container">
           <SectionHeader
             tag="Curriculum & Pathways"
@@ -197,7 +197,7 @@ export default function HomePage() {
       </section>
 
       {/* 4. FEATURED CONTENT (Spec #19, #20: One unified dynamic section with tabs for Events, Projects, Achievements, max 3 records) */}
-      <section className="section-spacing" style={{ background: 'var(--surface-section-alt)', backdropFilter: 'blur(10px)' }}>
+      <section className="section-spacing">
         <div className="container">
           <SectionHeader
             tag="Activity Hub"
@@ -214,7 +214,7 @@ export default function HomePage() {
       </section>
 
       {/* 5. STUDENT JOURNEY (Spec #21) */}
-      <section className="section-spacing" style={{ background: 'var(--surface-section-base)', backdropFilter: 'blur(10px)' }}>
+      <section className="section-spacing">
         <div className="container">
           <SectionHeader
             tag="Structured Progression"
@@ -230,8 +230,6 @@ export default function HomePage() {
       <section
         className="section-spacing"
         style={{
-          background: 'var(--surface-section-alt)',
-          backdropFilter: 'blur(10px)',
           position: 'relative',
           textAlign: 'center',
           overflow: 'hidden',

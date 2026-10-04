@@ -254,11 +254,12 @@ export default function ProjectHologram3D({ category, title }: ProjectHologram3D
 
     // 6. Animation Loop
     let animId: number;
-    const clock = new THREE.Clock();
+    const timer = new THREE.Timer();
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
-      const elapsed = clock.getElapsedTime();
+      timer.update();
+      const elapsed = timer.getElapsed();
 
       // Auto rotation
       if (autoRotateRef.current && !isDragging) {
@@ -292,6 +293,7 @@ export default function ProjectHologram3D({ category, title }: ProjectHologram3D
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onTouchEnd);
       window.removeEventListener('resize', onResize);
+      timer.dispose();
       renderer.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);

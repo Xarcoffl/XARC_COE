@@ -219,12 +219,13 @@ export default function Hero3D() {
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     // --- 6. Animation Loop ---
-    let clock = new THREE.Clock();
+    const timer = new THREE.Timer();
     let animId: number;
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
+      timer.update();
+      const elapsedTime = timer.getElapsed();
 
       // Subtle autonomous spatial breathing
       headsetGroup.position.y = Math.sin(elapsedTime * 1.2) * 0.08;
@@ -259,6 +260,7 @@ export default function Hero3D() {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(animId);
+      timer.dispose();
       if (renderer.domElement && currentMount.contains(renderer.domElement)) {
         currentMount.removeChild(renderer.domElement);
       }

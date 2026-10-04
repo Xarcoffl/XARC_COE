@@ -33,7 +33,7 @@ export default function VerticalsPage() {
       </section>
 
       {/* Interactive Vertical Selector (Spec #25) */}
-      <section className="section-spacing" style={{ background: 'var(--bg-secondary)', paddingTop: '0' }}>
+      <section className="section-spacing" style={{ paddingTop: '20px' }}>
         <div className="container">
           <VerticalSelector verticals={verticals} />
 

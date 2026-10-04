@@ -32,7 +32,6 @@ const NAV_ITEMS = [
   { label: 'Events', href: '/events', icon: Calendar },
   { label: 'Achievements', href: '/achievements', icon: Award },
   { label: 'Industry', href: '/industry', icon: Globe },
-  { label: 'Contact', href: '/contact', icon: Radio },
   { label: 'Join CoE Cohort', href: '/request', icon: UserPlus },
 ];
 
@@ -127,7 +126,7 @@ export default function Navbar({ institutionName, coeName }: NavbarProps) {
           {/* Tooltip on Hover */}
           <div className="dock-tooltip">
             <div className="dock-tooltip-title">{centerName}</div>
-            <div className="dock-tooltip-sub">{instName} • 5 clicks for Admin</div>
+            <div className="dock-tooltip-sub">{instName}</div>
           </div>
         </div>
 
@@ -139,12 +138,13 @@ export default function Navbar({ institutionName, coeName }: NavbarProps) {
             const Icon = item.icon;
             const isActive =
               item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+            const isCta = item.href === '/request';
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`dock-item ${isActive ? 'active' : ''}`}
+                className={`dock-item ${isActive ? 'active' : ''} ${isCta ? 'dock-item-cta' : ''}`}
                 onClick={() => soundFx.playSpatialClick()}
                 onMouseEnter={() => soundFx.playSpatialHover()}
                 aria-label={item.label}
@@ -155,6 +155,9 @@ export default function Navbar({ institutionName, coeName }: NavbarProps) {
 
                 {/* Subtle Neon Active Glow Pip */}
                 {isActive && <span className="dock-active-pip" />}
+
+                {/* Pulsing indicator badge for CTA */}
+                {isCta && !isActive && <span className="dock-cta-beacon" />}
 
                 {/* Tooltip on Hover */}
                 <div className="dock-tooltip">

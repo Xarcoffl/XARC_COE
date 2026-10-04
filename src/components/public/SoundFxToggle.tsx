@@ -19,65 +19,28 @@ export default function SoundFxToggle() {
 
   return (
     <button
+      suppressHydrationWarning
       onClick={handleToggle}
       className="sound-toggle-btn"
       aria-label={enabled ? 'Mute Spatial Audio' : 'Enable Spatial Audio'}
-      title={enabled ? 'Spatial Audio: ON (Click to Mute)' : 'Spatial Audio: MUTED (Click to Enable)'}
+      title={enabled ? 'Spatial Audio: Enabled (Click to Mute)' : 'Spatial Audio: Muted (Click to Enable)'}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: '6px',
-        padding: '6px 12px',
-        borderRadius: 'var(--radius-full)',
+        justifyContent: 'center',
+        width: '38px',
+        height: '38px',
+        borderRadius: '10px',
         background: enabled ? 'rgba(0, 245, 255, 0.12)' : 'rgba(255, 255, 255, 0.05)',
         border: enabled ? '1px solid rgba(0, 245, 255, 0.4)' : '1px solid rgba(255, 255, 255, 0.15)',
         color: enabled ? 'var(--accent-cyan)' : 'var(--text-muted)',
-        fontFamily: 'var(--font-mono)',
-        fontSize: '0.72rem',
         cursor: 'pointer',
         transition: 'all var(--transition-fast)',
+        padding: 0,
+        boxShadow: enabled ? '0 0 12px var(--accent-cyan-glow)' : 'none',
       }}
     >
-      {enabled ? (
-        <>
-          <Volume2 size={14} className="text-cyan" />
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px', height: '10px' }}>
-            <span
-              style={{
-                width: '2px',
-                height: '8px',
-                background: 'var(--accent-cyan)',
-                borderRadius: '1px',
-                animation: 'pulse 1.2s infinite ease-in-out',
-              }}
-            />
-            <span
-              style={{
-                width: '2px',
-                height: '12px',
-                background: 'var(--accent-cyan)',
-                borderRadius: '1px',
-                animation: 'pulse 0.9s infinite ease-in-out',
-              }}
-            />
-            <span
-              style={{
-                width: '2px',
-                height: '6px',
-                background: 'var(--accent-cyan)',
-                borderRadius: '1px',
-                animation: 'pulse 1.5s infinite ease-in-out',
-              }}
-            />
-          </span>
-          <span className="hidden sm:inline" style={{ marginLeft: '2px' }}>SFX</span>
-        </>
-      ) : (
-        <>
-          <VolumeX size={14} />
-          <span className="hidden sm:inline">MUTED</span>
-        </>
-      )}
+      {enabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
     </button>
   );
 }

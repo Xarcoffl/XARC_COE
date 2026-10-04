@@ -31,7 +31,6 @@ async function runTests() {
     { path: '/events/spatial-computing-hackathon-2026', label: 'Individual Event Detail' },
     { path: '/achievements', label: 'Achievements Showcase' },
     { path: '/industry', label: 'Industry Alliances' },
-    { path: '/contact', label: 'Contact Page' },
     { path: '/request', label: 'Request to Join Form' },
     { path: '/control/auth', label: 'Admin Login Page' },
     { path: '/control/content/request', label: 'Admin Request Form Editor' },
@@ -47,6 +46,15 @@ async function runTests() {
       }
     });
   }
+
+  // 1b. Verify Footer Contact and Mail Details
+  await check('Footer contains contact number and mail ID', async () => {
+    const res = await fetch(`${BASE}/`);
+    const text = await res.text();
+    if (!text.includes('mailto:') || !text.includes('tel:')) {
+      throw new Error('Footer missing contact number or mail ID');
+    }
+  });
 
   // 2. Student Request Submission (Public API)
   const testStudent = {
@@ -188,7 +196,24 @@ async function runTests() {
     }
   });
 
-  // 10. Admin Request Form Content Management
+  // 10. Admin Pipeline: Batch Status Transition
+  await check('Admin Pipeline: Batch Status Transition (PATCH /api/admin/requests with ids)', async () => {
+    const res = await fetch(`${BASE}/api/admin/requests`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Cookie: sessionCookie },
+      body: JSON.stringify({
+        ids: [targetRequestId],
+        status: 'JOINED',
+        internal_notes: 'Batch inducted into XR cohort.',
+      }),
+    });
+    if (res.status !== 200) throw new Error(`Expected 200, got ${res.status}`);
+    const data = await res.json();
+    if (!data.success || data.count < 1) throw new Error('Failed to batch update status');
+    if (data.requests[0].status !== 'JOINED') throw new Error('Status not updated to JOINED');
+  });
+
+  // 11. Admin Request Form Content Management
   await check('Admin Content: Manage Request Form (GET /api/admin/content?section=request)', async () => {
     const res = await fetch(`${BASE}/api/admin/content?section=request`, {
       headers: { Cookie: sessionCookie },

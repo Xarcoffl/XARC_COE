@@ -38,6 +38,7 @@ export default function EventCard({ event }: EventCardProps) {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
+        timeZone: 'UTC',
       });
     } catch {
       return dateStr;

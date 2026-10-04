@@ -83,7 +83,7 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
       </section>
 
       {/* Main Content Area */}
-      <section className="section-spacing" style={{ background: 'var(--bg-secondary)', paddingTop: '0' }}>
+      <section className="section-spacing" style={{ paddingTop: '0' }}>
         <div className="container">
           {/* Main Interactive 3D / 2D Media Inspector */}
           <ProjectMediaInspector
@@ -221,12 +221,11 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
 
           {/* 8. Result / Outcome */}
           <div
-            className="glass-card"
+            className="glass-card hud-corner"
             style={{
               padding: '32px',
               marginBottom: '56px',
               border: '1px solid rgba(43, 217, 254, 0.35)',
-              background: 'linear-gradient(135deg, rgba(16, 23, 41, 0.9) 0%, rgba(20, 30, 52, 0.8) 100%)',
             }}
           >
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', color: 'var(--accent-cyan)', marginBottom: '8px' }}>
