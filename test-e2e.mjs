@@ -1,5 +1,5 @@
 // End-to-end integration test suite
-const BASE = 'http://localhost:3005';
+const BASE = process.env.BASE_URL || 'http://localhost:3005';
 
 async function runTests() {
   console.log('====================================================');
@@ -31,10 +31,10 @@ async function runTests() {
     { path: '/events/spatial-computing-hackathon-2026', label: 'Individual Event Detail' },
     { path: '/achievements', label: 'Achievements Showcase' },
     { path: '/industry', label: 'Industry Alliances' },
-    { path: '/contact', label: 'Contact Page' },
     { path: '/request', label: 'Request to Join Form' },
     { path: '/control/auth', label: 'Admin Login Page' },
     { path: '/control/content/request', label: 'Admin Request Form Editor' },
+    { path: '/control/content/footer', label: 'Admin Footer Content Editor' },
   ];
 
   for (const page of pages) {
@@ -47,6 +47,15 @@ async function runTests() {
       }
     });
   }
+
+  // 1b. Verify Footer Contact and Mail Details
+  await check('Footer contains contact number and mail ID', async () => {
+    const res = await fetch(`${BASE}/`);
+    const text = await res.text();
+    if (!text.includes('mailto:') || !text.includes('tel:')) {
+      throw new Error('Footer missing contact number or mail ID');
+    }
+  });
 
   // 2. Student Request Submission (Public API)
   const testStudent = {
@@ -188,7 +197,24 @@ async function runTests() {
     }
   });
 
-  // 10. Admin Request Form Content Management
+  // 10. Admin Pipeline: Batch Status Transition
+  await check('Admin Pipeline: Batch Status Transition (PATCH /api/admin/requests with ids)', async () => {
+    const res = await fetch(`${BASE}/api/admin/requests`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Cookie: sessionCookie },
+      body: JSON.stringify({
+        ids: [targetRequestId],
+        status: 'JOINED',
+        internal_notes: 'Batch inducted into XR cohort.',
+      }),
+    });
+    if (res.status !== 200) throw new Error(`Expected 200, got ${res.status}`);
+    const data = await res.json();
+    if (!data.success || data.count < 1) throw new Error('Failed to batch update status');
+    if (data.requests[0].status !== 'JOINED') throw new Error('Status not updated to JOINED');
+  });
+
+  // 11. Admin Request Form Content Management
   await check('Admin Content: Manage Request Form (GET /api/admin/content?section=request)', async () => {
     const res = await fetch(`${BASE}/api/admin/content?section=request`, {
       headers: { Cookie: sessionCookie },
@@ -217,6 +243,83 @@ async function runTests() {
     if (!data.success) throw new Error(data.message);
   });
 
+  await check('Admin Content: Manage Request Form Departments', async () => {
+    const getRes = await fetch(`${BASE}/api/admin/content?section=request`, {
+      headers: { Cookie: sessionCookie },
+    });
+    const { content } = await getRes.json();
+    if (!Array.isArray(content.departments) || content.departments.length === 0) {
+      throw new Error('Expected departments array in request form content');
+    }
+
+    const testDept = 'Robotics & Autonomous Systems';
+    const originalDepts = [...content.departments];
+    content.departments = [...originalDepts, testDept];
+
+    const saveRes = await fetch(`${BASE}/api/admin/content`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Cookie: sessionCookie },
+      body: JSON.stringify({ section: 'request', content }),
+    });
+    if (saveRes.status !== 200) throw new Error(`Save failed with status ${saveRes.status}`);
+
+    const pubRes = await fetch(`${BASE}/api/public/content`);
+    const pubData = await pubRes.json();
+    if (!pubData.request?.departments?.includes(testDept)) {
+      throw new Error('Newly added department not reflected in public content API');
+    }
+
+    // Restore original departments
+    content.departments = originalDepts;
+    await fetch(`${BASE}/api/admin/content`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Cookie: sessionCookie },
+      body: JSON.stringify({ section: 'request', content }),
+    });
+  });
+
+  await check('Admin Settings: Manage Footer Contents', async () => {
+    const getRes = await fetch(`${BASE}/api/admin/settings`, {
+      headers: { Cookie: sessionCookie },
+    });
+    if (getRes.status !== 200) throw new Error(`Expected 200, got ${getRes.status}`);
+    const data = await getRes.json();
+    if (!data.success || !data.settings) throw new Error('Failed to retrieve admin settings');
+
+    const originalSettings = { ...data.settings };
+    const testTagline = 'TEST // SPATIAL COMPUTING ACCELERATOR';
+    const testCopyright = '© 2026 Centre of Excellence. All Rights Reserved.';
+
+    const updateRes = await fetch(`${BASE}/api/admin/settings`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Cookie: sessionCookie },
+      body: JSON.stringify({
+        settings: {
+          ...originalSettings,
+          footer_tagline: testTagline,
+          footer_copyright: testCopyright,
+        },
+      }),
+    });
+    if (updateRes.status !== 200) throw new Error(`Update failed with status ${updateRes.status}`);
+
+    const pubSettingsRes = await fetch(`${BASE}/api/public/settings`);
+    const pubSettingsData = await pubSettingsRes.json();
+    if (pubSettingsData.settings?.footer_tagline !== testTagline) {
+      throw new Error('Updated footer tagline not reflected in public settings API');
+    }
+    if (pubSettingsData.settings?.footer_copyright !== testCopyright) {
+      throw new Error('Updated footer copyright not reflected in public settings API');
+    }
+
+    // Revert settings to original
+    await fetch(`${BASE}/api/admin/settings`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Cookie: sessionCookie },
+      body: JSON.stringify({ settings: originalSettings }),
+    });
+  });
+
   // 11. Public Request Form Dynamic Content
   await check('Public API: Content endpoint returns Request Form content', async () => {
     const res = await fetch(`${BASE}/api/public/content`);
@@ -237,6 +340,47 @@ async function runTests() {
     // Check that verbose 4-column sections are removed
     if (html.includes('footer-links-grid') || html.includes('footer-nav-col')) {
       throw new Error('Footer still contains multi-column link elements');
+    }
+  });
+
+  // 13. Production Hardening: Health Check Endpoint
+  await check('Production Hardening: Health API returns 200 and healthy status', async () => {
+    const res = await fetch(`${BASE}/api/health`);
+    if (res.status !== 200) throw new Error(`Expected HTTP 200, got ${res.status}`);
+    const data = await res.json();
+    if (data.status !== 'healthy') throw new Error(`Expected status 'healthy', got ${data.status}`);
+    console.log(`      Engine: ${data.database?.primary} (Atlas Configured: ${data.database?.mongo_configured}, Connected: ${data.database?.mongo_connected})`);
+  });
+
+  // 14. Production Hardening: Security Headers
+  await check('Production Hardening: Security Headers enforced', async () => {
+    const res = await fetch(`${BASE}/`);
+    const xContentType = res.headers.get('x-content-type-options');
+    const xFrame = res.headers.get('x-frame-options');
+    if (xContentType !== 'nosniff') throw new Error(`Missing X-Content-Type-Options header (got ${xContentType})`);
+    if (xFrame !== 'DENY') throw new Error(`Missing or invalid X-Frame-Options header (got ${xFrame})`);
+  });
+
+  // 15. Production Hardening: SEO Crawlability (Robots & Sitemap)
+  await check('Production Hardening: Robots.txt & Sitemap.xml available', async () => {
+    const robotsRes = await fetch(`${BASE}/robots.txt`);
+    if (robotsRes.status !== 200) throw new Error(`robots.txt returned ${robotsRes.status}`);
+    const robotsText = await robotsRes.text();
+    if (!robotsText.includes('Disallow: /control/')) throw new Error('robots.txt missing /control/ disallow');
+
+    const sitemapRes = await fetch(`${BASE}/sitemap.xml`);
+    if (sitemapRes.status !== 200) throw new Error(`sitemap.xml returned ${sitemapRes.status}`);
+    const sitemapText = await sitemapRes.text();
+    if (!sitemapText.includes('urlset') && !sitemapText.includes('url')) throw new Error('sitemap.xml missing XML markup');
+  });
+
+  // 16. Production Hardening: Branded 404 Page
+  await check('Production Hardening: Branded 404 Sector Page', async () => {
+    const res = await fetch(`${BASE}/non-existent-sector-test-route`);
+    if (res.status !== 404) throw new Error(`Expected HTTP 404, got ${res.status}`);
+    const text = await res.text();
+    if (!text.includes('Sector Not Found') && !text.includes('404')) {
+      throw new Error('404 page missing custom sector markup');
     }
   });
 

@@ -30,10 +30,11 @@ export default function ThemeToggle({ compact = false }: ThemeToggleProps) {
   if (!mounted) {
     return (
       <div
+        suppressHydrationWarning
         style={{
-          width: compact ? '36px' : '100%',
+          width: compact ? '38px' : '100%',
           height: '38px',
-          borderRadius: 'var(--radius-sm)',
+          borderRadius: compact ? '10px' : 'var(--radius-sm)',
           background: 'rgba(255, 255, 255, 0.05)',
         }}
       />
@@ -45,6 +46,7 @@ export default function ThemeToggle({ compact = false }: ThemeToggleProps) {
   if (compact) {
     return (
       <button
+        suppressHydrationWarning
         onClick={handleToggle}
         className="theme-toggle-btn"
         title={isLight ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
@@ -71,6 +73,7 @@ export default function ThemeToggle({ compact = false }: ThemeToggleProps) {
 
   return (
     <button
+      suppressHydrationWarning
       onClick={handleToggle}
       className="theme-toggle-btn"
       title={isLight ? 'Switch to Dark Mode' : 'Switch to Light Mode'}

@@ -1,6 +1,8 @@
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import bcrypt from 'bcryptjs';
+import { getMongoDb, isMongoConfigured } from './mongodb';
 import {
   DatabaseSchema,
   StudentRequest,
@@ -71,6 +73,8 @@ function getInitialData(): DatabaseSchema {
         youtube: 'https://youtube.com',
         twitter: 'https://twitter.com',
       },
+      footer_copyright: 'All Rights Reserved.',
+      footer_tagline: 'Spatial Computing & Immersive Engineering Digital Ecosystem',
     },
     home_content: {
       hero: {
@@ -690,6 +694,19 @@ function getInitialData(): DatabaseSchema {
   };
 }
 
+// Default academic departments available for student application
+export const DEFAULT_DEPARTMENTS: string[] = [
+  'Computer Science and Engineering',
+  'Information Technology',
+  'Electronics and Communication Engineering',
+  'Electrical and Electronics Engineering',
+  'Mechanical Engineering',
+  'Artificial Intelligence and Data Science',
+  'Cyber Security',
+  'Mechatronics Engineering',
+  'Civil Engineering',
+];
+
 // Ensure database file exists
 export const DEFAULT_REQUEST_CONTENT: RequestFormContent = {
   title: 'Apply to Join the AR/VR Centre of Excellence',
@@ -720,6 +737,7 @@ export const DEFAULT_REQUEST_CONTENT: RequestFormContent = {
     'Self-Learning',
     'Still Exploring',
   ],
+  departments: DEFAULT_DEPARTMENTS,
   keycard_title: 'HOLO_KEYCARD // ADMISSION DOSSIER',
   keycard_badge: 'REAL-TIME 3D WAFER',
   success_heading: 'Welcome to the Frontier.',
@@ -744,43 +762,211 @@ export const DEFAULT_REQUEST_CONTENT: RequestFormContent = {
   ],
 };
 
+let memoryCache: DatabaseSchema | null = null;
+const TMP_DB_FILE = path.join(os.tmpdir(), 'arvr_coe_db.json');
+
 export function initDb(): DatabaseSchema {
-  if (!fs.existsSync(DB_DIR)) {
-    fs.mkdirSync(DB_DIR, { recursive: true });
+  if (memoryCache) {
+    return memoryCache;
   }
 
-  if (!fs.existsSync(DB_FILE)) {
-    const data = getInitialData();
-    data.request_content = DEFAULT_REQUEST_CONTENT;
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
-    return data;
+  // 1. Check if /tmp has a hydrated cache from serverless execution
+  if (fs.existsSync(TMP_DB_FILE)) {
+    try {
+      const raw = fs.readFileSync(TMP_DB_FILE, 'utf-8');
+      const parsed = JSON.parse(raw);
+      memoryCache = parsed;
+      return parsed;
+    } catch {}
   }
+
+  // 2. Read bundled data/db.json
+  if (fs.existsSync(DB_FILE)) {
+    try {
+      const raw = fs.readFileSync(DB_FILE, 'utf-8');
+      const parsed = JSON.parse(raw);
+      memoryCache = parsed;
+      return parsed;
+    } catch {}
+  }
+
+  // 3. Fallback
+  const data = getInitialData();
+  data.request_content = DEFAULT_REQUEST_CONTENT;
+  memoryCache = data;
+  return data;
+}
+
+// Asynchronously syncs local document state to MongoDB Atlas collections
+export async function syncToMongo(data: DatabaseSchema): Promise<void> {
+  const db = await getMongoDb();
+  if (!db) return;
 
   try {
-    const raw = fs.readFileSync(DB_FILE, 'utf-8');
-    const parsed = JSON.parse(raw);
-    if (!parsed.request_content) {
-      parsed.request_content = DEFAULT_REQUEST_CONTENT;
-      saveDb(parsed);
+    // 1. Settings (Single Document)
+    if (data.settings) {
+      await db.collection('settings').updateOne(
+        { _id: 'site_settings' as any },
+        { $set: { ...data.settings, _id: 'site_settings' } },
+        { upsert: true }
+      );
     }
-    return parsed;
-  } catch (err) {
-    console.error('Error reading database file, recreating initial data:', err);
-    const data = getInitialData();
-    data.request_content = DEFAULT_REQUEST_CONTENT;
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
-    return data;
+
+    // 2. Content Single Documents
+    if (data.home_content) {
+      await db.collection('home_content').updateOne(
+        { _id: 'home_content' as any },
+        { $set: { ...data.home_content, _id: 'home_content' } },
+        { upsert: true }
+      );
+    }
+    if (data.about_content) {
+      await db.collection('about_content').updateOne(
+        { _id: 'about_content' as any },
+        { $set: { ...data.about_content, _id: 'about_content' } },
+        { upsert: true }
+      );
+    }
+    if (data.request_content) {
+      await db.collection('request_content').updateOne(
+        { _id: 'request_content' as any },
+        { $set: { ...data.request_content, _id: 'request_content' } },
+        { upsert: true }
+      );
+    }
+
+    // 3. Collection Lists Helper
+    const syncCollection = async (colName: string, items: any[], idField = 'id') => {
+      const col = db.collection(colName);
+      if (!Array.isArray(items) || items.length === 0) {
+        if (colName === 'student_requests') {
+          await col.deleteMany({});
+        }
+        return;
+      }
+      const itemIds = items.map((i) => i[idField]);
+      await col.deleteMany({ [idField]: { $nin: itemIds } });
+      for (const item of items) {
+        const filter = { [idField]: item[idField] };
+        await col.updateOne(filter as any, { $set: item }, { upsert: true });
+      }
+    };
+
+    await Promise.all([
+      syncCollection('verticals', data.verticals, 'slug'),
+      syncCollection('projects', data.projects, 'slug'),
+      syncCollection('events', data.events, 'slug'),
+      syncCollection('achievements', data.achievements, 'id'),
+      syncCollection('industry_records', data.industry_records, 'id'),
+      syncCollection('student_requests', data.student_requests, 'id'),
+      syncCollection('admin_users', data.admin_users, 'id'),
+    ]);
+  } catch (err: any) {
+    console.warn('MongoDB write-through sync notification:', err?.message || err);
   }
 }
 
-// Thread-safe atomic write
+// Thread-safe atomic local write with serverless tmp fallback & MongoDB write-through synchronization
 export function saveDb(data: DatabaseSchema): void {
-  if (!fs.existsSync(DB_DIR)) {
-    fs.mkdirSync(DB_DIR, { recursive: true });
+  memoryCache = data;
+
+  // 1. Try local data/db.json write (works in persistent node servers, docker, local dev)
+  try {
+    if (!fs.existsSync(DB_DIR)) {
+      fs.mkdirSync(DB_DIR, { recursive: true });
+    }
+    const tempFile = `${DB_FILE}.tmp.${Date.now()}`;
+    fs.writeFileSync(tempFile, JSON.stringify(data, null, 2), 'utf-8');
+    fs.renameSync(tempFile, DB_FILE);
+  } catch {
+    // In serverless environments like Vercel, the local filesystem is read-only
   }
-  const tempFile = `${DB_FILE}.tmp.${Date.now()}`;
-  fs.writeFileSync(tempFile, JSON.stringify(data, null, 2), 'utf-8');
-  fs.renameSync(tempFile, DB_FILE);
+
+  // 2. Write to OS /tmp directory (writable in serverless lambdas)
+  try {
+    const tmpTempFile = `${TMP_DB_FILE}.tmp.${Date.now()}`;
+    fs.writeFileSync(tmpTempFile, JSON.stringify(data, null, 2), 'utf-8');
+    fs.renameSync(tmpTempFile, TMP_DB_FILE);
+  } catch {}
+
+  // 3. If MongoDB Atlas is configured, asynchronously sync to cloud collections
+  if (isMongoConfigured()) {
+    syncToMongo(data).catch((err) => {
+      console.warn('Async MongoDB write-through error:', err?.message || err);
+    });
+  }
+}
+
+export async function saveDbAsync(data: DatabaseSchema): Promise<void> {
+  saveDb(data);
+  if (isMongoConfigured()) {
+    try {
+      await syncToMongo(data);
+    } catch (err: any) {
+      console.warn('saveDbAsync MongoDB error:', err?.message || err);
+    }
+  }
+}
+
+// Hydrates database state from MongoDB Atlas into serverless cache if configured
+export async function hydrateFromMongoIfNeeded(): Promise<DatabaseSchema> {
+  const current = initDb();
+  if (!isMongoConfigured()) return current;
+
+  try {
+    const db = await getMongoDb();
+    if (!db) return current;
+
+    const [settingsDoc, homeDoc, aboutDoc, reqDoc, verticals, projects, events, achievements, industry, student_requests, admin_users] = await Promise.all([
+      db.collection('settings').findOne({ _id: 'site_settings' as any }),
+      db.collection('home_content').findOne({ _id: 'home_content' as any }),
+      db.collection('about_content').findOne({ _id: 'about_content' as any }),
+      db.collection('request_content').findOne({ _id: 'request_content' as any }),
+      db.collection('verticals').find().toArray(),
+      db.collection('projects').find().toArray(),
+      db.collection('events').find().toArray(),
+      db.collection('achievements').find().toArray(),
+      db.collection('industry_records').find().toArray(),
+      db.collection('student_requests').find().toArray(),
+      db.collection('admin_users').find().toArray(),
+    ]);
+
+    const stripId = (doc: any) => {
+      if (!doc) return doc;
+      const { _id, ...rest } = doc;
+      return rest;
+    };
+
+    const stripList = (list: any[]) => (Array.isArray(list) ? list.map(stripId) : []);
+
+    const hydrated: DatabaseSchema = {
+      ...current,
+      settings: settingsDoc ? stripId(settingsDoc) : current.settings,
+      home_content: homeDoc ? stripId(homeDoc) : current.home_content,
+      about_content: aboutDoc ? stripId(aboutDoc) : current.about_content,
+      request_content: reqDoc ? stripId(reqDoc) : current.request_content,
+      verticals: Array.isArray(verticals) && verticals.length > 0 ? stripList(verticals) : current.verticals,
+      projects: Array.isArray(projects) && projects.length > 0 ? stripList(projects) : current.projects,
+      events: Array.isArray(events) && events.length > 0 ? stripList(events) : current.events,
+      achievements: Array.isArray(achievements) && achievements.length > 0 ? stripList(achievements) : current.achievements,
+      industry_records: Array.isArray(industry) && industry.length > 0 ? stripList(industry) : current.industry_records,
+      student_requests: Array.isArray(student_requests) ? stripList(student_requests) : current.student_requests,
+      admin_users: Array.isArray(admin_users) && admin_users.length > 0 ? stripList(admin_users) : current.admin_users,
+    };
+
+    memoryCache = hydrated;
+    try {
+      fs.writeFileSync(DB_FILE, JSON.stringify(hydrated, null, 2), 'utf-8');
+    } catch {}
+    try {
+      fs.writeFileSync(TMP_DB_FILE, JSON.stringify(hydrated, null, 2), 'utf-8');
+    } catch {}
+
+    return hydrated;
+  } catch (err: any) {
+    console.warn('Hydration from MongoDB skipped, using local cache:', err?.message || err);
+    return current;
+  }
 }
 
 // ---------------- PUBLIC ACCESSORS (Strictly published, safe, no student data) ----------------
@@ -838,7 +1024,11 @@ export function getPublicAboutContent() {
 
 export function getPublicRequestContent(): RequestFormContent {
   const db = initDb();
-  return db.request_content || DEFAULT_REQUEST_CONTENT;
+  const content = db.request_content || DEFAULT_REQUEST_CONTENT;
+  if (!content.departments || !Array.isArray(content.departments) || content.departments.length === 0) {
+    content.departments = [...DEFAULT_DEPARTMENTS];
+  }
+  return content;
 }
 
 export function getPublicVerticals() {
@@ -937,12 +1127,17 @@ export function getPublicSettings() {
     campus_address: db.settings.campus_address,
     working_hours: db.settings.working_hours,
     social_links: db.settings.social_links,
+    footer_copyright: db.settings.footer_copyright || 'All Rights Reserved.',
+    footer_tagline: db.settings.footer_tagline || '',
   };
 }
 
 // ---------------- STUDENT REQUEST SUBMISSION (PUBLIC API) ----------------
 
-export function submitStudentRequest(data: Omit<StudentRequest, 'id' | 'status' | 'internal_notes' | 'submitted_at' | 'updated_at'>): { success: boolean; message: string; duplicate?: boolean } {
+export async function submitStudentRequest(data: Omit<StudentRequest, 'id' | 'status' | 'internal_notes' | 'submitted_at' | 'updated_at'>): Promise<{ success: boolean; message: string; duplicate?: boolean }> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
 
   const reqEmail = (data.email || data.college_email || '').trim().toLowerCase();
@@ -975,7 +1170,7 @@ export function submitStudentRequest(data: Omit<StudentRequest, 'id' | 'status' 
   };
 
   db.student_requests.unshift(newRequest);
-  saveDb(db);
+  await saveDbAsync(db);
 
   return {
     success: true,
@@ -985,7 +1180,10 @@ export function submitStudentRequest(data: Omit<StudentRequest, 'id' | 'status' 
 
 // ---------------- ADMIN PRIVATE ACCESSORS & MUTATIONS ----------------
 
-export function getAdminDashboardStats() {
+export async function getAdminDashboardStats() {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   const newRequests = db.student_requests.filter((r) => r.status === 'NEW').length;
   const waitingRequests = db.student_requests.filter((r) => r.status === 'WAITING').length;
@@ -1018,7 +1216,10 @@ export function getAdminDashboardStats() {
   };
 }
 
-export function getAdminStudentRequests(filterStatus?: string, search?: string, department?: string, year?: string, interest?: string) {
+export async function getAdminStudentRequests(filterStatus?: string, search?: string, department?: string, year?: string, interest?: string): Promise<StudentRequest[]> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   let list = db.student_requests;
 
@@ -1053,7 +1254,10 @@ export function getAdminStudentRequests(filterStatus?: string, search?: string, 
   return list.sort((a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime());
 }
 
-export function updateStudentRequestStatus(id: string, newStatus: 'NEW' | 'WAITING' | 'JOINED' | 'REJECTED', internalNotes?: string) {
+export async function updateStudentRequestStatus(id: string, newStatus: 'NEW' | 'WAITING' | 'JOINED' | 'REJECTED', internalNotes?: string): Promise<StudentRequest | null> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   const index = db.student_requests.findIndex((r) => r.id === id);
   if (index === -1) return null;
@@ -1072,11 +1276,50 @@ export function updateStudentRequestStatus(id: string, newStatus: 'NEW' | 'WAITI
   }
 
   db.student_requests[index] = req;
-  saveDb(db);
+  await saveDbAsync(db);
   return req;
+}
+
+export async function batchUpdateStudentRequestStatus(
+  ids: string[],
+  newStatus: 'NEW' | 'WAITING' | 'JOINED' | 'REJECTED',
+  internalNotes?: string
+): Promise<StudentRequest[]> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  const updatedList: StudentRequest[] = [];
+  const now = new Date().toISOString();
+
+  for (const id of ids) {
+    const index = db.student_requests.findIndex((r) => r.id === id);
+    if (index !== -1) {
+      const req = db.student_requests[index];
+      req.status = newStatus;
+      req.updated_at = now;
+      if (newStatus === 'JOINED' && !req.joined_at) {
+        req.joined_at = now;
+      }
+      if (newStatus === 'REJECTED' && !req.rejected_at) {
+        req.rejected_at = now;
+      }
+      if (internalNotes !== undefined) {
+        req.internal_notes = internalNotes;
+      }
+      db.student_requests[index] = req;
+      updatedList.push(req);
+    }
+  }
+
+  if (updatedList.length > 0) {
+    await saveDbAsync(db);
+  }
+  return updatedList;
 }
 
 // Student requests cannot be deleted; they can only be rejected.
 export function deleteStudentRequest(_id: string): boolean {
   return false;
 }
+

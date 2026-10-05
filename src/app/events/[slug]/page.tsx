@@ -42,6 +42,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
         month: 'long',
         day: 'numeric',
         year: 'numeric',
+        timeZone: 'UTC',
       });
     } catch {
       return dateStr;
@@ -114,7 +115,7 @@ export default async function EventDetailPage({ params }: EventDetailPageProps) 
       </section>
 
       {/* Main Event Content */}
-      <section className="section-spacing" style={{ background: 'var(--bg-secondary)', paddingTop: '0' }}>
+      <section className="section-spacing" style={{ paddingTop: '0' }}>
         <div className="container">
           {/* 3D Spatial Arena / 2D Poster Switcher */}
           <EventMediaInspector

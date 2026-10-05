@@ -38,10 +38,23 @@ export default function AdminRequestContentPage() {
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
   const [newTag, setNewTag] = useState('');
+  const [newDept, setNewDept] = useState('');
   const [activeTab, setActiveTab] = useState<'editor' | 'preview' | 'split'>('split');
   const [previewTheme, setPreviewTheme] = useState<'dark' | 'light'>('dark');
   const [newOptionTexts, setNewOptionTexts] = useState<Record<string, string>>({});
   const router = useRouter();
+
+  const FALLBACK_DEPARTMENTS = [
+    'Computer Science and Engineering',
+    'Information Technology',
+    'Electronics and Communication Engineering',
+    'Electrical and Electronics Engineering',
+    'Mechanical Engineering',
+    'Artificial Intelligence and Data Science',
+    'Cyber Security',
+    'Mechatronics Engineering',
+    'Civil Engineering',
+  ];
 
   useEffect(() => {
     fetch('/api/admin/content?section=request')
@@ -120,6 +133,62 @@ export default function AdminRequestContentPage() {
     setContent({
       ...content,
       interest_options: content.interest_options.filter((t) => t !== tag),
+    });
+  };
+
+  // Department Management Handlers
+  const handleAddDepartment = () => {
+    if (!content || !newDept.trim()) return;
+    const current = content.departments || FALLBACK_DEPARTMENTS;
+    if (current.includes(newDept.trim())) {
+      setNewDept('');
+      return;
+    }
+    setContent({
+      ...content,
+      departments: [...current, newDept.trim()],
+    });
+    setNewDept('');
+  };
+
+  const handleRemoveDepartment = (index: number) => {
+    if (!content) return;
+    const current = content.departments || FALLBACK_DEPARTMENTS;
+    setContent({
+      ...content,
+      departments: current.filter((_, i) => i !== index),
+    });
+  };
+
+  const handleUpdateDepartment = (index: number, val: string) => {
+    if (!content) return;
+    const current = [...(content.departments || FALLBACK_DEPARTMENTS)];
+    current[index] = val;
+    setContent({
+      ...content,
+      departments: current,
+    });
+  };
+
+  const handleMoveDepartment = (index: number, direction: 'up' | 'down') => {
+    if (!content) return;
+    const current = [...(content.departments || FALLBACK_DEPARTMENTS)];
+    const targetIdx = direction === 'up' ? index - 1 : index + 1;
+    if (targetIdx < 0 || targetIdx >= current.length) return;
+    const temp = current[index];
+    current[index] = current[targetIdx];
+    current[targetIdx] = temp;
+    setContent({
+      ...content,
+      departments: current,
+    });
+  };
+
+  const handleRestoreDefaultDepartments = () => {
+    if (!content) return;
+    setContent({
+      ...content,
+      departments: [...FALLBACK_DEPARTMENTS],
     });
   };
 
@@ -495,11 +564,155 @@ export default function AdminRequestContentPage() {
                       </div>
                     </div>
 
-                    {/* Section 4: DYNAMIC CUSTOM APPLICATION FORM FIELDS BUILDER */}
+                    {/* Section 4: ELIGIBLE ACADEMIC DEPARTMENTS MANAGEMENT */}
                     <div className="admin-card">
                       <div className="admin-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <div>
-                          <h3 className="admin-card-title">04 // CUSTOM APPLICATION FORM FIELDS</h3>
+                          <h3 className="admin-card-title">04 // ELIGIBLE ACADEMIC DEPARTMENTS</h3>
+                          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>
+                            Configure engineering and science disciplines permitted to join. Controls the department dropdown on the public application form.
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleRestoreDefaultDepartments}
+                          className="admin-btn admin-btn-secondary admin-btn-sm"
+                          title="Restore standard 9 engineering disciplines"
+                        >
+                          <School size={13} />
+                          <span>Reset Defaults</span>
+                        </button>
+                      </div>
+
+                      <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div>
+                          <label className="admin-field-label">Add Department / Discipline</label>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <input
+                              type="text"
+                              className="admin-input"
+                              placeholder="e.g. Biomedical Engineering, Robotics & Automation..."
+                              value={newDept}
+                              onChange={(e) => setNewDept(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  handleAddDepartment();
+                                }
+                              }}
+                            />
+                            <button
+                              type="button"
+                              onClick={handleAddDepartment}
+                              className="admin-btn admin-btn-primary admin-btn-sm"
+                            >
+                              <Plus size={14} />
+                              <span>Add</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                            <label className="admin-field-label" style={{ margin: 0 }}>
+                              Active Departments ({(content.departments || FALLBACK_DEPARTMENTS).length})
+                            </label>
+                            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                              Order in this list matches the public dropdown order
+                            </span>
+                          </div>
+
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            {(!content.departments || content.departments.length === 0) ? (
+                              <div
+                                style={{
+                                  padding: '20px',
+                                  textAlign: 'center',
+                                  background: 'var(--surface-card-alt)',
+                                  borderRadius: '8px',
+                                  border: '1px dashed var(--border-subtle)',
+                                  color: 'var(--text-muted)',
+                                  fontSize: '0.85rem',
+                                }}
+                              >
+                                No departments defined. Click &quot;Reset Defaults&quot; to restore standard disciplines.
+                              </div>
+                            ) : (
+                              content.departments.map((dept, idx) => (
+                                <div
+                                  key={idx}
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    background: 'var(--surface-card-alt)',
+                                    border: '1px solid var(--border-subtle)',
+                                    borderRadius: '6px',
+                                    padding: '8px 12px',
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      fontFamily: 'var(--font-mono)',
+                                      fontSize: '0.72rem',
+                                      color: 'var(--accent-cyan)',
+                                      fontWeight: 700,
+                                      minWidth: '24px',
+                                    }}
+                                  >
+                                    #{idx + 1}
+                                  </span>
+                                  <input
+                                    type="text"
+                                    className="admin-input"
+                                    value={dept}
+                                    onChange={(e) => handleUpdateDepartment(idx, e.target.value)}
+                                    style={{ padding: '6px 10px', fontSize: '0.85rem', flex: 1 }}
+                                  />
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleMoveDepartment(idx, 'up')}
+                                      disabled={idx === 0}
+                                      className="admin-btn admin-btn-secondary admin-btn-sm"
+                                      style={{ padding: '4px 6px' }}
+                                      title="Move Up"
+                                    >
+                                      <MoveUp size={12} />
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleMoveDepartment(idx, 'down')}
+                                      disabled={idx === (content.departments?.length || 0) - 1}
+                                      className="admin-btn admin-btn-secondary admin-btn-sm"
+                                      style={{ padding: '4px 6px' }}
+                                      title="Move Down"
+                                    >
+                                      <MoveDown size={12} />
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveDepartment(idx)}
+                                      className="admin-btn admin-btn-danger admin-btn-sm"
+                                      style={{ padding: '4px 6px' }}
+                                      title="Delete Department"
+                                    >
+                                      <Trash2 size={12} />
+                                    </button>
+                                  </div>
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Section 5: DYNAMIC CUSTOM APPLICATION FORM FIELDS BUILDER */}
+                    <div className="admin-card">
+                      <div className="admin-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <h3 className="admin-card-title">05 // CUSTOM APPLICATION FORM FIELDS</h3>
                           <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>
                             Add tailored application questions (text, textarea, number, or dropdown) to the public join form.
                           </p>
@@ -728,10 +941,10 @@ export default function AdminRequestContentPage() {
                       </div>
                     </div>
 
-                    {/* Section 5: Success Message & Keycard Badges */}
+                    {/* Section 6: Success Message & Keycard Badges */}
                     <div className="admin-card">
                       <div className="admin-card-header">
-                        <h3 className="admin-card-title">05 // SUCCESS CONFIRMATION & KEYCARD</h3>
+                        <h3 className="admin-card-title">06 // SUCCESS CONFIRMATION & KEYCARD</h3>
                       </div>
                       <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -1017,10 +1230,35 @@ export default function AdminRequestContentPage() {
                           </div>
                         </div>
 
-                        {/* 5. Active Interest Tags Preview */}
+                        {/* 5. Department Selection Preview */}
                         <div>
                           <div style={{ fontSize: '0.72rem', color: previewTheme === 'dark' ? '#94a3b8' : '#64748b', fontFamily: 'monospace', marginBottom: '8px' }}>
-                            02 // INTEREST CHOICES OFFERED ({content.interest_options.length}):
+                            02 // ACADEMIC DEPARTMENT OPTIONS ({(content.departments || FALLBACK_DEPARTMENTS).length}):
+                          </div>
+                          <select
+                            disabled
+                            style={{
+                              width: '100%',
+                              padding: '7px 10px',
+                              borderRadius: '6px',
+                              background: previewTheme === 'dark' ? 'rgba(255,255,255,0.05)' : '#f8fafc',
+                              border: previewTheme === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                              color: previewTheme === 'dark' ? '#f3f4f6' : '#0f172a',
+                              fontSize: '0.75rem',
+                              fontWeight: 500,
+                              cursor: 'not-allowed',
+                            }}
+                          >
+                            {(content.departments && content.departments.length > 0 ? content.departments : FALLBACK_DEPARTMENTS).map((d) => (
+                              <option key={d} value={d}>{d}</option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {/* 6. Active Interest Tags Preview */}
+                        <div>
+                          <div style={{ fontSize: '0.72rem', color: previewTheme === 'dark' ? '#94a3b8' : '#64748b', fontFamily: 'monospace', marginBottom: '8px' }}>
+                            03 // INTEREST CHOICES OFFERED ({content.interest_options.length}):
                           </div>
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
                             {content.interest_options.map((t) => (
@@ -1042,7 +1280,7 @@ export default function AdminRequestContentPage() {
                           </div>
                         </div>
 
-                        {/* 6. Dynamic Custom Form Fields Preview */}
+                        {/* 7. Dynamic Custom Form Fields Preview */}
                         <div
                           style={{
                             padding: '16px',
@@ -1053,7 +1291,7 @@ export default function AdminRequestContentPage() {
                         >
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                             <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#ec4899', letterSpacing: '0.08em' }}>
-                              03 // CUSTOM FORM FIELDS ({content.custom_fields?.length || 0})
+                              04 // CUSTOM FORM FIELDS ({content.custom_fields?.length || 0})
                             </span>
                             <span style={{ fontSize: '0.65rem', color: '#94a3b8' }}>LIVE RENDERED</span>
                           </div>

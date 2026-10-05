@@ -5,7 +5,8 @@ import { signAdminToken, checkLoginRateLimit, recordFailedLogin, resetLoginRateL
 
 export async function POST(req: NextRequest) {
   try {
-    const ip = req.headers.get('x-forwarded-for') || 'local-ip';
+    const rawIp = req.headers.get('x-forwarded-for') || 'local-ip';
+    const ip = rawIp.split(',')[0].trim();
     const rateCheck = checkLoginRateLimit(ip);
 
     if (!rateCheck.allowed) {

@@ -1,42 +1,37 @@
 {
   "admin_users": [
     {
-      "id": "admin-1",
       "email": "admin@coe.edu",
-      "password_hash": "$2b$10$Bl5rjsR1qX2YjTPpajGWiOD1bcb6KJiy8XmX9VVuECg/I5Z9EHZty",
-      "name": "CoE Administrator",
-      "role": "superadmin",
       "created_at": "2026-01-01T00:00:00.000Z",
-      "updated_at": "2026-01-01T00:00:00.000Z"
+      "id": "admin-1",
+      "name": "CoE Administrator",
+      "password_hash": "$2b$10$Bl5rjsR1qX2YjTPpajGWiOD1bcb6KJiy8XmX9VVuECg/I5Z9EHZty",
+      "role": "superadmin",
+      "updated_at": "2026-10-05T07:35:27.677Z"
     }
   ],
   "settings": {
-    "institution_name": "Centre of Excellence",
+    "campus_address": "Technology Campus, Innovation Corridor, Chennai - 600001",
     "coe_name": "AR/VR Centre of Excellence",
-    "tagline": "Explore. Learn. Build. Innovate.",
-    "site_title": "AR/VR Centre of Excellence | Spatial Computing Lab",
-    "meta_description": "A multidisciplinary immersive technology ecosystem for students to learn, collaborate, develop practical skills and build solutions using AR, VR, MR, XR, 3D and related technologies.",
-    "favicon_url": "/favicon.ico",
     "contact_email": "arvr.coe@institute.edu",
     "contact_phone": "+91 44 2345 6789",
+    "favicon_url": "/favicon.ico",
+    "footer_copyright": "All Rights Reserved.",
+    "footer_tagline": "Spatial Computing & Immersive Engineering Digital Ecosystem",
+    "institution_name": "Centre of Excellence",
+    "meta_description": "A multidisciplinary immersive technology ecosystem for students to learn, collaborate, develop practical skills and build solutions using AR, VR, MR, XR, 3D and related technologies.",
     "office_location": "Centre of Excellence Block, 2nd Floor, Room COE-204",
-    "campus_address": "Technology Campus, Innovation Corridor, Chennai - 600001",
-    "working_hours": "Monday – Saturday: 8:30 AM – 5:00 PM",
+    "site_title": "AR/VR Centre of Excellence | Spatial Computing Lab",
     "social_links": {
       "linkedin": "https://linkedin.com",
       "github": "https://github.com",
       "youtube": "https://youtube.com",
       "twitter": "https://twitter.com"
-    }
+    },
+    "tagline": "Explore. Learn. Build. Innovate.",
+    "working_hours": "Monday – Saturday: 8:30 AM – 5:00 PM"
   },
   "home_content": {
-    "hero": {
-      "title": "AR/VR Centre of Excellence",
-      "subtitle": "Explore. Learn. Build. Innovate.",
-      "description": "A multidisciplinary immersive technology ecosystem for students to learn, collaborate, develop practical skills and build solutions using AR, VR, MR, XR, 3D and related technologies.",
-      "primary_cta_label": "Request to Join",
-      "secondary_cta_label": "Explore Verticals"
-    },
     "about_preview": {
       "heading": "Where Learning Meets Immersive Technology",
       "description": "The AR/VR Centre of Excellence provides an advanced spatial computing environment where students bridge theoretical engineering with hands-on immersive innovation.",
@@ -63,45 +58,42 @@
         }
       ]
     },
-    "verticals_preview": {
-      "heading": "Five Pathways. One Immersive Ecosystem.",
-      "subheading": "Structured avenues tailored for every stage of your spatial computing journey."
-    },
     "featured_content": {
       "heading": "What's Happening"
     },
-    "journey": {
-      "heading": "Build Your Journey",
-      "description": "Progress through learning, practical development, competitions, projects, internships and industry-oriented opportunities."
+    "hero": {
+      "title": "AR/VR Centre of Excellence",
+      "subtitle": "Explore. Learn. Build. Innovate.",
+      "description": "A multidisciplinary immersive technology ecosystem for students to learn, collaborate, develop practical skills and build solutions using AR, VR, MR, XR, 3D and related technologies.",
+      "primary_cta_label": "Request to Join",
+      "secondary_cta_label": "Explore Verticals"
     },
     "join_cta": {
       "heading": "READY TO EXPLORE IMMERSIVE TECHNOLOGY?",
       "subheading": "Take your first step into Spatial Computing and Extended Reality.",
       "description": "Tell us what interests you and join our dynamic ecosystem of builders, designers, and innovators.",
       "cta_label": "Request to Join"
+    },
+    "journey": {
+      "heading": "Build Your Journey",
+      "description": "Progress through learning, practical development, competitions, projects, internships and industry-oriented opportunities."
+    },
+    "verticals_preview": {
+      "heading": "Five Pathways. One Immersive Ecosystem.",
+      "subheading": "Structured avenues tailored for every stage of your spatial computing journey."
     }
   },
   "about_content": {
+    "coworking_description": "The CoE is designed as a collaborative, modern studio workspace rather than a conventional classroom. High-performance VR test rigs, dedicated tracking bays, and agile huddle areas empower active experimentation.",
+    "coworking_title": "Your Space to Learn and Build",
     "hero": {
       "heading": "Beyond a Lab.",
       "subheading": "An Ecosystem for Immersive Innovation.",
       "description": "Established to cultivate pioneering engineers in Augmented Reality, Virtual Reality, Mixed Reality, and Spatial Computing at the Centre of Excellence."
     },
-    "mission": "To foster an open, multidisciplinary research and development laboratory where students master spatial computing paradigms, solve industry-grade engineering challenges, and build deployable XR solutions.",
-    "vision": "To emerge as a premier institutional hub for immersive technologies in South India, driving academic excellence, intellectual property creation, and industry-ready engineering talent.",
-    "what_we_do": [
-      "Structured hands-on technical bootcamps in Unity, Unreal Engine 5, WebXR, and Blender",
-      "Industry-sponsored research and development projects addressing real operational challenges",
-      "Continuous mentorship for national and international XR hackathons and competitions",
-      "Facilitating summer and semester-long internships with leading spatial technology firms",
-      "Fostering interdepartmental project teams bridging hardware, software, 3D art, and domain logic",
-      "save"
-    ],
-    "coworking_title": "Your Space to Learn and Build",
-    "coworking_description": "The CoE is designed as a collaborative, modern studio workspace rather than a conventional classroom. High-performance VR test rigs, dedicated tracking bays, and agile huddle areas empower active experimentation.",
-    "multidisciplinary_desc": "Spatial computing requires diverse disciplines: computer vision, 3D spatial audio, kinematics, computer graphics, human-computer interaction, and cloud streaming. Our lab welcomes students across all engineering branches.",
-    "student_development_desc": "From first-year orientation through final-year capstones, students progress through progressive milestones—from fundamental 3D mathematical principles to full-fledged multi-user immersive applications.",
     "industry_orientation_desc": "Through bilateral MoUs and active industry advisory boards, the curriculum and projects are aligned with prevailing spatial computing standards (OpenXR, WebXR, Apple visionOS, Meta Quest SDKs).",
+    "mission": "To foster an open, multidisciplinary research and development laboratory where students master spatial computing paradigms, solve industry-grade engineering challenges, and build deployable XR solutions.",
+    "multidisciplinary_desc": "Spatial computing requires diverse disciplines: computer vision, 3D spatial audio, kinematics, computer graphics, human-computer interaction, and cloud streaming. Our lab welcomes students across all engineering branches.",
     "roadmap": [
       {
         "phase": "Phase 01",
@@ -123,167 +115,189 @@
         "title": "Industry Capstones & Incubation",
         "description": "Commercial prototype delivery, patent filings, research papers, venture competitions, and placement acceleration."
       }
+    ],
+    "student_development_desc": "From first-year orientation through final-year capstones, students progress through progressive milestones—from fundamental 3D mathematical principles to full-fledged multi-user immersive applications.",
+    "vision": "To emerge as a premier institutional hub for immersive technologies in South India, driving academic excellence, intellectual property creation, and industry-ready engineering talent.",
+    "what_we_do": [
+      "Structured hands-on technical bootcamps in Unity, Unreal Engine 5, WebXR, and Blender",
+      "Industry-sponsored research and development projects addressing real operational challenges",
+      "Continuous mentorship for national and international XR hackathons and competitions",
+      "Facilitating summer and semester-long internships with leading spatial technology firms",
+      "Fostering interdepartmental project teams bridging hardware, software, 3D art, and domain logic"
     ]
   },
   "verticals": [
     {
-      "id": "vert-1",
       "slug": "long-term-certification",
-      "number": "01",
-      "title": "Long-Term Certification Courses",
-      "short_description": "Comprehensive curriculum tracks covering foundational to advanced spatial computing and 3D engine development.",
       "full_description": "Structured multi-semester technical progressions designed to take students from absolute zero to production-capable XR engineers. Covering computer graphics mathematics, Unity / Unreal Engine development, OpenXR integrations, 3D asset optimization, spatial audio, and interactive interface design.",
       "icon": "Award",
-      "outcomes": [
-        "Industry-standard certified skill credentials",
-        "Deep mastery of Unity & Unreal Engine XR toolchains",
-        "Portfolio of 4+ production-level interactive applications",
-        "Fluency in OpenXR, C#, and C++ graphics pipelines"
-      ],
-      "tools": [
-        "Unity 2023 LTS",
-        "Unreal Engine 5.4",
-        "OpenXR SDK",
-        "Blender 4.x",
-        "Visual Studio 2022"
-      ],
+      "id": "vert-1",
+      "is_published": true,
+      "number": "01",
       "opportunities": [
         "Software Engineer - XR",
         "Unity/Unreal Developer",
         "Graphics Programmer",
         "Technical Artist"
       ],
-      "is_published": true,
-      "order_index": 1
+      "order_index": 1,
+      "outcomes": [
+        "Industry-standard certified skill credentials",
+        "Deep mastery of Unity & Unreal Engine XR toolchains",
+        "Portfolio of 4+ production-level interactive applications",
+        "Fluency in OpenXR, C#, and C++ graphics pipelines"
+      ],
+      "short_description": "Comprehensive curriculum tracks covering foundational to advanced spatial computing and 3D engine development.",
+      "title": "Long-Term Certification Courses",
+      "tools": [
+        "Unity 2023 LTS",
+        "Unreal Engine 5.4",
+        "OpenXR SDK",
+        "Blender 4.x",
+        "Visual Studio 2022"
+      ]
     },
     {
-      "id": "vert-2",
       "slug": "industry-internships",
-      "number": "02",
-      "title": "Internships with Industry Support",
-      "short_description": "Direct engagement with technology partners on live commercial and industrial XR deliverables.",
       "full_description": "Bridge academic preparation with enterprise execution. Students are paired with corporate mentors to build industrial training simulations, medical visualization platforms, and digital twin interfaces under real development sprints.",
       "icon": "Briefcase",
-      "outcomes": [
-        "Real-world client project demonstrations and delivery",
-        "Direct mentorship from senior XR architects",
-        "Stipend-supported internship positions",
-        "Fast-track Pre-Placement Offers (PPO) upon completion"
-      ],
-      "tools": [
-        "Jira / Git Workflows",
-        "Enterprise Cloud SDKs",
-        "Meta Quest Pro / 3",
-        "Apple Vision Pro Dev Kit"
-      ],
+      "id": "vert-2",
+      "is_published": true,
+      "number": "02",
       "opportunities": [
         "Enterprise XR Consultant",
         "Simulation Engineer",
         "Pre-Placement Offers",
         "Industrial Designer"
       ],
-      "is_published": true,
-      "order_index": 2
+      "order_index": 2,
+      "outcomes": [
+        "Real-world client project demonstrations and delivery",
+        "Direct mentorship from senior XR architects",
+        "Stipend-supported internship positions",
+        "Fast-track Pre-Placement Offers (PPO) upon completion"
+      ],
+      "short_description": "Direct engagement with technology partners on live commercial and industrial XR deliverables.",
+      "title": "Internships with Industry Support",
+      "tools": [
+        "Jira / Git Workflows",
+        "Enterprise Cloud SDKs",
+        "Meta Quest Pro / 3",
+        "Apple Vision Pro Dev Kit"
+      ]
     },
     {
-      "id": "vert-3",
       "slug": "self-learning-courses",
-      "number": "03",
-      "title": "Self-Learning Courses",
-      "short_description": "Self-paced modular pathways with code repositories, hands-on tutorials, and assessment checkpoints.",
       "full_description": "Guided asynchronous learning paths tailored for students balancing academic coursework. Structured in three clear tiers (Beginner -> Intermediate -> Advanced), complete with starter repos, step-by-step documentation, and lab test criteria.",
       "icon": "BookOpen",
-      "outcomes": [
-        "Self-directed progression tailored to student schedules",
-        "GitHub-backed repository of completed exercises",
-        "Structured peer reviews and automated test checkpoints",
-        "Gateway qualifications for advanced research pods"
-      ],
-      "tools": [
-        "WebXR & Three.js",
-        "ShaderLab / HLSL",
-        "A-Frame & Babylon.js",
-        "GitHub Education"
-      ],
+      "id": "vert-3",
+      "is_published": true,
+      "number": "03",
       "opportunities": [
         "WebXR Specialist",
         "Creative Technologist",
         "Independent XR Creator",
         "Research Fellow"
       ],
-      "is_published": true,
-      "order_index": 3
+      "order_index": 3,
+      "outcomes": [
+        "Self-directed progression tailored to student schedules",
+        "GitHub-backed repository of completed exercises",
+        "Structured peer reviews and automated test checkpoints",
+        "Gateway qualifications for advanced research pods"
+      ],
+      "short_description": "Self-paced modular pathways with code repositories, hands-on tutorials, and assessment checkpoints.",
+      "title": "Self-Learning Courses",
+      "tools": [
+        "WebXR & Three.js",
+        "ShaderLab / HLSL",
+        "A-Frame & Babylon.js",
+        "GitHub Education"
+      ]
     },
     {
-      "id": "vert-4",
       "slug": "skill-development",
-      "number": "04",
-      "title": "Skill Development Activities",
-      "short_description": "Intensive hackathons, technical paper symposiums, patent clinics, and national challenge teams.",
       "full_description": "Competitive, collaborative arenas designed to stretch engineering limits. The CoE sponsors and mentors student squads competing in Smart India Hackathon, global XR game jams, IEEE VR conferences, and student IP disclosures.",
-      "icon": "Zap",
-      "outcomes": [
-        "National & international hackathon podium finishes",
-        "Provisional patent filings and institutional IP generation",
-        "Published conference papers in IEEE and Springer venues",
-        "High-stakes presentation and rapid-prototyping skills"
-      ],
-      "tools": [
-        "Rapid Prototyping Kits",
-        "Haptic Actuators",
-        "Arduino / ESP32 XR Peripherals",
-        "LiDAR Scanners"
-      ],
+      "icon": "Cpu",
+      "id": "vert-4",
+      "is_published": true,
+      "number": "04",
       "opportunities": [
         "Hackathon Champions",
         "Patent Holders",
         "Research Presenters",
         "Tech Community Leaders"
       ],
-      "is_published": true,
-      "order_index": 4
+      "order_index": 4,
+      "outcomes": [
+        "National & international hackathon podium finishes",
+        "Provisional patent filings and institutional IP generation",
+        "Published conference papers in IEEE and Springer venues",
+        "High-stakes presentation and rapid-prototyping skills"
+      ],
+      "short_description": "Intensive hackathons, technical paper symposiums, patent clinics, and national challenge teams.",
+      "title": "Skill Development Activities",
+      "tools": [
+        "Rapid Prototyping Kits",
+        "Haptic Actuators",
+        "Arduino / ESP32 XR Peripherals",
+        "LiDAR Scanners"
+      ]
     },
     {
-      "id": "vert-5",
       "slug": "product-development",
-      "number": "05",
-      "title": "Product Development",
-      "short_description": "Incubation of deployable industrial, healthcare, and educational spatial computing solutions.",
       "full_description": "Operating like an advanced engineering product laboratory. Interdisciplinary squads design, engineer, stress-test, and deploy end-to-end applications for engineering education, medical training, smart manufacturing, and cultural preservation.",
       "icon": "Cpu",
-      "outcomes": [
-        "Fully deployable spatial products with end-user validation",
-        "Exploded engineering CAD-to-XR pipelines",
-        "Campus-wide adoption of developed educational modules",
-        "Foundation for technology spin-offs and startup incubation"
-      ],
-      "tools": [
-        "SolidWorks XR Exporter",
-        "Spatial Anchors",
-        "Multi-user Photon Fusion",
-        "Eye & Face Tracking SDKs"
-      ],
+      "id": "vert-5",
+      "is_published": true,
+      "number": "05",
       "opportunities": [
         "Product Engineer - XR",
         "Spatial UX Architect",
         "Startup Founder",
         "Hardware/Software Systems Integrator"
       ],
-      "is_published": true,
-      "order_index": 5
+      "order_index": 5,
+      "outcomes": [
+        "Fully deployable spatial products with end-user validation",
+        "Exploded engineering CAD-to-XR pipelines",
+        "Campus-wide adoption of developed educational modules",
+        "Foundation for technology spin-offs and startup incubation"
+      ],
+      "short_description": "Incubation of deployable industrial, healthcare, and educational spatial computing solutions.",
+      "title": "Product Development",
+      "tools": [
+        "SolidWorks XR Exporter",
+        "Spatial Anchors",
+        "Multi-user Photon Fusion",
+        "Eye & Face Tracking SDKs"
+      ]
     }
   ],
   "projects": [
     {
-      "id": "proj-1",
       "slug": "industrial-safety-training-vr",
-      "title": "Industrial High-Voltage Substation VR Safety Simulator",
       "category": "VR",
       "cover_image": "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=1200&auto=format&fit=crop",
-      "short_desc": "An immersive virtual reality simulation for electrical engineering students and technicians to practice hazardous substation maintenance without real-world electrical danger.",
+      "created_at": "2026-01-15T10:00:00.000Z",
       "full_desc": "Developed in collaboration with regional power utility consultants, this VR application recreates a 230kV electrical substation in millimeter accuracy. Users follow Standard Operating Procedures (SOP), execute safety lockouts, wear virtual personal protective equipment (PPE), and handle emergency arc-flash contingencies in real-time.",
+      "gallery": [
+        "https://images.unsplash.com/photo-1592478411213-6153e4ebc07d?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "id": "proj-1",
+      "is_featured": true,
+      "is_published": true,
+      "mentor": "Dr. S. Ramesh, Professor & CoE Lead",
       "problem": "Real high-voltage electrical substations present lethal hazards during training. Physical access for undergraduate students is severely restricted due to safety protocols and equipment downtime costs.",
+      "result_outcome": "Adopted as a certified laboratory module for 180+ electrical engineering students. Evaluated pre/post test scores demonstrated an 84% reduction in procedural sequencing errors.",
+      "short_desc": "An immersive virtual reality simulation for electrical engineering students and technicians to practice hazardous substation maintenance without real-world electrical danger.",
       "solution": "A photorealistic VR simulator with physics-driven switchgear, dielectric testing procedures, and procedural fail-state safety simulations providing muscle memory retention with zero physical risk.",
+      "team": [
+        "Karthik S. (CSE - Final Year)",
+        "Pooja R. (EEE - 3rd Year)",
+        "Vignesh M. (ECE - 3rd Year)"
+      ],
       "technologies": [
         "Unity 2023 LTS",
         "OpenXR",
@@ -292,33 +306,33 @@
         "C#",
         "Blender CAD Retopology"
       ],
-      "team": [
-        "Karthik S. (CSE - Final Year)",
-        "Pooja R. (EEE - 3rd Year)",
-        "Vignesh M. (ECE - 3rd Year)"
-      ],
-      "mentor": "Dr. S. Ramesh, Professor & CoE Lead",
-      "gallery": [
-        "https://images.unsplash.com/photo-1592478411213-6153e4ebc07d?q=80&w=1000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=1000&auto=format&fit=crop"
-      ],
-      "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "result_outcome": "Adopted as a certified laboratory module for 180+ electrical engineering students. Evaluated pre/post test scores demonstrated an 84% reduction in procedural sequencing errors.",
-      "is_featured": true,
-      "is_published": true,
-      "created_at": "2026-01-15T10:00:00.000Z",
-      "updated_at": "2026-02-10T14:30:00.000Z"
+      "title": "Industrial High-Voltage Substation VR Safety Simulator",
+      "updated_at": "2026-02-10T14:30:00.000Z",
+      "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
     },
     {
-      "id": "proj-2",
       "slug": "medical-cardiac-anatomy-mr",
-      "title": "Mixed Reality Interactive Cardiac Anatomy & Pathology Explorer",
       "category": "MR",
-      "cover_image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1200&auto=format&fit=crop",
-      "short_desc": "A mixed reality spatial application rendering volumetric, beating 3D human heart models with interactive pathology slicing and surgical path planning.",
+      "cover_image": "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=1200&auto=format&fit=crop",
+      "created_at": "2026-01-20T11:00:00.000Z",
       "full_desc": "Transforming complex 2D CT/MRI DICOM scans into real-time volumetric mixed reality holograms. Students and medical trainees can manipulate 3D anatomical structures in physical room space, observe blood hemodynamics, and simulate surgical incisions with bimanual hand gestures.",
+      "gallery": [
+        "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "id": "proj-2",
+      "is_featured": true,
+      "is_published": true,
+      "mentor": "Dr. P. Anitha, Dept of Information Technology",
       "problem": "Traditional flat medical atlases fail to communicate complex 3D cardiac chamber depth, spatial spatial orientation, and dynamic valve mechanics, leading to steep learning curves.",
+      "result_outcome": "Presented at the National Biomedical Engineering Conclave 2026; received Best Student Innovation Award. Pilot clinical study showed significant improvement in spatial comprehension.",
+      "short_desc": "A mixed reality spatial application rendering volumetric, beating 3D human heart models with interactive pathology slicing and surgical path planning.",
       "solution": "A passthrough-enabled MR application utilizing spatial anchors and custom volumetric shaders to project interactive 4D cardiac dynamics directly onto student workbenches.",
+      "team": [
+        "Harish Kumar (IT - Final Year)",
+        "Divya B. (CSE - 3rd Year)",
+        "Siddharth N. (AI/DS - 3rd Year)"
+      ],
       "technologies": [
         "Unreal Engine 5.4",
         "Meta XR SDK",
@@ -326,32 +340,32 @@
         "Volumetric Shader HLSL",
         "DICOM to 3D Pipeline"
       ],
-      "team": [
-        "Harish Kumar (IT - Final Year)",
-        "Divya B. (CSE - 3rd Year)",
-        "Siddharth N. (AI/DS - 3rd Year)"
-      ],
-      "mentor": "Dr. P. Anitha, Dept of Information Technology",
-      "gallery": [
-        "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?q=80&w=1000&auto=format&fit=crop"
-      ],
-      "result_outcome": "Presented at the National Biomedical Engineering Conclave 2026; received Best Student Innovation Award. Pilot clinical study showed significant improvement in spatial comprehension.",
-      "is_featured": true,
-      "is_published": true,
-      "created_at": "2026-01-20T11:00:00.000Z",
-      "updated_at": "2026-02-15T16:00:00.000Z"
+      "title": "Mixed Reality Interactive Cardiac Anatomy & Pathology Explorer",
+      "updated_at": "2026-10-05T06:02:15.224Z"
     },
     {
-      "id": "proj-3",
       "slug": "smart-campus-digital-twin-3d",
-      "title": "Campus 3D Spatial Digital Twin & Energy Visualizer",
       "category": "3D",
       "cover_image": "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?q=80&w=1200&auto=format&fit=crop",
-      "short_desc": "A web-accessible high-fidelity 3D digital twin of the engineering college campus streaming live IoT sensor telemetry and solar energy yields.",
+      "created_at": "2025-11-10T09:00:00.000Z",
       "full_desc": "Constructed using drone photogrammetry, high-precision LiDAR scans, and WebGL optimization. The digital twin models over 45 acres of campus terrain, academic blocks, and solar power installations, feeding real-time power consumption metrics into interactive spatial dashboards.",
+      "gallery": [
+        "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "id": "proj-3",
+      "is_featured": true,
+      "is_published": true,
+      "mentor": "Prof. K. Venkatesh, Head - Digital Infrastructure",
       "problem": "Campus facilities management relied on disparate analog meters and siloed spreadsheets, making energy anomaly detection and spatial resource planning inefficient.",
+      "result_outcome": "Deployed on the college intranet for estate maintenance. Identified peak-load HVAC discrepancies resulting in a measurable 12% campus energy conservation.",
+      "short_desc": "A web-accessible high-fidelity 3D digital twin of the engineering college campus streaming live IoT sensor telemetry and solar energy yields.",
       "solution": "An interactive, lightweight browser-based WebGL digital twin that integrates MQTT IoT sensor streams with spatial 3D building models for instant visual analytics.",
+      "team": [
+        "Arun Balaji (CSE - Final Year)",
+        "Deepak K. (Mechanical - Final Year)",
+        "Sneha M. (IT - 3rd Year)"
+      ],
       "technologies": [
         "Three.js",
         "WebGL",
@@ -360,615 +374,351 @@
         "MQTT IoT",
         "LiDAR Point Cloud"
       ],
-      "team": [
-        "Arun Balaji (CSE - Final Year)",
-        "Deepak K. (Mechanical - Final Year)",
-        "Sneha M. (IT - 3rd Year)"
-      ],
-      "mentor": "Prof. K. Venkatesh, Head - Digital Infrastructure",
-      "gallery": [
-        "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?q=80&w=1000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop"
-      ],
-      "result_outcome": "Deployed on the college intranet for estate maintenance. Identified peak-load HVAC discrepancies resulting in a measurable 12% campus energy conservation.",
-      "is_featured": true,
-      "is_published": true,
-      "created_at": "2025-11-10T09:00:00.000Z",
+      "title": "Campus 3D Spatial Digital Twin & Energy Visualizer",
       "updated_at": "2026-01-05T12:00:00.000Z"
     },
     {
-      "id": "proj-4",
       "slug": "automotive-engine-exploded-ar",
-      "title": "Augmented Reality Exploded Internal Combustion Engine Disassembly",
       "category": "AR",
       "cover_image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
-      "short_desc": "An enterprise AR training tool that superimposes exploded mechanical assemblies onto physical engine blocks using model target recognition.",
+      "created_at": "2025-10-18T10:00:00.000Z",
       "full_desc": "Using advanced computer vision model targets, students point a tablet or AR glasses at a disassembled four-stroke engine to see internal piston tolerances, lubrication flowpaths, and torque specification callouts floating precisely in real space.",
+      "gallery": [
+        "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "id": "proj-4",
+      "is_featured": false,
+      "is_published": true,
+      "mentor": "Dr. G. Ravikumar, Dept of Mechanical Engineering",
       "problem": "Mechanical engineering laboratories face wear-and-tear on training engines and cannot show internal fluid mechanics or combustion phases during physical disassembly.",
+      "result_outcome": "Tested across 3 undergraduate mechanical engineering batches; reduced laboratory equipment setup time by 40% and improved practical exam scores.",
+      "short_desc": "An enterprise AR training tool that superimposes exploded mechanical assemblies onto physical engine blocks using model target recognition.",
       "solution": "Markerless AR superimposition with interactive step-by-step assembly guides, tolerance gauge checks, and animated thermodynamic cycle overlays.",
+      "team": [
+        "Rahul S. (Mechanical - Final Year)",
+        "Praveen T. (ECE - 3rd Year)"
+      ],
       "technologies": [
         "PTC Vuforia Engine",
         "Unity 3D",
         "ARKit / ARCore",
         "Autodesk Inventor CAD Export"
       ],
-      "team": [
-        "Rahul S. (Mechanical - Final Year)",
-        "Praveen T. (ECE - 3rd Year)"
-      ],
-      "mentor": "Dr. G. Ravikumar, Dept of Mechanical Engineering",
-      "gallery": [
-        "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop"
-      ],
-      "result_outcome": "Tested across 3 undergraduate mechanical engineering batches; reduced laboratory equipment setup time by 40% and improved practical exam scores.",
-      "is_featured": false,
-      "is_published": true,
-      "created_at": "2025-10-18T10:00:00.000Z",
+      "title": "Augmented Reality Exploded Internal Combustion Engine Disassembly",
       "updated_at": "2025-12-20T11:00:00.000Z"
     },
     {
-      "id": "proj-5",
       "slug": "heritage-temple-spatial-xr",
-      "title": "Ancient Temple Architectural Heritage Spatial XR Walkthrough",
       "category": "XR",
       "cover_image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1200&auto=format&fit=crop",
-      "short_desc": "A cultural heritage preservation project reconstructing ancient South Indian temple architecture through photogrammetry and spatial audio acoustics.",
+      "created_at": "2025-09-05T08:30:00.000Z",
       "full_desc": "Digitally preserving intricate monolithic stone carvings and sanctum acoustics using drone photogrammetry and physically-based rendering in Unreal Engine 5 with Lumen illumination.",
+      "gallery": [
+        "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1000&auto=format&fit=crop"
+      ],
+      "id": "proj-5",
+      "is_featured": false,
+      "is_published": true,
+      "mentor": "Prof. M. Selvam, Digital Heritage Initiative",
       "problem": "Historical stone structures suffer environmental weathering, while public access to delicate architectural features is restricted.",
+      "result_outcome": "Featured in the Tamil Nadu State Innovation Showcase; permanent interactive kiosk installed at the college central library.",
+      "short_desc": "A cultural heritage preservation project reconstructing ancient South Indian temple architecture through photogrammetry and spatial audio acoustics.",
       "solution": "Millimeter-precise digital archival and immersive walkthrough with spatialized temple bell reverb and interactive bilingual epigraphy guides.",
+      "team": [
+        "Keerthana V. (CSE - 3rd Year)",
+        "Naveen Raj (IT - 3rd Year)"
+      ],
       "technologies": [
         "Unreal Engine 5.3",
         "RealityCapture",
         "Nanite & Lumen",
         "Ambisonic Spatial Audio"
       ],
-      "team": [
-        "Keerthana V. (CSE - 3rd Year)",
-        "Naveen Raj (IT - 3rd Year)"
-      ],
-      "mentor": "Prof. M. Selvam, Digital Heritage Initiative",
-      "gallery": [
-        "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1000&auto=format&fit=crop"
-      ],
-      "result_outcome": "Featured in the Tamil Nadu State Innovation Showcase; permanent interactive kiosk installed at the college central library.",
-      "is_featured": false,
-      "is_published": true,
-      "created_at": "2025-09-05T08:30:00.000Z",
+      "title": "Ancient Temple Architectural Heritage Spatial XR Walkthrough",
       "updated_at": "2025-11-12T15:00:00.000Z"
     }
   ],
   "events": [
     {
-      "id": "event-1",
       "slug": "spatial-computing-hackathon-2026",
-      "title": "National Spatial Hack 2026: 36-Hour XR Hackathon",
       "category": "Hackathon",
-      "poster": "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop",
-      "start_date": "2026-11-15",
+      "created_at": "2026-02-01T10:00:00.000Z",
       "end_date": "2026-11-16",
-      "time": "08:00 AM – 08:00 PM (36 Hours Continuous)",
-      "venue": "AR/VR Centre of Excellence & Central Auditorium",
-      "registration_url": "https://spatialhack2026.institute.edu",
-      "short_desc": "Our flagship national hackathon challenging student developers across India to build transformative spatial computing solutions for healthcare, industry, and education.",
       "full_desc": "National Spatial Hack 2026 brings together over 50 shortlisted student teams for an intensive 36-hour sprint. Participants receive on-site access to Meta Quest 3 headsets, high-performance GPU workstations, and direct guidance from industry mentors from leading spatial computing enterprises.",
+      "gallery": [
+        "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1000&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1000&auto=format&fit=crop"
+      ],
       "highlights": [
         "Total prize pool of INR 1,50,000 across 3 innovation tracks",
         "On-site hardware loaner pool: Meta Quest 3, Vive Pro, HoloLens 2",
         "Mentorship clinics by Unity Certified Experts and XR Founders",
         "Direct interview opportunities for top 10 finalist teams"
       ],
-      "gallery": [
-        "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1000&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1000&auto=format&fit=crop"
-      ],
+      "id": "event-1",
       "is_featured": true,
       "is_published": true,
-      "created_at": "2026-02-01T10:00:00.000Z",
-      "updated_at": "2026-02-20T12:00:00.000Z"
+      "poster": "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop",
+      "registration_url": "https://spatialhack2026.institute.edu",
+      "short_desc": "Our flagship national hackathon challenging student developers across India to build transformative spatial computing solutions for healthcare, industry, and education.",
+      "start_date": "2026-11-15",
+      "time": "08:00 AM – 08:00 PM (36 Hours Continuous)",
+      "title": "National Spatial Hack 2026: 36-Hour XR Hackathon",
+      "updated_at": "2026-02-20T12:00:00.000Z",
+      "venue": "AR/VR Centre of Excellence & Central Auditorium"
     },
     {
-      "id": "event-2",
       "slug": "unity-unreal-bootcamp-2026",
-      "title": "Hands-on Bootcamp: Building OpenXR Applications with Unity & Unreal",
       "category": "Bootcamp",
-      "poster": "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=1200&auto=format&fit=crop",
-      "start_date": "2026-10-20",
+      "created_at": "2026-02-05T11:00:00.000Z",
       "end_date": "2026-10-22",
-      "time": "09:00 AM – 04:00 PM Daily",
-      "venue": "AR/VR CoE Lab, 2nd Floor, Room COE-204",
-      "registration_url": "https://institute.edu/events/xr-bootcamp",
-      "short_desc": "An intensive 3-day technical bootcamp covering OpenXR integration, locomotion mechanics, and hand tracking interactions.",
       "full_desc": "Designed for intermediate student coders who want to build cross-platform immersive applications. Each participant will build and deploy two complete VR mini-games onto standalone headsets during the workshop.",
+      "gallery": [
+        "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=1000&auto=format&fit=crop"
+      ],
       "highlights": [
         "OpenXR standard specification breakdown and architecture",
         "Physics-based interaction toolkit setup and raycast interactor customization",
         "Optimization techniques for 90 FPS standalone VR rendering",
         "Hands-on certificate upon final capstone review"
       ],
-      "gallery": [
-        "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=1000&auto=format&fit=crop"
-      ],
+      "id": "event-2",
       "is_featured": true,
       "is_published": true,
-      "created_at": "2026-02-05T11:00:00.000Z",
-      "updated_at": "2026-02-18T14:00:00.000Z"
+      "poster": "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=1200&auto=format&fit=crop",
+      "registration_url": "https://institute.edu/events/xr-bootcamp",
+      "short_desc": "An intensive 3-day technical bootcamp covering OpenXR integration, locomotion mechanics, and hand tracking interactions.",
+      "start_date": "2026-10-20",
+      "time": "09:00 AM – 04:00 PM Daily",
+      "title": "Hands-on Bootcamp: Building OpenXR Applications with Unity & Unreal",
+      "updated_at": "2026-02-18T14:00:00.000Z",
+      "venue": "AR/VR CoE Lab, 2nd Floor, Room COE-204"
     },
     {
-      "id": "event-3",
       "slug": "webxr-spatial-web-workshop",
-      "title": "WebXR & Three.js: Spatial Computing in Modern Web Browsers",
       "category": "Workshop",
-      "poster": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200&auto=format&fit=crop",
-      "start_date": "2026-01-25",
+      "created_at": "2025-12-10T10:00:00.000Z",
       "end_date": "2026-01-25",
-      "time": "10:00 AM – 03:30 PM",
-      "venue": "Computing Lab 4 & Hybrid Online",
-      "short_desc": "Exploring frictionless browser-based VR/AR experiences with Three.js, WebGL, and the W3C WebXR Device API.",
       "full_desc": "Over 120 attendees participated in this hands-on workshop learning how to create spatial 3D web applications accessible from smartphones, laptops, and VR headsets with no app-store installation requirement.",
+      "gallery": [
+        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1000&auto=format&fit=crop"
+      ],
       "highlights": [
         "Fundamentals of 3D scenegraphs in Three.js and shader programming",
         "WebXR hit-testing for browser-based augmented reality",
         "Asset compression using glTF Draco and KTX2 texture formats",
         "Live deployment of 30+ student spatial web pages to Vercel"
       ],
-      "gallery": [
-        "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1000&auto=format&fit=crop"
-      ],
+      "id": "event-3",
       "is_featured": true,
       "is_published": true,
-      "created_at": "2025-12-10T10:00:00.000Z",
-      "updated_at": "2026-01-26T10:00:00.000Z"
+      "poster": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=1200&auto=format&fit=crop",
+      "short_desc": "Exploring frictionless browser-based VR/AR experiences with Three.js, WebGL, and the W3C WebXR Device API.",
+      "start_date": "2026-01-25",
+      "time": "10:00 AM – 03:30 PM",
+      "title": "WebXR & Three.js: Spatial Computing in Modern Web Browsers",
+      "updated_at": "2026-01-26T10:00:00.000Z",
+      "venue": "Computing Lab 4 & Hybrid Online"
     },
     {
-      "id": "event-4",
       "slug": "industry-talk-spatial-audio",
-      "title": "Industry Expert Session: Spatial Audio and Psychoacoustics in XR",
       "category": "Guest Lecture",
-      "poster": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=1200&auto=format&fit=crop",
-      "start_date": "2025-11-18",
+      "created_at": "2025-10-25T09:00:00.000Z",
       "end_date": "2025-11-18",
-      "time": "02:00 PM – 04:30 PM",
-      "venue": "PEC Seminar Hall 1",
-      "short_desc": "A masterclass on HRTF modeling, ambisonics, and binaural audio design delivered by senior audio engineers.",
       "full_desc": "Focusing on how sound propagation, reflection, and head-related transfer functions create convincing presence in spatial computing simulations.",
+      "gallery": [
+        "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=1000&auto=format&fit=crop"
+      ],
       "highlights": [
         "Acoustic geometry and raytracing sound engines in game engines",
         "FMOD and Wwise integration with Unity XR",
         "Live psychoacoustic listening tests comparing mono vs binaural spatial cues"
       ],
-      "gallery": [
-        "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=1000&auto=format&fit=crop"
-      ],
+      "id": "event-4",
       "is_featured": false,
       "is_published": true,
-      "created_at": "2025-10-25T09:00:00.000Z",
-      "updated_at": "2025-11-19T10:00:00.000Z"
+      "poster": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=1200&auto=format&fit=crop",
+      "short_desc": "A masterclass on HRTF modeling, ambisonics, and binaural audio design delivered by senior audio engineers.",
+      "start_date": "2025-11-18",
+      "time": "02:00 PM – 04:30 PM",
+      "title": "Industry Expert Session: Spatial Audio and Psychoacoustics in XR",
+      "updated_at": "2025-11-19T10:00:00.000Z",
+      "venue": "PEC Seminar Hall 1"
     }
   ],
   "achievements": [
     {
       "id": "ach-1",
-      "title": "First Place at National Smart XR Innovators Hackathon 2026",
       "category": "Hackathon",
-      "year": "2026",
+      "created_at": "2026-02-12T10:00:00.000Z",
       "date": "February 2026",
-      "description": "Our student team \"SpatialMinds\" bagged the 1st prize and a cash award of INR 75,000 for developing a Mixed Reality surgical pre-planning assistant.",
-      "student_team": "Karthik S., Harish Kumar, Divya B.",
       "department": "Computer Science & Engineering and Information Technology",
+      "description": "Our student team \"SpatialMinds\" bagged the 1st prize and a cash award of INR 75,000 for developing a Mixed Reality surgical pre-planning assistant.",
       "image": "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?q=80&w=1000&auto=format&fit=crop",
-      "supporting_info": "Competed against 140+ engineering college teams across South India; judged by senior technical leaders from global XR enterprises.",
       "is_featured": true,
       "is_published": true,
-      "created_at": "2026-02-12T10:00:00.000Z"
+      "student_team": "Karthik S., Harish Kumar, Divya B.",
+      "supporting_info": "Competed against 140+ engineering college teams across South India; judged by senior technical leaders from global XR enterprises.",
+      "title": "First Place at National Smart XR Innovators Hackathon 2026",
+      "year": "2026"
     },
     {
       "id": "ach-2",
-      "title": "Patent Published: Haptic Feedback Glove for Virtual Tool Simulation",
       "category": "Patent",
-      "year": "2026",
+      "created_at": "2026-01-28T10:00:00.000Z",
       "date": "January 2026",
-      "description": "Indian Patent Office published our provisional patent (Application No: 202641002341) for a low-cost vibrotactile and tendon-actuated glove peripheral.",
-      "student_team": "Rahul S., Vignesh M., Dr. S. Ramesh (Faculty)",
       "department": "Mechanical Engineering & Electronics & Communication Engineering",
+      "description": "Indian Patent Office published our provisional patent (Application No: 202641002341) for a low-cost vibrotactile and tendon-actuated glove peripheral.",
       "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000&auto=format&fit=crop",
-      "supporting_info": "Provisional specification filed with Indian Patent Office; incorporates active torque resistance for simulating hand tool resistance in VR.",
       "is_featured": true,
       "is_published": true,
-      "created_at": "2026-01-28T10:00:00.000Z"
+      "student_team": "Rahul S., Vignesh M., Dr. S. Ramesh (Faculty)",
+      "supporting_info": "Provisional specification filed with Indian Patent Office; incorporates active torque resistance for simulating hand tool resistance in VR.",
+      "title": "Patent Published: Haptic Feedback Glove for Virtual Tool Simulation",
+      "year": "2026"
     },
     {
       "id": "ach-3",
-      "title": "14 Students Selected for Enterprise XR Internships",
       "category": "Internship",
-      "year": "2025",
+      "created_at": "2025-12-22T10:00:00.000Z",
       "date": "December 2025",
-      "description": "Fourteen CoE students secured paid semester internships at top tier spatial technology companies, defense simulation labs, and digital twin consultancies.",
-      "student_team": "Batch of 2025-2026 CoE Cohort",
       "department": "Interdepartmental (CSE, IT, ECE, Mech)",
+      "description": "Fourteen CoE students secured paid semester internships at top tier spatial technology companies, defense simulation labs, and digital twin consultancies.",
       "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1000&auto=format&fit=crop",
-      "supporting_info": "Average monthly internship stipend of INR 25,000; includes roles in Unreal Engine graphics programming and industrial simulation.",
       "is_featured": true,
       "is_published": true,
-      "created_at": "2025-12-22T10:00:00.000Z"
+      "student_team": "Batch of 2025-2026 CoE Cohort",
+      "supporting_info": "Average monthly internship stipend of INR 25,000; includes roles in Unreal Engine graphics programming and industrial simulation.",
+      "title": "14 Students Selected for Enterprise XR Internships",
+      "year": "2025"
     },
     {
       "id": "ach-4",
-      "title": "Best Institutional XR Centre Award at Tamil Nadu EdTech Conclave",
       "category": "Award",
-      "year": "2025",
+      "created_at": "2025-10-30T10:00:00.000Z",
       "date": "October 2025",
-      "description": "Recognized as an outstanding institutional Center of Excellence for immersive learning infrastructure and student practical output.",
-      "student_team": "AR/VR Centre of Excellence Faculty & Student Leads",
       "department": "Computer Science & Engineering",
+      "description": "Recognized as an outstanding institutional Center of Excellence for immersive learning infrastructure and student practical output.",
       "image": "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1000&auto=format&fit=crop",
-      "supporting_info": "Conferred by the Higher Education Department in partnership with industry consortiums.",
       "is_featured": false,
       "is_published": true,
-      "created_at": "2025-10-30T10:00:00.000Z"
+      "student_team": "AR/VR Centre of Excellence Faculty & Student Leads",
+      "supporting_info": "Conferred by the Higher Education Department in partnership with industry consortiums.",
+      "title": "Best Institutional XR Centre Award at Tamil Nadu EdTech Conclave",
+      "year": "2025"
     },
     {
       "id": "ach-5",
-      "title": "IEEE Conference Paper Publication on Low-Latency Wireless XR",
       "category": "Conference",
-      "year": "2025",
+      "created_at": "2025-08-25T10:00:00.000Z",
       "date": "August 2025",
-      "description": "Research paper titled \"Optimizing Motion-to-Photon Latency in Wi-Fi 6 Connected VR Headsets for Industrial Teleoperation\" accepted at IEEE ICCSP.",
-      "student_team": "Deepak K., Pooja R., Dr. P. Anitha",
       "department": "Electronics & Communication Engineering",
+      "description": "Research paper titled \"Optimizing Motion-to-Photon Latency in Wi-Fi 6 Connected VR Headsets for Industrial Teleoperation\" accepted at IEEE ICCSP.",
       "image": "https://images.unsplash.com/photo-1507668077129-56e32842fceb?q=80&w=1000&auto=format&fit=crop",
-      "supporting_info": "Published in IEEE Xplore digital library; DOI indexed.",
       "is_featured": false,
       "is_published": true,
-      "created_at": "2025-08-25T10:00:00.000Z"
+      "student_team": "Deepak K., Pooja R., Dr. P. Anitha",
+      "supporting_info": "Published in IEEE Xplore digital library; DOI indexed.",
+      "title": "IEEE Conference Paper Publication on Low-Latency Wireless XR",
+      "year": "2025"
     }
   ],
   "industry_records": [
     {
       "id": "ind-1",
-      "name": "Unity Technologies Academic Alliance",
       "category": "Partner",
-      "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&auto=format&fit=crop",
-      "description": "Official academic engagement providing licensed developer toolchains, curriculum frameworks, and globally recognized student certification pathways.",
-      "date_or_term": "Active MoU (2024 – 2027)",
       "collaboration_details": "Curriculum mapping with Unity Certified Associate and Professional exams, beta access to Unity XR interaction toolkits, and guest masterclasses.",
+      "date_or_term": "Active MoU (2024 – 2027)",
+      "description": "Official academic engagement providing licensed developer toolchains, curriculum frameworks, and globally recognized student certification pathways.",
+      "is_published": true,
       "key_outcomes": [
         "Official Unity student certification center",
         "Direct access to Unity academic engineering support",
         "Curriculum credits integrated with university electives"
       ],
-      "is_published": true,
+      "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&auto=format&fit=crop",
+      "name": "Unity Technologies Academic Alliance",
       "order_index": 1
     },
     {
       "id": "ind-2",
-      "name": "PTC Academic & Vuforia Enterprise",
       "category": "MoU",
-      "logo": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=400&auto=format&fit=crop",
-      "description": "Bilateral partnership focusing on Industrial Augmented Reality, CAD-to-AR digital work instructions, and spatial factory floor optimization.",
-      "date_or_term": "MoU signed September 2024",
       "collaboration_details": "Enterprise software provisioning of Vuforia Studio and Vuforia Engine for training engineering students on real-world industrial IoT workflows.",
+      "date_or_term": "MoU signed September 2024",
+      "description": "Bilateral partnership focusing on Industrial Augmented Reality, CAD-to-AR digital work instructions, and spatial factory floor optimization.",
+      "is_published": true,
       "key_outcomes": [
         "Vuforia Studio industrial AR training lab setup",
         "Joint capstone projects with manufacturing clients",
         "Faculty development programs conducted biannually"
       ],
-      "is_published": true,
+      "logo": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=400&auto=format&fit=crop",
+      "name": "PTC Academic & Vuforia Enterprise",
       "order_index": 2
     },
     {
       "id": "ind-3",
-      "name": "Industrial Visit to Spatial Tech Labs, Chennai",
       "category": "Industrial Visit",
-      "logo": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=400&auto=format&fit=crop",
-      "description": "A dedicated one-day exposure visit for 45 CoE student developers to observe live industrial VR training rigs and optical motion capture studios.",
-      "date_or_term": "November 14, 2025",
       "collaboration_details": "Students observed 24-camera Vicon optical tracking volumes, haptic force-feedback simulators, and heavy engineering virtual commissioning.",
+      "date_or_term": "November 14, 2025",
+      "description": "A dedicated one-day exposure visit for 45 CoE student developers to observe live industrial VR training rigs and optical motion capture studios.",
+      "is_published": true,
       "key_outcomes": [
         "Observed live motion-capture shoot for game animation",
         "Interactive Q&A session with Chief Technology Officer",
         "3 student teams invited for summer internship screenings"
       ],
-      "is_published": true,
+      "logo": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=400&auto=format&fit=crop",
+      "name": "Industrial Visit to Spatial Tech Labs, Chennai",
       "order_index": 3
     },
     {
       "id": "ind-4",
-      "name": "Expert Session: Enterprise OpenXR Runtimes & VisionOS",
       "category": "Expert Session",
-      "logo": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=400&auto=format&fit=crop",
-      "description": "Technical deep-dive delivered by Principal XR Systems Architect from a tier-1 multinational technology consulting corporation.",
-      "date_or_term": "January 10, 2026",
       "collaboration_details": "Covered architectural mechanics of spatial eye tracking, dynamic foveated rendering pipelines, and enterprise application security in headsets.",
+      "date_or_term": "January 10, 2026",
+      "description": "Technical deep-dive delivered by Principal XR Systems Architect from a tier-1 multinational technology consulting corporation.",
+      "is_published": true,
       "key_outcomes": [
         "Attended by 110 students and 15 faculty members",
         "Recorded technical masterclass archived for CoE students"
       ],
-      "is_published": true,
+      "logo": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=400&auto=format&fit=crop",
+      "name": "Expert Session: Enterprise OpenXR Runtimes & VisionOS",
       "order_index": 4
     }
   ],
-  "student_requests": [
-    {
-      "full_name": "Vigneshwaran R",
-      "register_number": "111422104088",
-      "department": "Computer Science and Engineering",
-      "year": "3rd Year",
-      "section": "B",
-      "email": "vignesh.r@gmail.com",
-      "college_email": "vignesh.r@gmail.com",
-      "mobile_number": "+91 99401 88888",
-      "interests": [
-        "VR",
-        "AR",
-        "Simulation",
-        "Product Development"
-      ],
-      "experience_level": "Intermediate",
-      "existing_skills": "Unity, C#, Blender 3D modeling",
-      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
-      "custom_field_responses": {},
-      "id": "req-1791019442129-u5uor",
-      "status": "REJECTED",
-      "internal_notes": "Prerequisites incomplete for current semester intake. Encouraged to reapply next cohort.",
-      "submitted_at": "2026-10-03T09:24:02.129Z",
-      "updated_at": "2026-10-03T09:24:02.190Z",
-      "rejected_at": "2026-10-03T09:24:02.190Z"
-    },
-    {
-      "full_name": "Vigneshwaran R",
-      "register_number": "111422104088",
-      "department": "Computer Science and Engineering",
-      "year": "3rd Year",
-      "section": "B",
-      "email": "vignesh.r@gmail.com",
-      "college_email": "vignesh.r@gmail.com",
-      "mobile_number": "+91 99401 88888",
-      "interests": [
-        "VR",
-        "AR",
-        "Simulation",
-        "Product Development"
-      ],
-      "experience_level": "Intermediate",
-      "existing_skills": "Unity, C#, Blender 3D modeling",
-      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
-      "custom_field_responses": {},
-      "id": "req-1791019105610-wczlt",
-      "status": "REJECTED",
-      "internal_notes": "Prerequisites incomplete for current semester intake. Encouraged to reapply next cohort.",
-      "submitted_at": "2026-10-03T09:18:25.610Z",
-      "updated_at": "2026-10-03T09:18:25.671Z",
-      "rejected_at": "2026-10-03T09:18:25.671Z"
-    },
-    {
-      "full_name": "Test Candidate 1791019101184",
-      "register_number": "111422104568",
-      "department": "Computer Science and Engineering",
-      "year": "3rd Year",
-      "section": "B",
-      "email": "candidate_1791019101184@gmail.com",
-      "college_email": "candidate_1791019101184@gmail.com",
-      "mobile_number": "+91 98401 99999",
-      "interests": [
-        "AR",
-        "Spatial SDKs"
-      ],
-      "experience_level": "Intermediate",
-      "existing_skills": "Unity, C#, Blender",
-      "motivation": "I am deeply passionate about spatial audio and hand tracking research.",
-      "custom_field_responses": {
-        "portfolio_url": "https://github.com/sample-xr-dev"
-      },
-      "id": "req-1791019101185-ivgn1",
-      "status": "NEW",
-      "internal_notes": "",
-      "submitted_at": "2026-10-03T09:18:21.185Z",
-      "updated_at": "2026-10-03T09:18:21.185Z"
-    },
-    {
-      "full_name": "Vigneshwaran R",
-      "register_number": "111422104088",
-      "department": "Computer Science and Engineering",
-      "year": "3rd Year",
-      "section": "B",
-      "email": "vignesh.r@gmail.com",
-      "college_email": "vignesh.r@gmail.com",
-      "mobile_number": "+91 99401 88888",
-      "interests": [
-        "VR",
-        "AR",
-        "Simulation",
-        "Product Development"
-      ],
-      "experience_level": "Intermediate",
-      "existing_skills": "Unity, C#, Blender 3D modeling",
-      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
-      "custom_field_responses": {},
-      "id": "req-1791019060765-s42zh",
-      "status": "REJECTED",
-      "internal_notes": "Prerequisites incomplete for current semester intake. Encouraged to reapply next cohort.",
-      "submitted_at": "2026-10-03T09:17:40.765Z",
-      "updated_at": "2026-10-03T09:17:40.857Z",
-      "rejected_at": "2026-10-03T09:17:40.857Z"
-    },
-    {
-      "full_name": "Vigneshwaran R",
-      "register_number": "111422104088",
-      "department": "Computer Science and Engineering",
-      "year": "3rd Year",
-      "section": "B",
-      "email": "vignesh.r@gmail.com",
-      "college_email": "vignesh.r@gmail.com",
-      "mobile_number": "+91 99401 88888",
-      "interests": [
-        "VR",
-        "AR",
-        "Simulation",
-        "Product Development"
-      ],
-      "experience_level": "Intermediate",
-      "existing_skills": "Unity, C#, Blender 3D modeling",
-      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
-      "id": "req-1791014411394-7r16v",
-      "status": "REJECTED",
-      "internal_notes": "Prerequisites incomplete for current semester intake. Encouraged to reapply next cohort.",
-      "submitted_at": "2026-10-03T08:00:11.394Z",
-      "updated_at": "2026-10-03T08:00:11.455Z",
-      "rejected_at": "2026-10-03T08:00:11.455Z"
-    },
-    {
-      "full_name": "Vigneshwaran R",
-      "register_number": "111422104088",
-      "department": "Computer Science and Engineering",
-      "year": "3rd Year",
-      "section": "B",
-      "email": "vignesh.r@gmail.com",
-      "college_email": "vignesh.r@gmail.com",
-      "mobile_number": "+91 99401 88888",
-      "interests": [
-        "VR",
-        "AR",
-        "Simulation",
-        "Product Development"
-      ],
-      "experience_level": "Intermediate",
-      "existing_skills": "Unity, C#, Blender 3D modeling",
-      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
-      "id": "req-1791010046645-i9fo9",
-      "status": "REJECTED",
-      "internal_notes": "Prerequisites incomplete for current semester intake. Encouraged to reapply next cohort.",
-      "submitted_at": "2026-10-03T06:47:26.645Z",
-      "updated_at": "2026-10-03T06:47:26.724Z",
-      "rejected_at": "2026-10-03T06:47:26.724Z"
-    },
-    {
-      "full_name": "Vigneshwaran R",
-      "register_number": "111422104088",
-      "department": "Computer Science and Engineering",
-      "year": "3rd Year",
-      "section": "B",
-      "email": "vignesh.r@gmail.com",
-      "college_email": "vignesh.r@gmail.com",
-      "mobile_number": "+91 99401 88888",
-      "interests": [
-        "VR",
-        "AR",
-        "Simulation",
-        "Product Development"
-      ],
-      "experience_level": "Intermediate",
-      "existing_skills": "Unity, C#, Blender 3D modeling",
-      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
-      "id": "req-1791009951718-5lc5e",
-      "status": "REJECTED",
-      "internal_notes": "Prerequisites incomplete for current semester intake. Encouraged to reapply next cohort.",
-      "submitted_at": "2026-10-03T06:45:51.718Z",
-      "updated_at": "2026-10-03T06:45:51.796Z"
-    },
-    {
-      "full_name": "Priya Sharma",
-      "register_number": "111423104999",
-      "department": "Information Technology",
-      "year": "2nd Year",
-      "section": "A",
-      "email": "priya.sharma99@gmail.com",
-      "college_email": "priya.sharma99@gmail.com",
-      "mobile_number": "+91 98401 99999",
-      "interests": [
-        "AR",
-        "UI/UX"
-      ],
-      "experience_level": "Beginner",
-      "existing_skills": "",
-      "motivation": "I want to build immersive AR learning applications for schools.",
-      "id": "req-1790843369780-layjx",
-      "status": "NEW",
-      "internal_notes": "",
-      "submitted_at": "2026-10-01T08:29:29.780Z",
-      "updated_at": "2026-10-01T08:29:29.780Z"
-    },
-    {
-      "id": "req-1",
-      "full_name": "Ananya Krishnan",
-      "register_number": "111422104012",
-      "department": "Computer Science and Engineering",
-      "year": "3rd Year",
-      "section": "A",
-      "email": "ananya.k@gmail.com",
-      "mobile_number": "+91 98401 23456",
-      "interests": [
-        "VR",
-        "Game Development",
-        "Simulation",
-        "Product Development"
-      ],
-      "experience_level": "Intermediate",
-      "existing_skills": "Intermediate C# scripting, built 2 simple 3D game prototypes in Unity, basic 3D mesh modeling in Blender.",
-      "motivation": "I want to build clinical rehabilitation simulations for physical therapy. The CoE provides the high-end headsets and mentorship that I cannot access alone, and I want to collaborate with students from biomedical and mechanical engineering.",
-      "status": "NEW",
-      "internal_notes": "Strong Unity background. Schedule for technical interview for the upcoming medical simulation project squad.",
-      "submitted_at": "2026-02-18T09:15:00.000Z",
-      "updated_at": "2026-02-18T09:15:00.000Z"
-    },
-    {
-      "id": "req-2",
-      "full_name": "Suresh Varma",
-      "register_number": "111423205045",
-      "department": "Electronics and Communication Engineering",
-      "year": "2nd Year",
-      "section": "B",
-      "email": "suresh.varma@gmail.com",
-      "mobile_number": "+91 97910 87654",
-      "interests": [
-        "AR",
-        "MR",
-        "UI/UX",
-        "Hackathons"
-      ],
-      "experience_level": "Beginner",
-      "existing_skills": "C/C++, Arduino microcontroller prototyping, foundational Python, enthusiastic about computer vision.",
-      "motivation": "Passionate about smart glasses and how heads-up displays can assist assembly line workers. I want to learn spatial computing pipelines and participate in national hackathons under the CoE banner.",
-      "status": "WAITING",
-      "internal_notes": "Good hardware and embedded foundation. Keep in waiting pool for the next cohort onboarding in April.",
-      "submitted_at": "2026-02-10T14:20:00.000Z",
-      "updated_at": "2026-10-01T07:33:17.752Z"
-    },
-    {
-      "id": "req-3",
-      "full_name": "Meera Nandakumar",
-      "register_number": "111421106028",
-      "department": "Information Technology",
-      "year": "Final Year",
-      "section": "A",
-      "email": "meera.nanda@gmail.com",
-      "mobile_number": "+91 94440 55432",
-      "interests": [
-        "3D Modelling",
-        "Simulation",
-        "Industry Projects",
-        "Internships"
-      ],
-      "experience_level": "Experienced",
-      "existing_skills": "Three.js, WebGL, React, Blender asset texturing, WebXR device API, glTF optimization.",
-      "motivation": "I have already developed a WebGL digital twin module. I want to join the CoE product development team to work directly on industry-sponsored enterprise XR projects.",
-      "status": "JOINED",
-      "internal_notes": "Approved and inducted into Product Development Vertical (Digital Twin Core Team).",
-      "submitted_at": "2026-01-10T08:00:00.000Z",
-      "updated_at": "2026-01-15T10:30:00.000Z",
-      "joined_at": "2026-01-15T10:30:00.000Z"
-    }
-  ],
+  "student_requests": [],
   "request_content": {
-    "title": "Apply to Join the AR/VR Centre of Excellence",
-    "subtitle": "COHORT 2026-2027 INTAKE OPEN",
-    "guidelines_heading": "ADMISSION GUIDELINES & SQUAD ALLOCATION",
-    "guidelines_description": "Candidates are evaluated continuously based on technical enthusiasm, problem-solving mindset, and commitment. Formal prior XR experience is NOT required — beginner to advanced tracks are supported.",
+    "custom_fields": [
+      {
+        "id": "portfolio_url",
+        "label": "Portfolio or GitHub Repository URL",
+        "type": "text",
+        "placeholder": "https://github.com/myusername",
+        "required": false,
+        "help_text": "Share links to your prior 3D, Unity, or code repositories."
+      }
+    ],
+    "departments": [
+      "Artificial Intelligence and Data Science",
+      "Computer Science and Engineering",
+      "Information Technology",
+      "Artificial Intelligence and Machine Learning",
+      "Electronics and Communication Engineering",
+      "Electrical and Electronics Engineering",
+      "Cyber Security",
+      "Computer Science and Business System",
+      "Bio Technology",
+      "Mechanical Engineering"
+    ],
     "eligibility_criteria": [
       "Open to all undergraduate & postgraduate engineering students",
-      "Minimum 4 hours/week commitment to lab projects or squad sprints",
       "Access granted to real hardware: Apple Vision Pro, Meta Quest 3, HoloLens 2, HTC Vive",
       "Mentorship by leading faculty researchers and XR industry partners"
     ],
+    "guidelines_description": "Candidates are evaluated continuously based on technical enthusiasm, problem-solving mindset, and commitment. Formal prior XR experience is NOT required — beginner to advanced tracks are supported.",
+    "guidelines_heading": "ADMISSION GUIDELINES & SQUAD ALLOCATION",
     "interest_options": [
       "AR",
       "VR",
@@ -987,19 +737,11 @@
       "Self-Learning",
       "Still Exploring"
     ],
-    "keycard_title": "HOLO_KEYCARD // ADMISSION DOSSIER",
     "keycard_badge": "REAL-TIME 3D WAFER",
+    "keycard_title": "HOLO_KEYCARD // ADMISSION DOSSIER",
+    "subtitle": "COHORT 2026-2027 INTAKE OPEN",
     "success_heading": "Welcome to the Frontier.",
     "success_message": "Your joining application has been securely transmitted to the AR/VR Centre of Excellence faculty committee. Look for an induction briefing sent to your personal email within 72 hours.",
-    "custom_fields": [
-      {
-        "id": "portfolio_url",
-        "label": "Portfolio or GitHub Repository URL",
-        "type": "text",
-        "placeholder": "https://github.com/myusername",
-        "required": false,
-        "help_text": "Share links to your prior 3D, Unity, or code repositories."
-      }
-    ]
+    "title": "Apply to Join the AR/VR Centre of Excellence"
   }
 }

@@ -42,11 +42,11 @@ A full-stack, production-quality digital ecosystem for the **AR/VR Centre of Exc
 - **Authentication**: Signed JWT session stored in an HttpOnly cookie with brute-force rate limiting (5 failed attempts trigger a 5-minute lockout).
 - **Admin Dashboard** (`/control/dashboard`): Live KPI cards for New Requests, Waiting, Joined, Events, Projects, Achievements, Recent Requests, and Upcoming Events.
 - **Student Request Management** (`/control/requests`):
-  - Filters by Status (`NEW`, `WAITING`, `JOINED`), Department, Year, Interest, and Search.
+  - Filters by Status (`NEW`, `WAITING`, `JOINED`, `REJECTED`), Department, Year, Interest, and Search.
   - Review Modal with student details, motivation, timestamps.
   - Private Administrator Notes (persisted confidentially).
-  - Status Transitions: `[ JOIN COE ]`, `[ KEEP WAITING ]`.
-  - Permanent Rejection: `[ REJECT & DELETE ]` with confirmation modal permanently purges the record (no rejected archive).
+  - Status Transitions: `[ JOIN COE ]`, `[ KEEP WAITING ]`, `[ REJECT ]`.
+  - Rejection Archive: Student records cannot be deleted and are permanently archived under `REJECTED` status.
 - **Content Management**:
   - Home Page Copy (`/control/content/home`)
   - About Page Copy (`/control/content/about`)

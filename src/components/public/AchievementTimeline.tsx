@@ -11,15 +11,36 @@ interface AchievementTimelineProps {
 export default function AchievementTimeline({ achievements }: AchievementTimelineProps) {
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const categories = [
-    'All',
-    'Hackathon',
-    'Competition',
-    'Patent',
-    'Internship',
-    'Award',
-    'Conference',
-  ];
+  // Only display categories that actually have at least one achievement recorded
+  const categories = React.useMemo(() => {
+    const presentCats = new Set<string>();
+    achievements.forEach((a) => {
+      if (a.category && a.category.trim()) {
+        presentCats.add(a.category.trim());
+      }
+    });
+
+    const standardOrder = ['Hackathon', 'Competition', 'Patent', 'Internship', 'Award', 'Conference'];
+    const ordered: string[] = ['All'];
+    standardOrder.forEach((cat) => {
+      if (presentCats.has(cat)) {
+        ordered.push(cat);
+        presentCats.delete(cat);
+      }
+    });
+    // Any custom or extra categories with achievements
+    Array.from(presentCats).sort().forEach((cat) => {
+      ordered.push(cat);
+    });
+
+    return ordered;
+  }, [achievements]);
+
+  React.useEffect(() => {
+    if (selectedCategory !== 'All' && !categories.includes(selectedCategory)) {
+      setSelectedCategory('All');
+    }
+  }, [categories, selectedCategory]);
 
   const filtered = selectedCategory === 'All'
     ? achievements

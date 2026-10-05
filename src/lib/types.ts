@@ -220,6 +220,8 @@ export interface SiteSettings {
     youtube?: string;
     twitter?: string;
   };
+  footer_copyright?: string;
+  footer_tagline?: string;
 }
 
 export interface CustomFormField {
@@ -239,6 +241,7 @@ export interface RequestFormContent {
   guidelines_description: string;
   eligibility_criteria: string[];
   interest_options: string[];
+  departments?: string[];
   keycard_title: string;
   keycard_badge: string;
   success_heading: string;

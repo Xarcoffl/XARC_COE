@@ -6,7 +6,7 @@ import AdminHeader from '@/components/admin/AdminHeader';
 import RequestDetailModal from '@/components/admin/RequestDetailModal';
 import { StudentRequest, StudentStatus } from '@/lib/types';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Search, Users, CheckCircle2, Clock, XCircle, RefreshCw, Layers, Award } from 'lucide-react';
+import { Search, Users, CheckCircle2, Clock, XCircle, RefreshCw, Layers, Award, Download } from 'lucide-react';
 
 function AdminRequestsContent() {
   const [requests, setRequests] = useState<StudentRequest[]>([]);
@@ -16,6 +16,9 @@ function AdminRequestsContent() {
   const [departmentFilter, setDepartmentFilter] = useState('ALL');
   const [yearFilter, setYearFilter] = useState('ALL');
   const [interestFilter, setInterestFilter] = useState('ALL');
+
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [batchUpdating, setBatchUpdating] = useState(false);
 
   const [selectedRequest, setSelectedRequest] = useState<StudentRequest | null>(null);
 
@@ -56,12 +59,28 @@ function AdminRequestsContent() {
   };
 
   useEffect(() => {
+    setSelectedIds([]);
     fetchRequests();
   }, [statusFilter, departmentFilter, yearFilter, interestFilter]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     fetchRequests();
+  };
+
+  const handleToggleSelect = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (requests.length === 0) return;
+    if (selectedIds.length === requests.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(requests.map((r) => r.id));
+    }
   };
 
   const handleStatusChange = async (id: string, newStatus: StudentStatus, internalNotes?: string) => {
@@ -79,6 +98,116 @@ function AdminRequestsContent() {
     } catch (err) {
       console.error('Error updating status:', err);
     }
+  };
+
+  const handleBatchStatusChange = async (newStatus: StudentStatus) => {
+    if (selectedIds.length === 0) return;
+    if (newStatus === 'REJECTED') {
+      if (!confirm(`Mark ${selectedIds.length} applicants as REJECTED? Student records cannot be deleted and will remain archived as Rejected.`)) {
+        return;
+      }
+    } else {
+      if (!confirm(`Update status of ${selectedIds.length} selected applicants to ${newStatus}?`)) {
+        return;
+      }
+    }
+
+    setBatchUpdating(true);
+    try {
+      const res = await fetch('/api/admin/requests', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds, status: newStatus }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedIds([]);
+        fetchRequests();
+      } else {
+        alert(data.message || 'Failed to update requests.');
+      }
+    } catch (err) {
+      console.error('Batch status update error:', err);
+      alert('An error occurred during batch update.');
+    } finally {
+      setBatchUpdating(false);
+    }
+  };
+
+  const exportToCsv = () => {
+    const listToExport = selectedIds.length > 0
+      ? requests.filter((r) => selectedIds.includes(r.id))
+      : requests;
+
+    if (listToExport.length === 0) {
+      alert('No student records to export.');
+      return;
+    }
+
+    const headers = [
+      'ID',
+      'Full Name',
+      'Register Number',
+      'Department',
+      'Year',
+      'Section',
+      'Personal Email',
+      'College Email',
+      'Mobile Number',
+      'Experience Level',
+      'Interests',
+      'Existing Skills',
+      'Motivation',
+      'Status',
+      'Submitted At',
+      'Updated At',
+      'Joined At',
+      'Rejected At',
+      'Internal Notes',
+      'Custom Field Responses',
+    ];
+
+    const escapeCsv = (str: string | undefined | null) => {
+      if (str === undefined || str === null) return '""';
+      const escaped = String(str).replace(/"/g, '""');
+      return `"${escaped}"`;
+    };
+
+    const rows = listToExport.map((r) => [
+      escapeCsv(r.id),
+      escapeCsv(r.full_name),
+      escapeCsv(r.register_number),
+      escapeCsv(r.department),
+      escapeCsv(r.year),
+      escapeCsv(r.section || 'A'),
+      escapeCsv(r.email),
+      escapeCsv(r.college_email),
+      escapeCsv(r.mobile_number),
+      escapeCsv(r.experience_level),
+      escapeCsv(r.interests.join('; ')),
+      escapeCsv(r.existing_skills),
+      escapeCsv(r.motivation),
+      escapeCsv(r.status),
+      escapeCsv(r.submitted_at),
+      escapeCsv(r.updated_at),
+      escapeCsv(r.joined_at),
+      escapeCsv(r.rejected_at),
+      escapeCsv(r.internal_notes),
+      escapeCsv(r.custom_field_responses ? JSON.stringify(r.custom_field_responses) : ''),
+    ]);
+
+    const csvContent = [headers.join(','), ...rows.map((row) => row.join(','))].join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const filterTag = statusFilter.toLowerCase();
+    link.setAttribute('download', `arvr_coe_intake_roster_${filterTag}_${dateStr}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const handleRejectDirect = async (req: StudentRequest) => {
@@ -217,7 +346,81 @@ function AdminRequestsContent() {
             </button>
           </div>
 
-          {/* Toolbar with Search and Filters */}
+          {/* Batch Status Action Bar */}
+          {selectedIds.length > 0 && (
+            <div
+              className="admin-card"
+              style={{
+                marginBottom: '16px',
+                padding: '14px 20px',
+                background: 'rgba(37, 99, 235, 0.12)',
+                border: '1px solid #2563eb',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '12px',
+                borderRadius: '8px',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span className="beacon-dot" style={{ background: '#3b82f6' }} />
+                <span style={{ fontWeight: 700, fontSize: '0.88rem', color: 'var(--text-primary)' }}>
+                  {selectedIds.length} applicant{selectedIds.length > 1 ? 's' : ''} selected
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedIds([])}
+                  className="admin-btn admin-btn-secondary admin-btn-sm"
+                  style={{ fontSize: '0.75rem', padding: '2px 8px' }}
+                >
+                  Clear Selection
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginRight: '4px' }}>Batch Status:</span>
+                <button
+                  type="button"
+                  onClick={() => handleBatchStatusChange('WAITING')}
+                  className="admin-btn admin-btn-warning admin-btn-sm"
+                  disabled={batchUpdating}
+                >
+                  <Clock size={13} />
+                  <span>Mark WAITING ({selectedIds.length})</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleBatchStatusChange('JOINED')}
+                  className="admin-btn admin-btn-success admin-btn-sm"
+                  disabled={batchUpdating}
+                >
+                  <CheckCircle2 size={13} />
+                  <span>Induct JOINED ({selectedIds.length})</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleBatchStatusChange('REJECTED')}
+                  className="admin-btn admin-btn-danger admin-btn-sm"
+                  disabled={batchUpdating}
+                >
+                  <XCircle size={13} />
+                  <span>Mark REJECTED ({selectedIds.length})</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={exportToCsv}
+                  className="admin-btn admin-btn-primary admin-btn-sm"
+                  title="Export selected applicants to CSV"
+                >
+                  <Download size={13} />
+                  <span>Export Selected ({selectedIds.length})</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Toolbar with Search, Filters, and CSV Export */}
           <div className="admin-toolbar" style={{ borderRadius: '8px 8px 0 0' }}>
             <form onSubmit={handleSearchSubmit} style={{ display: 'flex', gap: '8px', flex: 1, minWidth: '240px' }}>
               <input
@@ -268,6 +471,17 @@ function AdminRequestsContent() {
 
             <button
               type="button"
+              onClick={exportToCsv}
+              className="admin-btn admin-btn-primary admin-btn-sm"
+              title="Export filtered roster as CSV"
+              style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+            >
+              <Download size={14} />
+              <span>Export Roster (CSV)</span>
+            </button>
+
+            <button
+              type="button"
               onClick={fetchRequests}
               className="admin-btn admin-btn-secondary admin-btn-sm"
               title="Refresh"
@@ -291,6 +505,15 @@ function AdminRequestsContent() {
                 <table className="admin-table">
                   <thead>
                     <tr>
+                      <th style={{ width: '40px', textAlign: 'center' }}>
+                        <input
+                          type="checkbox"
+                          aria-label="Select all students"
+                          checked={requests.length > 0 && selectedIds.length === requests.length}
+                          onChange={handleSelectAll}
+                          style={{ cursor: 'pointer', width: '16px', height: '16px', accentColor: '#2563eb' }}
+                        />
+                      </th>
                       <th>Student Name</th>
                       <th>Register No</th>
                       <th>Dept & Year</th>
@@ -303,7 +526,16 @@ function AdminRequestsContent() {
                   </thead>
                   <tbody>
                     {requests.map((req) => (
-                      <tr key={req.id}>
+                      <tr key={req.id} style={selectedIds.includes(req.id) ? { background: 'rgba(37, 99, 235, 0.08)' } : {}}>
+                        <td style={{ textAlign: 'center' }}>
+                          <input
+                            type="checkbox"
+                            aria-label={`Select ${req.full_name}`}
+                            checked={selectedIds.includes(req.id)}
+                            onChange={() => handleToggleSelect(req.id)}
+                            style={{ cursor: 'pointer', width: '16px', height: '16px', accentColor: '#2563eb' }}
+                          />
+                        </td>
                         <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
                           <div>{req.full_name}</div>
                           <div style={{ fontSize: '0.75rem', color: 'var(--accent-blue)' }}>{req.email || req.college_email}</div>
@@ -350,8 +582,8 @@ function AdminRequestsContent() {
                             {req.status}
                           </span>
                         </td>
-                        <td style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                          {new Date(req.submitted_at).toLocaleDateString()}
+                        <td style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }} suppressHydrationWarning>
+                          {new Date(req.submitted_at).toLocaleDateString('en-US', { timeZone: 'UTC' })}
                         </td>
                         <td style={{ textAlign: 'right' }}>
                           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '6px' }}>

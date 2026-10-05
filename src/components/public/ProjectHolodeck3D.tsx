@@ -414,10 +414,11 @@ export default function ProjectHolodeck3D() {
     window.addEventListener('resize', onResize);
 
     // 6. Animation Loop
-    const clock = new THREE.Clock();
+    const timer = new THREE.Timer();
 
     const animate = () => {
-      const elapsed = clock.getElapsedTime();
+      timer.update();
+      const elapsed = timer.getElapsed();
 
       // Auto rotation
       if (autoRotateRef.current && !isDragging) {
@@ -468,6 +469,7 @@ export default function ProjectHolodeck3D() {
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onTouchEnd);
       window.removeEventListener('resize', onResize);
+      timer.dispose();
       renderer.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
@@ -524,9 +526,6 @@ export default function ProjectHolodeck3D() {
           ))}
         </div>
 
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--accent-cyan)' }}>
-          // SPATIAL_HOLODECK_ACTIVE
-        </div>
       </div>
 
       {/* Mobile Specimen Card fallback */}

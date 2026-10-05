@@ -2,10 +2,15 @@
   "name": "arvr-coe-pec",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "db:migrate-mongo": "node scripts/migrate-to-mongo.mjs",
+    "admin:manage": "node scripts/manage-admin.mjs"
   },
   "dependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -17,6 +22,7 @@
     "bcryptjs": "^3.0.3",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^1.49.0",
+    "mongodb": "^7.7.0",
     "next": "^16.3.8",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",

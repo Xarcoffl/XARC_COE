@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionAdminFromRequest } from '@/lib/auth';
-import { getAdminStudentRequests, updateStudentRequestStatus, deleteStudentRequest } from '@/lib/db';
+import { getAdminStudentRequests, updateStudentRequestStatus, batchUpdateStudentRequestStatus, deleteStudentRequest } from '@/lib/db';
 
 export async function GET(req: NextRequest) {
   const admin = getSessionAdminFromRequest(req);
@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   const year = searchParams.get('year') || undefined;
   const interest = searchParams.get('interest') || undefined;
 
-  const requests = getAdminStudentRequests(status, search, department, year, interest);
+  const requests = await getAdminStudentRequests(status, search, department, year, interest);
   return NextResponse.json({ success: true, requests });
 }
 
@@ -26,16 +26,28 @@ export async function PATCH(req: NextRequest) {
   }
 
   try {
-    const { id, status, internal_notes } = await req.json();
-    if (!id || !status) {
-      return NextResponse.json({ success: false, message: 'Request ID and new status are required.' }, { status: 400 });
-    }
+    const body = await req.json();
+    const { id, ids, status, internal_notes } = body;
 
-    if (status !== 'NEW' && status !== 'WAITING' && status !== 'JOINED' && status !== 'REJECTED') {
+    if (!['NEW', 'WAITING', 'JOINED', 'REJECTED'].includes(status)) {
       return NextResponse.json({ success: false, message: 'Invalid status. Must be NEW, WAITING, JOINED, or REJECTED.' }, { status: 400 });
     }
 
-    const updated = updateStudentRequestStatus(id, status, internal_notes);
+    // Batch update mode
+    if (Array.isArray(ids)) {
+      if (ids.length === 0) {
+        return NextResponse.json({ success: false, message: 'ids array cannot be empty.' }, { status: 400 });
+      }
+      const updatedList = await batchUpdateStudentRequestStatus(ids, status, internal_notes);
+      return NextResponse.json({ success: true, count: updatedList.length, requests: updatedList });
+    }
+
+    // Single update mode
+    if (!id) {
+      return NextResponse.json({ success: false, message: 'Request ID or IDs array is required.' }, { status: 400 });
+    }
+
+    const updated = await updateStudentRequestStatus(id, status, internal_notes);
     if (!updated) {
       return NextResponse.json({ success: false, message: 'Request not found.' }, { status: 404 });
     }

@@ -40,7 +40,7 @@ export default function AchievementsPage() {
       </section>
 
       {/* Verified Statistics Counters (Spec #36) */}
-      <section style={{ background: 'var(--bg-secondary)', paddingBottom: '48px' }}>
+      <section style={{ paddingTop: '32px', paddingBottom: '48px' }}>
         <div className="container">
           <div
             style={{

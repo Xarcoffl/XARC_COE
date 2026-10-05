@@ -57,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="dark" className="dark-theme" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -69,15 +69,17 @@ export default function RootLayout({
                 document.documentElement.setAttribute('data-theme', t);
                 if (t === 'light') {
                   document.documentElement.classList.add('light-theme');
+                  document.documentElement.classList.remove('dark-theme');
                 } else {
                   document.documentElement.classList.add('dark-theme');
+                  document.documentElement.classList.remove('light-theme');
                 }
               } catch(e) {}
             })()`,
           }}
         />
       </head>
-      <body>{children}</body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

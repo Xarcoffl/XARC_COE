@@ -335,12 +335,13 @@ export default function EventArenaHolodeck3D({ events }: EventArenaHolodeck3DPro
 
     // 8. Animation Loop
     let animId: number;
-    const clock = new THREE.Clock();
+    const timer = new THREE.Timer();
     let pulseScale = 1;
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
-      const elapsed = clock.getElapsedTime();
+      timer.update();
+      const elapsed = timer.getElapsed();
 
       // Auto rotation
       if (autoRotateRef.current && !isDragging) {
@@ -387,6 +388,7 @@ export default function EventArenaHolodeck3D({ events }: EventArenaHolodeck3DPro
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onTouchEnd);
       window.removeEventListener('resize', onResize);
+      timer.dispose();
       renderer.dispose();
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
@@ -565,7 +567,7 @@ export default function EventArenaHolodeck3D({ events }: EventArenaHolodeck3DPro
               style={{ fontSize: '0.72rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
             >
               <Radio size={12} className="animate-spin" />
-              <span>{calculateDaysLeft(currentEvent.start_date)}</span>
+              <span suppressHydrationWarning>{calculateDaysLeft(currentEvent.start_date)}</span>
             </span>
           </div>
 

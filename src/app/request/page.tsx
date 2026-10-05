@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Navbar from '@/components/public/Navbar';
 import Footer from '@/components/public/Footer';
 import { ExperienceLevel, CustomFormField } from '@/lib/types';
@@ -21,6 +22,7 @@ export default function RequestPage() {
     keycard_badge: string;
     success_heading: string;
     success_message: string;
+    departments?: string[];
     custom_fields?: CustomFormField[];
   }>({
     title: 'Start Your XR Journey.',
@@ -51,6 +53,17 @@ export default function RequestPage() {
       'Self-Learning',
       'Still Exploring',
     ],
+    departments: [
+      'Computer Science and Engineering',
+      'Information Technology',
+      'Electronics and Communication Engineering',
+      'Electrical and Electronics Engineering',
+      'Mechanical Engineering',
+      'Artificial Intelligence and Data Science',
+      'Cyber Security',
+      'Mechatronics Engineering',
+      'Civil Engineering',
+    ],
     keycard_title: 'HOLO_KEYCARD // ADMISSION DOSSIER',
     keycard_badge: 'REAL-TIME 3D WAFER',
     success_heading: 'Welcome to the Frontier.',
@@ -66,6 +79,14 @@ export default function RequestPage() {
       .then((res) => {
         if (res?.success && res.content) {
           setContent(res.content);
+          if (res.content.departments && res.content.departments.length > 0) {
+            setFormData((prev) => {
+              if (!res.content.departments.includes(prev.department)) {
+                return { ...prev, department: res.content.departments[0] };
+              }
+              return prev;
+            });
+          }
         }
       })
       .catch(() => {});
@@ -85,9 +106,31 @@ export default function RequestPage() {
     confirmed: false,
   });
 
+  const router = useRouter();
+  const [submittedData, setSubmittedData] = useState<typeof formData | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [countdown, setCountdown] = useState(5);
+
+  // Automatically return to homepage after holding for 5 seconds upon submission
+  useEffect(() => {
+    if (!submitted) return;
+    setCountdown(5);
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          router.push('/');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [submitted, router]);
 
   const interestOptions = content.interest_options?.length ? content.interest_options : [
     'AR',
@@ -197,6 +240,7 @@ export default function RequestPage() {
         return;
       }
 
+      setSubmittedData({ ...formData });
       soundFx.playSuccessChime();
       setSubmitted(true);
     } catch {
@@ -260,21 +304,43 @@ export default function RequestPage() {
                 {content.success_message || 'Your joining application has been securely transmitted to the AR/VR Centre of Excellence faculty committee.'}
               </p>
 
-              {/* 3D Holographic Candidate Keycard (Locked / Submitted) */}
-              <div style={{ maxWidth: '420px', margin: '0 auto 28px auto' }}>
+              {/* 3D Holographic Candidate Keycard (Locked / Submitted with all candidate details) */}
+              <div style={{ maxWidth: '440px', margin: '0 auto 28px auto' }}>
                 <StudentHoloKeycard3D
-                  fullName={formData.full_name}
-                  registerNumber={formData.register_number}
-                  department={formData.department}
-                  experienceLevel={formData.experience_level}
+                  fullName={submittedData?.full_name || formData.full_name}
+                  registerNumber={submittedData?.register_number || formData.register_number}
+                  department={submittedData?.department || formData.department}
+                  year={submittedData?.year || formData.year}
+                  section={submittedData?.section || formData.section}
+                  email={submittedData?.email || formData.email}
+                  interests={submittedData?.interests || formData.interests}
+                  experienceLevel={submittedData?.experience_level || formData.experience_level}
                   isSubmitted={true}
                 />
+              </div>
+
+              {/* 5-Second Auto-Return Countdown Progress */}
+              <div style={{ maxWidth: '340px', margin: '0 auto 24px auto' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.78rem', fontFamily: 'var(--font-mono)', color: 'var(--accent-cyan)', marginBottom: '8px' }}>
+                  <span>AUTO-REDIRECTING TO HOMEPAGE</span>
+                  <span style={{ fontWeight: 700 }}>{countdown}s</span>
+                </div>
+                <div style={{ width: '100%', height: '4px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '2px', overflow: 'hidden' }}>
+                  <div
+                    style={{
+                      height: '100%',
+                      width: `${(countdown / 5) * 100}%`,
+                      background: 'linear-gradient(90deg, var(--accent-cyan), #10b981)',
+                      transition: 'width 1s linear',
+                    }}
+                  />
+                </div>
               </div>
 
               <div>
                 <Link href="/" className="btn-primary" style={{ padding: '12px 32px' }}>
                   <Home size={16} />
-                  <span>Return to Command Console</span>
+                  <span>Return to Command Console Now ({countdown}s)</span>
                 </Link>
               </div>
             </div>
@@ -325,6 +391,10 @@ export default function RequestPage() {
                   fullName={formData.full_name}
                   registerNumber={formData.register_number}
                   department={formData.department}
+                  year={formData.year}
+                  section={formData.section}
+                  email={formData.email}
+                  interests={formData.interests}
                   experienceLevel={formData.experience_level}
                   isSubmitted={false}
                 />
@@ -439,7 +509,7 @@ export default function RequestPage() {
                           value={formData.department}
                           onChange={(e) => setFormData({ ...formData, department: e.target.value })}
                         >
-                          {departmentOptions.map((dept) => (
+                          {(content.departments && content.departments.length > 0 ? content.departments : departmentOptions).map((dept) => (
                             <option key={dept} value={dept}>
                               {dept}
                             </option>

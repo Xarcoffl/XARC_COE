@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Layers, Monitor, Cpu, Sparkles, Terminal, ShieldCheck, Briefcase, Box } from 'lucide-react';
+import { Layers, Monitor, Cpu, Sparkles, Terminal, ShieldCheck, Briefcase } from 'lucide-react';
 import LabIsometricTwin3D from './LabIsometricTwin3D';
-import HardwareRigViewer3D from './HardwareRigViewer3D';
 import { soundFx } from '@/lib/soundFx';
 
 interface NodeInfo {
@@ -76,7 +75,6 @@ export default function CoWorkingDiagram() {
   ];
 
   const [activeNode, setActiveNode] = useState<NodeInfo>(nodes[1]);
-  const [inspectingRig, setInspectingRig] = useState(false);
 
   return (
     <div className="glass-card hud-corner" style={{ padding: '36px', position: 'relative', overflow: 'hidden' }}>
@@ -195,51 +193,16 @@ export default function CoWorkingDiagram() {
 
           <div
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '12px',
               paddingTop: '16px',
               borderTop: '1px solid var(--border-subtle)',
-              flexWrap: 'wrap',
             }}
           >
             <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-              CORE RIGS: GPU Workstations • VR Headsets • Local Rig
+              SECTOR RIGS: GPU Workstations • VR Headsets • Rapid Prototyping Rigs
             </span>
-
-            <button
-              type="button"
-              onClick={() => {
-                setInspectingRig(true);
-                soundFx.playHoloActivate();
-              }}
-              className="btn-primary"
-              style={{
-                padding: '6px 14px',
-                fontSize: '0.78rem',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                borderRadius: '6px',
-              }}
-            >
-              <Box size={14} />
-              <span>Inspect 3D Hardware Rig</span>
-            </button>
           </div>
         </div>
       </div>
-
-      {/* 3D Hardware Rig Inspector Modal */}
-      {inspectingRig && (
-        <HardwareRigViewer3D
-          nodeId={activeNode.id}
-          nodeTitle={activeNode.title}
-          coord={activeNode.coord}
-          onClose={() => setInspectingRig(false)}
-        />
-      )}
     </div>
   );
 }

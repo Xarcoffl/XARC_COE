@@ -2,7 +2,6 @@ import React from 'react';
 import Navbar from '@/components/public/Navbar';
 import Footer from '@/components/public/Footer';
 import SectionHeader from '@/components/public/SectionHeader';
-import IndustryGlobe3D from '@/components/public/IndustryGlobe3D';
 import { getPublicIndustry } from '@/lib/db';
 import { Handshake, Building2, MapPin, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
@@ -35,11 +34,8 @@ export default function IndustryPage() {
       </section>
 
       {/* Industry Partners & Bilateral MoUs (Spec #38) */}
-      <section className="section-spacing" style={{ background: 'var(--bg-secondary)', paddingTop: '0' }}>
+      <section className="section-spacing" style={{ paddingTop: '20px' }}>
         <div className="container">
-          {/* Interactive 3D Spatial Global Network Globe */}
-          <IndustryGlobe3D />
-
           <SectionHeader
             tag="Corporate Alliances"
             title="Partners & MoUs"
@@ -168,7 +164,6 @@ export default function IndustryPage() {
             style={{
               padding: '36px',
               textAlign: 'center',
-              background: 'radial-gradient(circle at center, rgba(43, 217, 254, 0.1) 0%, rgba(16, 23, 41, 0.95) 100%)',
             }}
           >
             <h3 style={{ fontSize: '1.5rem', marginBottom: '10px' }}>
@@ -177,10 +172,10 @@ export default function IndustryPage() {
             <p style={{ color: 'var(--text-secondary)', maxWidth: '560px', margin: '0 auto 20px auto', fontSize: '0.92rem' }}>
               Interested in sponsoring student hackathons, establishing an MoU, or commissioning capstone spatial prototypes? Connect with our advisory board.
             </p>
-            <Link href="/contact" className="btn-secondary">
+            <a href="mailto:arvr.coe@institute.edu" className="btn-secondary">
               <span>Contact CoE Advisory</span>
               <ArrowRight size={16} />
-            </Link>
+            </a>
           </div>
         </div>
       </section>

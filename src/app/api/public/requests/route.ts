@@ -1,8 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { submitStudentRequest } from '@/lib/db';
+import { checkSubmissionRateLimit } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   try {
+    const rawIp = req.headers.get('x-forwarded-for') || 'local-ip';
+    const clientIp = rawIp.split(',')[0].trim();
+    const rateCheck = checkSubmissionRateLimit(clientIp);
+
+    if (!rateCheck.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Submission limit reached from your network. Please wait ${rateCheck.remainingSeconds} seconds before submitting again.`,
+        },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
 
     // Server-side validation (Spec #95)
@@ -52,7 +67,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const result = submitStudentRequest({
+    const result = await submitStudentRequest({
       full_name: full_name.trim(),
       register_number: register_number.trim(),
       department: department.trim(),
