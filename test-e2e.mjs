@@ -349,6 +349,7 @@ async function runTests() {
     if (res.status !== 200) throw new Error(`Expected HTTP 200, got ${res.status}`);
     const data = await res.json();
     if (data.status !== 'healthy') throw new Error(`Expected status 'healthy', got ${data.status}`);
+    console.log(`      Engine: ${data.database?.primary} (Atlas Configured: ${data.database?.mongo_configured}, Connected: ${data.database?.mongo_connected})`);
   });
 
   // 14. Production Hardening: Security Headers

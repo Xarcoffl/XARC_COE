@@ -8,6 +8,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
   }
 
-  const stats = getAdminDashboardStats();
+  const stats = await getAdminDashboardStats();
   return NextResponse.json({ success: true, stats });
 }

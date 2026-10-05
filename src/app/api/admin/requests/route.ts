@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
   const year = searchParams.get('year') || undefined;
   const interest = searchParams.get('interest') || undefined;
 
-  const requests = getAdminStudentRequests(status, search, department, year, interest);
+  const requests = await getAdminStudentRequests(status, search, department, year, interest);
   return NextResponse.json({ success: true, requests });
 }
 
@@ -38,7 +38,7 @@ export async function PATCH(req: NextRequest) {
       if (ids.length === 0) {
         return NextResponse.json({ success: false, message: 'ids array cannot be empty.' }, { status: 400 });
       }
-      const updatedList = batchUpdateStudentRequestStatus(ids, status, internal_notes);
+      const updatedList = await batchUpdateStudentRequestStatus(ids, status, internal_notes);
       return NextResponse.json({ success: true, count: updatedList.length, requests: updatedList });
     }
 
@@ -47,7 +47,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Request ID or IDs array is required.' }, { status: 400 });
     }
 
-    const updated = updateStudentRequestStatus(id, status, internal_notes);
+    const updated = await updateStudentRequestStatus(id, status, internal_notes);
     if (!updated) {
       return NextResponse.json({ success: false, message: 'Request not found.' }, { status: 404 });
     }

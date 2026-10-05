@@ -201,10 +201,22 @@ The AR/VR Centre of Excellence platform is an enterprise-grade digital portal an
 | `src/app/request/page.tsx` | Modified | Dynamically loads and selects from admin-configured academic departments list. |
 | `src/app/control/requests/page.tsx` | Modified | Multi-select checkboxes, floating batch action HUD, one-click CSV roster export. |
 | `src/lib/types.ts` | Modified | Added `departments` to `RequestFormContent`, added `footer_copyright` and `footer_tagline` to `SiteSettings`. |
-| `src/lib/db.ts` | Modified | Added `DEFAULT_DEPARTMENTS`, auto-initialization for departments and footer content, updated getters/setters. |
-| `src/styles/admin.css` | Modified | Enforced permanent dark mode for `/control/*` routes. |
-| `src/app/globals.css` | Modified | Light/dark theme token tuning, removed erratic section-wise blurs, refined glass cards. |
-| `test-e2e.mjs` | Modified | Added 3 new test suites (total 30) verifying department editing/persistence, footer settings API, and `/control/content/footer` route. |
+| `src/lib/mongodb.ts` | Created | Next.js singleton cached MongoDB connection manager supporting MongoDB Atlas with connection caching. |
+| `scripts/migrate-to-mongo.mjs` | Created | Idempotent CLI tool to migrate and seed data/db.json into MongoDB Atlas with indexes (`npm run db:migrate-mongo`). |
+| `src/lib/db.ts` | Modified | Added MongoDB Atlas write-through synchronization with seamless zero-config fallback to local atomic JSON. |
+| `src/app/api/health/route.ts` | Created | Liveness & readiness health check API endpoint with MongoDB telemetry. |
+| `next.config.mjs` | Modified | Injected production security headers (CSP, X-Frame-Options, HSTS, Sniff-protection) and disabled framework fingerprinting. |
+| `src/app/not-found.tsx` | Created | Branded Spatial 404 Sector Not Found page with quick navigation recovery. |
+| `src/app/error.tsx` | Created | Client runtime error boundary catching unhandled rendering exceptions. |
+| `src/app/robots.ts` | Created | Dynamic robots.txt disallowing admin flight decks and indexing public showcases. |
+| `src/app/sitemap.ts` | Created | Dynamic XML sitemap indexing all active projects, events, and public routes. |
+| `Dockerfile` | Created | Multi-stage production container with Alpine base, non-root user, and automated health checks. |
+| `docker-compose.yml` | Created | Container orchestration with persistent volume mapping and environment templates. |
+| `test-e2e.mjs` | Modified | Updated to 34 automated test suites validating health API, security headers, robots/sitemap, and custom 404. |
+| `scripts/manage-admin.mjs` | Created | Administrative account management CLI utility (`npm run admin:manage`) supporting listing, password resets, email updates, and new admin account creation. |
+| `src/app/api/admin/settings/route.ts` | Modified | Enabled altering administrator login email with format and uniqueness validation, and session cookie re-issuance upon profile change. |
+| `src/app/control/settings/page.tsx` | Modified | Unlocked Admin Email field in Tab 05 (Security) allowing direct browser-based email updates with state refreshing. |
+| `package.json` | Modified | Added `"admin:manage": "node scripts/manage-admin.mjs"` command. |
 
 ---
 

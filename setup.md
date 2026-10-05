@@ -357,15 +357,31 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 ---
 
-### Q5: Docker Deployment & Data Persistence
+### Q5: Production Database Migration (MongoDB Atlas)
+By default, the platform uses an embedded atomic JSON datastore (`data/db.json`) requiring zero setup. To connect to MongoDB Atlas for cloud production:
+1. Create a free M0 cluster on [MongoDB Atlas](https://www.mongodb.com/atlas).
+2. Under **Database Access**, create a user (e.g. `arvr_admin`).
+3. Under **Network Access**, whitelist your server IP (or `0.0.0.0/0` for cloud hosting).
+4. Copy your connection string and add it to `.env.local`:
+   ```bash
+   MONGODB_URI="mongodb+srv://<username>:<password>@<cluster>.mongodb.net/arvr_coe?retryWrites=true&w=majority"
+   ```
+5. Migrate all local data with a single command:
+   ```bash
+   npm run db:migrate-mongo
+   ```
+6. Start the server: `npm run dev -- -p 3005`. The app will automatically connect to MongoDB Atlas and keep `data/db.json` as an offline fallback.
+
+---
+
+### Q6: Docker Deployment & Data Persistence
 If containerizing the application using Docker, ensure the `data/` directory is mounted as a persistent Docker volume:
-```dockerfile
-# Example volume mount
-VOLUME ["/app/data"]
-```
 ```bash
-# Running container with volume persistence
-docker run -p 3005:3005 -v arvr_data:/app/data arvr-coe-image
+# Using docker compose:
+docker compose up -d
+
+# Or standard docker run:
+docker run -p 3005:3000 -v ./data:/app/data arvr-coe-image
 ```
 
 ---
@@ -373,3 +389,4 @@ docker run -p 3005:3005 -v arvr_data:/app/data arvr-coe-image
 ## Need Further Help?
 - Refer to [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md) for architectural invariants, design decisions, and system history.
 - Run `node test-e2e.mjs` anytime to verify all public and administrative subsystems are functioning at 100%.
+

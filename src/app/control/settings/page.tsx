@@ -125,6 +125,9 @@ export default function AdminSettingsPage() {
       const data = await res.json();
       if (data.success) {
         setMsg({ text: 'Configuration and credentials updated successfully.', type: 'success' });
+        if (data.admin_profile) {
+          setProfile(data.admin_profile);
+        }
         setCurrentPassword('');
         setNewPassword('');
         setConfirmPassword('');
@@ -568,13 +571,13 @@ export default function AdminSettingsPage() {
                           />
                         </div>
                         <div>
-                          <label className="admin-field-label">Admin Email (Immutable)</label>
+                          <label className="admin-field-label">Admin Email (Login Account)</label>
                           <input
                             type="email"
-                            disabled
                             className="admin-input"
                             value={profile.email}
-                            style={{ opacity: 0.6, cursor: 'not-allowed' }}
+                            onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                            placeholder="admin@coe.edu"
                           />
                         </div>
                       </div>

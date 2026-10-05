@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const result = submitStudentRequest({
+    const result = await submitStudentRequest({
       full_name: full_name.trim(),
       register_number: register_number.trim(),
       department: department.trim(),
