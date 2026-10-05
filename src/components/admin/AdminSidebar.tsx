@@ -17,6 +17,7 @@ import {
   Settings,
   LogOut,
   ExternalLink,
+  PanelBottom,
 } from 'lucide-react';
 
 export default function AdminSidebar() {
@@ -45,6 +46,7 @@ export default function AdminSidebar() {
         { label: 'Home Page', href: '/control/content/home', icon: Home },
         { label: 'About Page', href: '/control/content/about', icon: Info },
         { label: 'Request Form', href: '/control/content/request', icon: FileText },
+        { label: 'Footer Content', href: '/control/content/footer', icon: PanelBottom },
         { label: 'Verticals', href: '/control/verticals', icon: Layers },
         { label: 'Projects', href: '/control/projects', icon: FolderGit2 },
         { label: 'Events', href: '/control/events', icon: Calendar },

@@ -34,7 +34,7 @@ The AR/VR Centre of Excellence platform is an enterprise-grade digital portal an
 | **Authentication** | JSON Web Tokens (`jsonwebtoken`) | `9.0.3` | Cryptographically signed, stored in HttpOnly cookies |
 | **Password Hashing** | Bcryptjs | `3.0.3` | Salted credential hashing |
 | **Persistence** | Embedded Atomic JSON (`data/db.json`) | — | Atomic write-replace pattern via temp files |
-| **Testing** | Node.js Test Harness (`test-e2e.mjs`) | — | Automated 27-suite end-to-end integration test runner |
+| **Testing** | Node.js Test Harness (`test-e2e.mjs`) | — | Automated 34-suite end-to-end integration test runner |
 
 ---
 
@@ -138,13 +138,14 @@ The AR/VR Centre of Excellence platform is an enterprise-grade digital portal an
 - **Dual-Pane Content & Curriculum Studios**:
   - `/control/content/home`: Hero messaging, pillars manager, dark/light split preview.
   - `/control/content/about`: Vision, mission, roadmap milestones, mandate pillars.
-  - `/control/content/request`: Dynamic Custom Form Fields Builder (add/edit/delete/reorder text, textarea, number, select questions) with live form preview.
+  - `/control/content/request`: Dynamic Custom Form Fields Builder (add/edit/delete/reorder text, textarea, number, select questions), **Eligible Academic Departments Management** (add, edit, reorder, delete, restore defaults), and live responsive form preview.
+  - `/control/content/footer`: Dedicated **Footer Content Studio** with real-time browser preview, CoE brand identity, institutional copyright statements, quick legal presets, direct contact channels (`mailto:`, `tel:`), and auxiliary lab tagline badge.
   - `/control/verticals`: Curriculum manager, deliverables, toolchains, career pathways.
   - `/control/projects`: Project editor, narrative tabs, student squad roster, cover image presets.
   - `/control/events`: Event scheduler, speaker rosters, highlights, poster presets.
   - `/control/achievements`: Trophy manager, category badges, team tags.
   - `/control/industry`: Corporate partner editor, MoU terms, bilateral outcomes.
-  - `/control/settings`: Institutional metadata, branding, contact phone, contact email, copyright year.
+  - `/control/settings`: Institutional metadata, branding, contact phone, contact email, copyright year, and dedicated **Footer Tab (Tab 03)**.
 
 ---
 
@@ -192,13 +193,18 @@ The AR/VR Centre of Excellence platform is an enterprise-grade digital portal an
 | `src/components/public/AchievementsPodium3D.tsx` | Modified | Replaced 3D podium with an animated pixel-by-pixel building 3D Trophy. |
 | `src/app/achievements/page.tsx` | Modified | Suppressed empty achievement categories until an achievement is recorded. |
 | `src/app/request/page.tsx` | Modified | Added dynamic custom form field rendering and submission payload. |
-| `src/app/control/content/request/page.tsx` | Modified | Custom Application Form Fields Builder (add/edit/delete/reorder fields) with live preview. |
+| `src/app/control/content/request/page.tsx` | Modified | Added Section 04 for managing eligible academic departments (add, inline edit, move up/down, delete, restore defaults) and live preview dropdown. |
+| `src/app/control/content/footer/page.tsx` | Created | Dedicated Footer Content Studio with live interactive browser preview, brand identity controls, copyright statement presets, contact details, and tagline badge. |
+| `src/app/control/settings/page.tsx` | Modified | Added Tab 03 (Footer) with brand identity, copyright, email/phone, and tagline controls and live preview simulator. |
+| `src/components/admin/AdminSidebar.tsx` | Modified | Added Footer Content link under WEBSITE CONTENT. |
+| `src/components/public/Footer.tsx` | Modified | Dynamically renders admin-configured copyright notice, institution name, CoE name, contact mail/phone links, and optional tagline. |
+| `src/app/request/page.tsx` | Modified | Dynamically loads and selects from admin-configured academic departments list. |
 | `src/app/control/requests/page.tsx` | Modified | Multi-select checkboxes, floating batch action HUD, one-click CSV roster export. |
-| `src/lib/types.ts` | Modified | Added `CustomFormField` interface, `custom_fields` array, and `custom_field_responses` map. |
-| `src/lib/db.ts` | Modified | Added atomic write-replace pattern, batch status transition helper, and seed defaults. |
+| `src/lib/types.ts` | Modified | Added `departments` to `RequestFormContent`, added `footer_copyright` and `footer_tagline` to `SiteSettings`. |
+| `src/lib/db.ts` | Modified | Added `DEFAULT_DEPARTMENTS`, auto-initialization for departments and footer content, updated getters/setters. |
 | `src/styles/admin.css` | Modified | Enforced permanent dark mode for `/control/*` routes. |
 | `src/app/globals.css` | Modified | Light/dark theme token tuning, removed erratic section-wise blurs, refined glass cards. |
-| `test-e2e.mjs` | Modified | Added verification tests for footer contact/mail IDs, batch status transitions, and deletion prohibition. |
+| `test-e2e.mjs` | Modified | Added 3 new test suites (total 30) verifying department editing/persistence, footer settings API, and `/control/content/footer` route. |
 
 ---
 

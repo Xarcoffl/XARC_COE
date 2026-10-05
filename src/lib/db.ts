@@ -71,6 +71,8 @@ function getInitialData(): DatabaseSchema {
         youtube: 'https://youtube.com',
         twitter: 'https://twitter.com',
       },
+      footer_copyright: 'All Rights Reserved.',
+      footer_tagline: 'Spatial Computing & Immersive Engineering Digital Ecosystem',
     },
     home_content: {
       hero: {
@@ -690,6 +692,19 @@ function getInitialData(): DatabaseSchema {
   };
 }
 
+// Default academic departments available for student application
+export const DEFAULT_DEPARTMENTS: string[] = [
+  'Computer Science and Engineering',
+  'Information Technology',
+  'Electronics and Communication Engineering',
+  'Electrical and Electronics Engineering',
+  'Mechanical Engineering',
+  'Artificial Intelligence and Data Science',
+  'Cyber Security',
+  'Mechatronics Engineering',
+  'Civil Engineering',
+];
+
 // Ensure database file exists
 export const DEFAULT_REQUEST_CONTENT: RequestFormContent = {
   title: 'Apply to Join the AR/VR Centre of Excellence',
@@ -720,6 +735,7 @@ export const DEFAULT_REQUEST_CONTENT: RequestFormContent = {
     'Self-Learning',
     'Still Exploring',
   ],
+  departments: DEFAULT_DEPARTMENTS,
   keycard_title: 'HOLO_KEYCARD // ADMISSION DOSSIER',
   keycard_badge: 'REAL-TIME 3D WAFER',
   success_heading: 'Welcome to the Frontier.',
@@ -759,8 +775,31 @@ export function initDb(): DatabaseSchema {
   try {
     const raw = fs.readFileSync(DB_FILE, 'utf-8');
     const parsed = JSON.parse(raw);
+    let mutated = false;
+
     if (!parsed.request_content) {
       parsed.request_content = DEFAULT_REQUEST_CONTENT;
+      mutated = true;
+    } else if (!parsed.request_content.departments || !Array.isArray(parsed.request_content.departments) || parsed.request_content.departments.length === 0) {
+      parsed.request_content.departments = [...DEFAULT_DEPARTMENTS];
+      mutated = true;
+    }
+
+    if (!parsed.settings) {
+      parsed.settings = getInitialData().settings;
+      mutated = true;
+    } else {
+      if (!parsed.settings.footer_copyright) {
+        parsed.settings.footer_copyright = 'All Rights Reserved.';
+        mutated = true;
+      }
+      if (parsed.settings.footer_tagline === undefined) {
+        parsed.settings.footer_tagline = 'Spatial Computing & Immersive Engineering Digital Ecosystem';
+        mutated = true;
+      }
+    }
+
+    if (mutated) {
       saveDb(parsed);
     }
     return parsed;
@@ -838,7 +877,11 @@ export function getPublicAboutContent() {
 
 export function getPublicRequestContent(): RequestFormContent {
   const db = initDb();
-  return db.request_content || DEFAULT_REQUEST_CONTENT;
+  const content = db.request_content || DEFAULT_REQUEST_CONTENT;
+  if (!content.departments || !Array.isArray(content.departments) || content.departments.length === 0) {
+    content.departments = [...DEFAULT_DEPARTMENTS];
+  }
+  return content;
 }
 
 export function getPublicVerticals() {
@@ -937,6 +980,8 @@ export function getPublicSettings() {
     campus_address: db.settings.campus_address,
     working_hours: db.settings.working_hours,
     social_links: db.settings.social_links,
+    footer_copyright: db.settings.footer_copyright || 'All Rights Reserved.',
+    footer_tagline: db.settings.footer_tagline || '',
   };
 }
 

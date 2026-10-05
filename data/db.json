@@ -27,7 +27,9 @@
       "github": "https://github.com",
       "youtube": "https://youtube.com",
       "twitter": "https://twitter.com"
-    }
+    },
+    "footer_copyright": "All Rights Reserved.",
+    "footer_tagline": "Spatial Computing & Immersive Engineering Digital Ecosystem"
   },
   "home_content": {
     "hero": {
@@ -220,7 +222,7 @@
       "title": "Skill Development Activities",
       "short_description": "Intensive hackathons, technical paper symposiums, patent clinics, and national challenge teams.",
       "full_description": "Competitive, collaborative arenas designed to stretch engineering limits. The CoE sponsors and mentors student squads competing in Smart India Hackathon, global XR game jams, IEEE VR conferences, and student IP disclosures.",
-      "icon": "Zap",
+      "icon": "Cpu",
       "outcomes": [
         "National & international hackathon podium finishes",
         "Provisional patent filings and institutional IP generation",
@@ -313,7 +315,7 @@
       "slug": "medical-cardiac-anatomy-mr",
       "title": "Mixed Reality Interactive Cardiac Anatomy & Pathology Explorer",
       "category": "MR",
-      "cover_image": "https://unsplash.com/photos/boy-wearing-black-and-white-vr-headset-DeyfdybVQhA",
+      "cover_image": "https://images.unsplash.com/photo-1593508512255-86ab42a8e620?q=80&w=1200&auto=format&fit=crop",
       "short_desc": "A mixed reality spatial application rendering volumetric, beating 3D human heart models with interactive pathology slicing and surgical path planning.",
       "full_desc": "Transforming complex 2D CT/MRI DICOM scans into real-time volumetric mixed reality holograms. Students and medical trainees can manipulate 3D anatomical structures in physical room space, observe blood hemodynamics, and simulate surgical incisions with bimanual hand gestures.",
       "problem": "Traditional flat medical atlases fail to communicate complex 3D cardiac chamber depth, spatial spatial orientation, and dynamic valve mechanics, leading to steep learning curves.",
@@ -339,7 +341,7 @@
       "is_featured": true,
       "is_published": true,
       "created_at": "2026-01-20T11:00:00.000Z",
-      "updated_at": "2026-10-03T13:14:51.890Z"
+      "updated_at": "2026-10-05T06:02:15.224Z"
     },
     {
       "id": "proj-3",
@@ -687,6 +689,168 @@
     }
   ],
   "student_requests": [
+    {
+      "full_name": "Vigneshwaran R",
+      "register_number": "111422104088",
+      "department": "Computer Science and Engineering",
+      "year": "3rd Year",
+      "section": "B",
+      "email": "vignesh.r@gmail.com",
+      "college_email": "vignesh.r@gmail.com",
+      "mobile_number": "+91 99401 88888",
+      "interests": [
+        "VR",
+        "AR",
+        "Simulation",
+        "Product Development"
+      ],
+      "experience_level": "Intermediate",
+      "existing_skills": "Unity, C#, Blender 3D modeling",
+      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
+      "custom_field_responses": {},
+      "id": "req-1791168822173-q7h98",
+      "status": "JOINED",
+      "internal_notes": "Batch inducted into XR cohort.",
+      "submitted_at": "2026-10-05T02:53:42.173Z",
+      "updated_at": "2026-10-05T02:53:42.278Z",
+      "rejected_at": "2026-10-05T02:53:42.271Z",
+      "joined_at": "2026-10-05T02:53:42.278Z"
+    },
+    {
+      "full_name": "Vigneshwaran R",
+      "register_number": "111422104088",
+      "department": "Computer Science and Engineering",
+      "year": "3rd Year",
+      "section": "B",
+      "email": "vignesh.r@gmail.com",
+      "college_email": "vignesh.r@gmail.com",
+      "mobile_number": "+91 99401 88888",
+      "interests": [
+        "VR",
+        "AR",
+        "Simulation",
+        "Product Development"
+      ],
+      "experience_level": "Intermediate",
+      "existing_skills": "Unity, C#, Blender 3D modeling",
+      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
+      "custom_field_responses": {},
+      "id": "req-1791168775157-7533d",
+      "status": "JOINED",
+      "internal_notes": "Batch inducted into XR cohort.",
+      "submitted_at": "2026-10-05T02:52:55.157Z",
+      "updated_at": "2026-10-05T02:52:55.679Z",
+      "rejected_at": "2026-10-05T02:52:55.661Z",
+      "joined_at": "2026-10-05T02:52:55.679Z"
+    },
+    {
+      "full_name": "Vigneshwaran R",
+      "register_number": "111422104088",
+      "department": "Computer Science and Engineering",
+      "year": "3rd Year",
+      "section": "B",
+      "email": "vignesh.r@gmail.com",
+      "college_email": "vignesh.r@gmail.com",
+      "mobile_number": "+91 99401 88888",
+      "interests": [
+        "VR",
+        "AR",
+        "Simulation",
+        "Product Development"
+      ],
+      "experience_level": "Intermediate",
+      "existing_skills": "Unity, C#, Blender 3D modeling",
+      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
+      "custom_field_responses": {},
+      "id": "req-1791167309995-t62bq",
+      "status": "JOINED",
+      "internal_notes": "Batch inducted into XR cohort.",
+      "submitted_at": "2026-10-05T02:28:29.995Z",
+      "updated_at": "2026-10-05T02:28:30.078Z",
+      "rejected_at": "2026-10-05T02:28:30.072Z",
+      "joined_at": "2026-10-05T02:28:30.078Z"
+    },
+    {
+      "full_name": "Vigneshwaran R",
+      "register_number": "111422104088",
+      "department": "Computer Science and Engineering",
+      "year": "3rd Year",
+      "section": "B",
+      "email": "vignesh.r@gmail.com",
+      "college_email": "vignesh.r@gmail.com",
+      "mobile_number": "+91 99401 88888",
+      "interests": [
+        "VR",
+        "AR",
+        "Simulation",
+        "Product Development"
+      ],
+      "experience_level": "Intermediate",
+      "existing_skills": "Unity, C#, Blender 3D modeling",
+      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
+      "custom_field_responses": {},
+      "id": "req-1791167245778-b71y0",
+      "status": "JOINED",
+      "internal_notes": "Batch inducted into XR cohort.",
+      "submitted_at": "2026-10-05T02:27:25.778Z",
+      "updated_at": "2026-10-05T02:27:25.864Z",
+      "rejected_at": "2026-10-05T02:27:25.858Z",
+      "joined_at": "2026-10-05T02:27:25.864Z"
+    },
+    {
+      "full_name": "Vigneshwaran R",
+      "register_number": "111422104088",
+      "department": "Computer Science and Engineering",
+      "year": "3rd Year",
+      "section": "B",
+      "email": "vignesh.r@gmail.com",
+      "college_email": "vignesh.r@gmail.com",
+      "mobile_number": "+91 99401 88888",
+      "interests": [
+        "VR",
+        "AR",
+        "Simulation",
+        "Product Development"
+      ],
+      "experience_level": "Intermediate",
+      "existing_skills": "Unity, C#, Blender 3D modeling",
+      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
+      "custom_field_responses": {},
+      "id": "req-1791167199389-n0jts",
+      "status": "JOINED",
+      "internal_notes": "Batch inducted into XR cohort.",
+      "submitted_at": "2026-10-05T02:26:39.389Z",
+      "updated_at": "2026-10-05T02:26:39.501Z",
+      "rejected_at": "2026-10-05T02:26:39.494Z",
+      "joined_at": "2026-10-05T02:26:39.501Z"
+    },
+    {
+      "full_name": "Vigneshwaran R",
+      "register_number": "111422104088",
+      "department": "Computer Science and Engineering",
+      "year": "3rd Year",
+      "section": "B",
+      "email": "vignesh.r@gmail.com",
+      "college_email": "vignesh.r@gmail.com",
+      "mobile_number": "+91 99401 88888",
+      "interests": [
+        "VR",
+        "AR",
+        "Simulation",
+        "Product Development"
+      ],
+      "experience_level": "Intermediate",
+      "existing_skills": "Unity, C#, Blender 3D modeling",
+      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
+      "custom_field_responses": {},
+      "id": "req-1791165189987-bedmp",
+      "status": "JOINED",
+      "internal_notes": "Batch inducted into XR cohort.",
+      "submitted_at": "2026-10-05T01:53:09.987Z",
+      "updated_at": "2026-10-05T01:53:10.073Z",
+      "rejected_at": "2026-10-05T01:53:10.067Z",
+      "joined_at": "2026-10-05T01:53:10.073Z"
+    },
     {
       "full_name": "Vigneshwaran R",
       "register_number": "111422104088",
@@ -1478,6 +1642,17 @@
         "required": false,
         "help_text": "Share links to your prior 3D, Unity, or code repositories."
       }
+    ],
+    "departments": [
+      "Computer Science and Engineering",
+      "Information Technology",
+      "Electronics and Communication Engineering",
+      "Electrical and Electronics Engineering",
+      "Mechanical Engineering",
+      "Artificial Intelligence and Data Science",
+      "Cyber Security",
+      "Mechatronics Engineering",
+      "Civil Engineering"
     ]
   }
 }

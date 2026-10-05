@@ -25,6 +25,7 @@ import {
   Check,
   X,
   Compass,
+  PanelBottom,
 } from 'lucide-react';
 
 export default function AdminSettingsPage() {
@@ -38,7 +39,7 @@ export default function AdminSettingsPage() {
   const [showNewPass, setShowNewPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
 
-  const [activeTab, setActiveTab] = useState<'branding' | 'contact' | 'social' | 'security'>('branding');
+  const [activeTab, setActiveTab] = useState<'branding' | 'contact' | 'footer' | 'social' | 'security'>('branding');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
@@ -195,10 +196,11 @@ export default function AdminSettingsPage() {
                   }}
                 >
                   {[
-                    { id: 'branding', label: '01 Branding & SEO', icon: Globe },
-                    { id: 'contact', label: '02 Contact & Campus', icon: Building },
-                    { id: 'social', label: '03 Social Channels', icon: Share2 },
-                    { id: 'security', label: '04 Profile & Security', icon: Key },
+                    { id: 'branding', label: '01 Branding', icon: Globe },
+                    { id: 'contact', label: '02 Contact', icon: Building },
+                    { id: 'footer', label: '03 Footer', icon: PanelBottom },
+                    { id: 'social', label: '04 Social', icon: Share2 },
+                    { id: 'security', label: '05 Security', icon: Key },
                   ].map((tab) => {
                     const Icon = tab.icon;
                     const isActive = activeTab === tab.id;
@@ -377,11 +379,116 @@ export default function AdminSettingsPage() {
                   </div>
                 )}
 
-                {/* TAB 3: SOCIAL CHANNELS */}
+                {/* TAB 3: FOOTER CONTENTS */}
+                {activeTab === 'footer' && (
+                  <div className="admin-card" style={{ marginBottom: '20px' }}>
+                    <div className="admin-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <h3 className="admin-card-title">03 // FOOTER CONTENTS & BRANDING</h3>
+                        <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>
+                          Configure copyright notice, institution attribution, contact phone & email, and optional spatial taglines.
+                        </p>
+                      </div>
+                      <span className="badge badge-cyan" style={{ fontSize: '0.7rem' }}>
+                        LIVE FOOTER
+                      </span>
+                    </div>
+                    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                        <div>
+                          <label className="admin-field-label">CoE Display Name in Footer</label>
+                          <input
+                            type="text"
+                            className="admin-input"
+                            value={settings.coe_name}
+                            onChange={(e) => setSettings({ ...settings, coe_name: e.target.value })}
+                            placeholder="e.g. AR/VR Centre of Excellence"
+                          />
+                        </div>
+                        <div>
+                          <label className="admin-field-label">Institution / University Name in Footer</label>
+                          <input
+                            type="text"
+                            className="admin-input"
+                            value={settings.institution_name}
+                            onChange={(e) => setSettings({ ...settings, institution_name: e.target.value })}
+                            placeholder="e.g. Centre of Excellence"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                          <label className="admin-field-label" style={{ marginBottom: 0 }}>Copyright Notice Text</label>
+                          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Displays immediately following the institution name</span>
+                        </div>
+                        <input
+                          type="text"
+                          className="admin-input"
+                          value={settings.footer_copyright || 'All Rights Reserved.'}
+                          onChange={(e) => setSettings({ ...settings, footer_copyright: e.target.value })}
+                          placeholder="e.g. All Rights Reserved."
+                        />
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                        <div>
+                          <label className="admin-field-label">
+                            Footer Contact Email (<span style={{ fontFamily: 'monospace' }}>mailto:</span>)
+                          </label>
+                          <div style={{ position: 'relative' }}>
+                            <Mail size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--accent-cyan)' }} />
+                            <input
+                              type="email"
+                              className="admin-input"
+                              style={{ paddingLeft: '36px' }}
+                              value={settings.contact_email}
+                              onChange={(e) => setSettings({ ...settings, contact_email: e.target.value })}
+                              placeholder="arvr.coe@institute.edu"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="admin-field-label">
+                            Footer Contact Phone (<span style={{ fontFamily: 'monospace' }}>tel:</span>)
+                          </label>
+                          <div style={{ position: 'relative' }}>
+                            <Phone size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#4ade80' }} />
+                            <input
+                              type="text"
+                              className="admin-input"
+                              style={{ paddingLeft: '36px' }}
+                              value={settings.contact_phone}
+                              onChange={(e) => setSettings({ ...settings, contact_phone: e.target.value })}
+                              placeholder="+91 44 2345 6789"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                          <label className="admin-field-label" style={{ marginBottom: 0 }}>Optional Footer Subtitle / Tagline Badge</label>
+                          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Displays as an identification badge</span>
+                        </div>
+                        <input
+                          type="text"
+                          className="admin-input"
+                          value={settings.footer_tagline || ''}
+                          onChange={(e) => setSettings({ ...settings, footer_tagline: e.target.value })}
+                          placeholder="e.g. Spatial Computing & Immersive Engineering Digital Ecosystem"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB 4: SOCIAL CHANNELS */}
                 {activeTab === 'social' && (
                   <div className="admin-card" style={{ marginBottom: '20px' }}>
                     <div className="admin-card-header">
-                      <h3 className="admin-card-title">03 // SOCIAL & REPOSITORY CHANNELS</h3>
+                      <h3 className="admin-card-title">04 // SOCIAL & REPOSITORY CHANNELS</h3>
                     </div>
                     <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                       
@@ -443,11 +550,11 @@ export default function AdminSettingsPage() {
                   </div>
                 )}
 
-                {/* TAB 4: PROFILE & SECURITY */}
+                {/* TAB 5: PROFILE & SECURITY */}
                 {activeTab === 'security' && (
                   <div className="admin-card" style={{ marginBottom: '20px' }}>
                     <div className="admin-card-header">
-                      <h3 className="admin-card-title">04 // ADMINISTRATOR PROFILE & SECURITY</h3>
+                      <h3 className="admin-card-title">05 // ADMINISTRATOR PROFILE & SECURITY</h3>
                     </div>
                     <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
@@ -786,37 +893,57 @@ export default function AdminSettingsPage() {
                 {/* PUBLIC MINIMALIST FOOTER SIMULATOR */}
                 <div
                   style={{
-                    background: 'rgba(15, 23, 42, 0.8)',
+                    background: 'var(--surface-ground)',
                     borderRadius: '10px',
                     padding: '16px',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    textAlign: 'center',
+                    border: '1px solid var(--border-subtle)',
                   }}
                 >
                   <span style={{ fontSize: '0.68rem', fontWeight: 700, color: '#10b981', letterSpacing: '0.08em', display: 'block', marginBottom: '10px' }}>
-                    LIVE MINIMALIST FOOTER (PER USER SPEC)
+                    LIVE MINIMALIST FOOTER PREVIEW
                   </span>
                   
                   <div
                     style={{
-                      background: 'rgba(255,255,255,0.02)',
-                      border: '1px solid rgba(255,255,255,0.05)',
+                      background: 'var(--surface-card-alt)',
+                      border: '1px solid var(--border-subtle)',
                       borderRadius: '8px',
-                      padding: '14px',
+                      padding: '14px 16px',
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '8px',
-                      alignItems: 'center',
+                      gap: '12px',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.72rem', color: '#10b981' }}>
-                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }} />
-                      <span>CoE Spatial Core Online & Operational</span>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', fontSize: '0.78rem' }}>
+                      <div style={{ color: 'var(--text-secondary)' }}>
+                        © {new Date().getFullYear()} <strong style={{ color: 'var(--text-primary)' }}>{settings.coe_name}</strong>, {settings.institution_name}. {settings.footer_copyright || 'All Rights Reserved.'}
+                      </div>
+                      {settings.footer_tagline && (
+                        <span
+                          style={{
+                            fontSize: '0.7rem',
+                            color: 'var(--text-muted)',
+                            background: 'var(--surface-card)',
+                            border: '1px solid var(--border-subtle)',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            fontFamily: 'monospace',
+                          }}
+                        >
+                          {settings.footer_tagline}
+                        </span>
+                      )}
                     </div>
 
-                    <p style={{ fontSize: '0.76rem', color: '#94a3b8', margin: 0, lineHeight: 1.4 }}>
-                      &copy; {new Date().getFullYear()} {settings.coe_name || 'AR/VR Centre of Excellence'} &bull; {settings.institution_name || 'Institution'}. All Rights Reserved.
-                    </p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', fontSize: '0.78rem', fontFamily: 'monospace' }}>
+                      <span style={{ color: 'var(--accent-cyan)', display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: 600 }}>
+                        <Mail size={13} /> {settings.contact_email}
+                      </span>
+                      <span style={{ color: 'var(--border-active)' }}>•</span>
+                      <span style={{ color: '#4ade80', display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: 600 }}>
+                        <Phone size={13} /> {settings.contact_phone}
+                      </span>
+                    </div>
                   </div>
                 </div>
 

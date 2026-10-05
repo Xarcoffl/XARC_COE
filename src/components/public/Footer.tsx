@@ -8,6 +8,8 @@ interface FooterProps {
   coeName?: string;
   contactEmail?: string;
   contactPhone?: string;
+  footerCopyright?: string;
+  footerTagline?: string;
 }
 
 export default function Footer(props: FooterProps) {
@@ -17,6 +19,8 @@ export default function Footer(props: FooterProps) {
     coeName: props.coeName || 'AR/VR Centre of Excellence',
     contactEmail: props.contactEmail || 'arvr.coe@institute.edu',
     contactPhone: props.contactPhone || '+91 (0) 80 2345 6789',
+    footerCopyright: props.footerCopyright || 'All Rights Reserved.',
+    footerTagline: props.footerTagline || '',
   });
 
   useEffect(() => {
@@ -30,6 +34,8 @@ export default function Footer(props: FooterProps) {
             coeName: res.settings.coe_name || prev.coeName,
             contactEmail: res.settings.contact_email || prev.contactEmail,
             contactPhone: res.settings.contact_phone || prev.contactPhone,
+            footerCopyright: res.settings.footer_copyright || prev.footerCopyright,
+            footerTagline: res.settings.footer_tagline !== undefined ? res.settings.footer_tagline : prev.footerTagline,
           }));
         }
       })
@@ -61,9 +67,26 @@ export default function Footer(props: FooterProps) {
           fontSize: '0.86rem',
         }}
       >
-        {/* Copyright & CoE Name */}
-        <div suppressHydrationWarning style={{ color: 'var(--text-secondary)' }}>
-          © {currentYear} <strong style={{ color: 'var(--text-primary)' }}>{data.coeName}</strong>, {data.institutionName}. All Rights Reserved.
+        {/* Copyright & CoE Name & Optional Tagline */}
+        <div suppressHydrationWarning style={{ color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <span>
+            © {currentYear} <strong style={{ color: 'var(--text-primary)' }}>{data.coeName}</strong>, {data.institutionName}. {data.footerCopyright}
+          </span>
+          {data.footerTagline && (
+            <span
+              style={{
+                fontSize: '0.75rem',
+                color: 'var(--text-muted)',
+                background: 'var(--surface-card-alt)',
+                border: '1px solid var(--border-subtle)',
+                padding: '2px 8px',
+                borderRadius: '4px',
+                fontFamily: 'var(--font-mono)',
+              }}
+            >
+              {data.footerTagline}
+            </span>
+          )}
         </div>
 
         {/* Contact Number and Mail ID Only */}

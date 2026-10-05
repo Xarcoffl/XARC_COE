@@ -22,6 +22,7 @@ export default function RequestPage() {
     keycard_badge: string;
     success_heading: string;
     success_message: string;
+    departments?: string[];
     custom_fields?: CustomFormField[];
   }>({
     title: 'Start Your XR Journey.',
@@ -52,6 +53,17 @@ export default function RequestPage() {
       'Self-Learning',
       'Still Exploring',
     ],
+    departments: [
+      'Computer Science and Engineering',
+      'Information Technology',
+      'Electronics and Communication Engineering',
+      'Electrical and Electronics Engineering',
+      'Mechanical Engineering',
+      'Artificial Intelligence and Data Science',
+      'Cyber Security',
+      'Mechatronics Engineering',
+      'Civil Engineering',
+    ],
     keycard_title: 'HOLO_KEYCARD // ADMISSION DOSSIER',
     keycard_badge: 'REAL-TIME 3D WAFER',
     success_heading: 'Welcome to the Frontier.',
@@ -67,6 +79,14 @@ export default function RequestPage() {
       .then((res) => {
         if (res?.success && res.content) {
           setContent(res.content);
+          if (res.content.departments && res.content.departments.length > 0) {
+            setFormData((prev) => {
+              if (!res.content.departments.includes(prev.department)) {
+                return { ...prev, department: res.content.departments[0] };
+              }
+              return prev;
+            });
+          }
         }
       })
       .catch(() => {});
@@ -489,7 +509,7 @@ export default function RequestPage() {
                           value={formData.department}
                           onChange={(e) => setFormData({ ...formData, department: e.target.value })}
                         >
-                          {departmentOptions.map((dept) => (
+                          {(content.departments && content.departments.length > 0 ? content.departments : departmentOptions).map((dept) => (
                             <option key={dept} value={dept}>
                               {dept}
                             </option>
