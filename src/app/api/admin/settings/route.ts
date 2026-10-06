@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { getSessionAdminFromRequest, signAdminToken, COOKIE_NAME } from '@/lib/auth';
-import { initDb, saveDb } from '@/lib/db';
+import { initDb, saveDbAsync, hydrateFromMongoIfNeeded } from '@/lib/db';
+import { isMongoConfigured } from '@/lib/mongodb';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(req: NextRequest) {
   const admin = getSessionAdminFromRequest(req);
   if (!admin) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
   }
 
   const db = initDb();
@@ -30,6 +38,9 @@ export async function POST(req: NextRequest) {
 
   try {
     const { settings, profile, new_password, current_password } = await req.json();
+    if (isMongoConfigured()) {
+      await hydrateFromMongoIfNeeded();
+    }
     const db = initDb();
 
     // 1. Update site settings if provided
@@ -99,7 +110,7 @@ export async function POST(req: NextRequest) {
       db.admin_users[adminIdx].updated_at = new Date().toISOString();
     }
 
-    saveDb(db);
+    await saveDbAsync(db);
 
     const updatedAdmin = db.admin_users[adminIdx];
 

@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import { initDb } from '@/lib/db';
+import { initDb, hydrateFromMongoIfNeeded } from '@/lib/db';
+import { isMongoConfigured } from '@/lib/mongodb';
 import { signAdminToken, checkLoginRateLimit, recordFailedLogin, resetLoginRateLimit, COOKIE_NAME } from '@/lib/auth';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function POST(req: NextRequest) {
   try {
@@ -28,6 +32,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (isMongoConfigured()) {
+      await hydrateFromMongoIfNeeded();
+    }
     const db = initDb();
     const admin = db.admin_users.find((u) => u.email.toLowerCase() === email.trim().toLowerCase());
 

@@ -8,6 +8,7 @@ import { ArrowLeft, CheckCircle2, Users, UserCheck, Layers, Cpu, ExternalLink } 
 import Link from 'next/link';
 import ProjectMediaInspector from '@/components/public/ProjectMediaInspector';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 interface ProjectDetailPageProps {
@@ -16,7 +17,7 @@ interface ProjectDetailPageProps {
 
 export async function generateMetadata({ params }: ProjectDetailPageProps) {
   const { slug } = await params;
-  const result = getPublicProjectBySlug(slug);
+  const result = await getPublicProjectBySlug(slug);
   if (!result) return { title: 'Project Not Found | AR/VR CoE' };
 
   return {
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: ProjectDetailPageProps) {
 
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const { slug } = await params;
-  const result = getPublicProjectBySlug(slug);
+  const result = await getPublicProjectBySlug(slug);
 
   if (!result) {
     notFound();

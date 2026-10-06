@@ -7,10 +7,11 @@ import { getPublicVerticals } from '@/lib/db';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default function VerticalsPage() {
-  const verticals = getPublicVerticals();
+export default async function VerticalsPage() {
+  const verticals = await getPublicVerticals();
 
   return (
     <div className="public-layout-root" style={{ position: 'relative', overflowX: 'hidden' }}>

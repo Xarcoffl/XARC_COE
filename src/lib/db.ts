@@ -839,12 +839,10 @@ export async function syncToMongo(data: DatabaseSchema): Promise<void> {
     const syncCollection = async (colName: string, items: any[], idField = 'id') => {
       const col = db.collection(colName);
       if (!Array.isArray(items) || items.length === 0) {
-        if (colName === 'student_requests') {
-          await col.deleteMany({});
-        }
+        await col.deleteMany({});
         return;
       }
-      const itemIds = items.map((i) => i[idField]);
+      const itemIds = items.map((i) => i[idField]).filter(Boolean);
       await col.deleteMany({ [idField]: { $nin: itemIds } });
       for (const item of items) {
         const filter = { [idField]: item[idField] };
@@ -853,9 +851,9 @@ export async function syncToMongo(data: DatabaseSchema): Promise<void> {
     };
 
     await Promise.all([
-      syncCollection('verticals', data.verticals, 'slug'),
-      syncCollection('projects', data.projects, 'slug'),
-      syncCollection('events', data.events, 'slug'),
+      syncCollection('verticals', data.verticals, 'id'),
+      syncCollection('projects', data.projects, 'id'),
+      syncCollection('events', data.events, 'id'),
       syncCollection('achievements', data.achievements, 'id'),
       syncCollection('industry_records', data.industry_records, 'id'),
       syncCollection('student_requests', data.student_requests, 'id'),
@@ -945,11 +943,11 @@ export async function hydrateFromMongoIfNeeded(): Promise<DatabaseSchema> {
       home_content: homeDoc ? stripId(homeDoc) : current.home_content,
       about_content: aboutDoc ? stripId(aboutDoc) : current.about_content,
       request_content: reqDoc ? stripId(reqDoc) : current.request_content,
-      verticals: Array.isArray(verticals) && verticals.length > 0 ? stripList(verticals) : current.verticals,
-      projects: Array.isArray(projects) && projects.length > 0 ? stripList(projects) : current.projects,
-      events: Array.isArray(events) && events.length > 0 ? stripList(events) : current.events,
-      achievements: Array.isArray(achievements) && achievements.length > 0 ? stripList(achievements) : current.achievements,
-      industry_records: Array.isArray(industry) && industry.length > 0 ? stripList(industry) : current.industry_records,
+      verticals: Array.isArray(verticals) ? stripList(verticals) : current.verticals,
+      projects: Array.isArray(projects) ? stripList(projects) : current.projects,
+      events: Array.isArray(events) ? stripList(events) : current.events,
+      achievements: Array.isArray(achievements) ? stripList(achievements) : current.achievements,
+      industry_records: Array.isArray(industry) ? stripList(industry) : current.industry_records,
       student_requests: Array.isArray(student_requests) ? stripList(student_requests) : current.student_requests,
       admin_users: Array.isArray(admin_users) && admin_users.length > 0 ? stripList(admin_users) : current.admin_users,
     };
@@ -969,9 +967,12 @@ export async function hydrateFromMongoIfNeeded(): Promise<DatabaseSchema> {
   }
 }
 
-// ---------------- PUBLIC ACCESSORS (Strictly published, safe, no student data) ----------------
+// ---------------- PUBLIC ACCESSORS (Strictly published, safe, live MongoDB hydrated) ----------------
 
-export function getPublicHomeContent() {
+export async function getPublicHomeContent() {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   return {
     home_content: db.home_content,
@@ -1010,7 +1011,10 @@ export function getPublicHomeContent() {
   };
 }
 
-export function getPublicAboutContent() {
+export async function getPublicAboutContent() {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   return {
     about_content: db.about_content,
@@ -1022,7 +1026,10 @@ export function getPublicAboutContent() {
   };
 }
 
-export function getPublicRequestContent(): RequestFormContent {
+export async function getPublicRequestContent(): Promise<RequestFormContent> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   const content = db.request_content || DEFAULT_REQUEST_CONTENT;
   if (!content.departments || !Array.isArray(content.departments) || content.departments.length === 0) {
@@ -1031,14 +1038,20 @@ export function getPublicRequestContent(): RequestFormContent {
   return content;
 }
 
-export function getPublicVerticals() {
+export async function getPublicVerticals() {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   return db.verticals
     .filter((v) => v.is_published)
     .sort((a, b) => a.order_index - b.order_index);
 }
 
-export function getPublicProjects(category?: string) {
+export async function getPublicProjects(category?: string) {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   let list = db.projects.filter((p) => p.is_published);
   if (category && category !== 'ALL') {
@@ -1047,7 +1060,10 @@ export function getPublicProjects(category?: string) {
   return list.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 }
 
-export function getPublicProjectBySlug(slug: string) {
+export async function getPublicProjectBySlug(slug: string) {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   const project = db.projects.find((p) => p.slug === slug && p.is_published);
   if (!project) return null;
@@ -1060,7 +1076,10 @@ export function getPublicProjectBySlug(slug: string) {
   return { project, related };
 }
 
-export function getPublicEvents(statusFilter?: EventStatus) {
+export async function getPublicEvents(statusFilter?: EventStatus) {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   const list = db.events
     .filter((e) => e.is_published)
@@ -1075,7 +1094,10 @@ export function getPublicEvents(statusFilter?: EventStatus) {
   return list.sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime());
 }
 
-export function getPublicEventBySlug(slug: string) {
+export async function getPublicEventBySlug(slug: string) {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   const event = db.events.find((e) => e.slug === slug && e.is_published);
   if (!event) return null;
@@ -1096,7 +1118,10 @@ export function getPublicEventBySlug(slug: string) {
   return { event: eventWithStatus, related };
 }
 
-export function getPublicAchievements(category?: string) {
+export async function getPublicAchievements(category?: string) {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   let list = db.achievements.filter((a) => a.is_published);
   if (category && category !== 'All') {
@@ -1105,14 +1130,20 @@ export function getPublicAchievements(category?: string) {
   return list.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 }
 
-export function getPublicIndustry() {
+export async function getPublicIndustry() {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   return db.industry_records
     .filter((i) => i.is_published)
     .sort((a, b) => a.order_index - b.order_index);
 }
 
-export function getPublicSettings() {
+export async function getPublicSettings() {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   return {
     institution_name: db.settings.institution_name,

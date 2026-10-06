@@ -4,7 +4,7 @@ import '../styles/admin.css';
 import { getPublicSettings } from '@/lib/db';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const settings = getPublicSettings();
+  const settings = await getPublicSettings();
   const title = settings.site_title || `${settings.coe_name} | ${settings.institution_name}`;
   const description =
     settings.meta_description ||

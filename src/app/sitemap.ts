@@ -1,7 +1,14 @@
 import { MetadataRoute } from 'next';
-import { initDb } from '@/lib/db';
+import { initDb, hydrateFromMongoIfNeeded } from '@/lib/db';
+import { isMongoConfigured } from '@/lib/mongodb';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://arvr.coe.edu';
   const now = new Date();

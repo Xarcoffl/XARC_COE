@@ -6,10 +6,11 @@ import { getPublicIndustry } from '@/lib/db';
 import { Handshake, Building2, MapPin, Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default function IndustryPage() {
-  const industryRecords = getPublicIndustry();
+export default async function IndustryPage() {
+  const industryRecords = await getPublicIndustry();
 
   const partners = industryRecords.filter((r) => r.category === 'Partner' || r.category === 'MoU');
   const activities = industryRecords.filter((r) => r.category !== 'Partner' && r.category !== 'MoU');

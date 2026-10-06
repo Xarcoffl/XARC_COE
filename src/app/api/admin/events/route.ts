@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionAdminFromRequest } from '@/lib/auth';
-import { initDb, saveDb, calculateEventStatus } from '@/lib/db';
+import { initDb, saveDbAsync, calculateEventStatus, hydrateFromMongoIfNeeded } from '@/lib/db';
+import { isMongoConfigured } from '@/lib/mongodb';
 import { EventItem } from '@/lib/types';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(req: NextRequest) {
   const admin = getSessionAdminFromRequest(req);
   if (!admin) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
   }
 
   const db = initDb();
@@ -26,6 +34,9 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
+    if (isMongoConfigured()) {
+      await hydrateFromMongoIfNeeded();
+    }
     const db = initDb();
 
     const slug = body.slug || body.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
@@ -52,7 +63,7 @@ export async function POST(req: NextRequest) {
     };
 
     db.events.unshift(newEvent);
-    saveDb(db);
+    await saveDbAsync(db);
 
     return NextResponse.json({ success: true, event: newEvent }, { status: 201 });
   } catch (err) {
@@ -69,6 +80,9 @@ export async function PUT(req: NextRequest) {
 
   try {
     const body = await req.json();
+    if (isMongoConfigured()) {
+      await hydrateFromMongoIfNeeded();
+    }
     const db = initDb();
 
     const idx = db.events.findIndex((e) => e.id === body.id);
@@ -83,7 +97,7 @@ export async function PUT(req: NextRequest) {
       updated_at: new Date().toISOString(),
     };
 
-    saveDb(db);
+    await saveDbAsync(db);
     return NextResponse.json({ success: true, event: db.events[idx] });
   } catch (err) {
     console.error('Error updating event:', err);
@@ -103,9 +117,12 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ success: false, message: 'Event ID required' }, { status: 400 });
   }
 
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   db.events = db.events.filter((e) => e.id !== id);
-  saveDb(db);
+  await saveDbAsync(db);
 
   return NextResponse.json({ success: true, message: 'Event removed.' });
 }

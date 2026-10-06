@@ -4,10 +4,11 @@ import Footer from '@/components/public/Footer';
 import EventsFilterView from '@/components/public/EventsFilterView';
 import { getPublicEvents } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default function EventsPage() {
-  const allEvents = getPublicEvents();
+export default async function EventsPage() {
+  const allEvents = await getPublicEvents();
 
   return (
     <div className="public-layout-root" style={{ position: 'relative', overflowX: 'hidden' }}>
