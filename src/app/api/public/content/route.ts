@@ -1,13 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPublicHomeContent, getPublicAboutContent, getPublicRequestContent } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const section = searchParams.get('section');
 
-  const requestContent = getPublicRequestContent();
-  const homeContent = getPublicHomeContent();
-  const aboutContent = getPublicAboutContent();
+  const [requestContent, homeContent, aboutContent] = await Promise.all([
+    getPublicRequestContent(),
+    getPublicHomeContent(),
+    getPublicAboutContent(),
+  ]);
 
   if (section === 'request') {
     return NextResponse.json({ success: true, request: requestContent, content: requestContent });
@@ -23,6 +28,5 @@ export async function GET(req: NextRequest) {
     request: requestContent,
     home: homeContent,
     about: aboutContent,
-    content: requestContent,
   });
 }

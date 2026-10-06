@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionAdminFromRequest } from '@/lib/auth';
-import { initDb, saveDb } from '@/lib/db';
+import { initDb, saveDbAsync, hydrateFromMongoIfNeeded } from '@/lib/db';
+import { isMongoConfigured } from '@/lib/mongodb';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(req: NextRequest) {
   const admin = getSessionAdminFromRequest(req);
   if (!admin) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
   }
 
   const { searchParams } = new URL(req.url);
@@ -31,19 +39,22 @@ export async function POST(req: NextRequest) {
 
   try {
     const { section, content } = await req.json();
+    if (isMongoConfigured()) {
+      await hydrateFromMongoIfNeeded();
+    }
     const db = initDb();
 
     if (section === 'home') {
       db.home_content = content;
-      saveDb(db);
+      await saveDbAsync(db);
       return NextResponse.json({ success: true, message: 'Home content updated successfully.' });
     } else if (section === 'about') {
       db.about_content = content;
-      saveDb(db);
+      await saveDbAsync(db);
       return NextResponse.json({ success: true, message: 'About content updated successfully.' });
     } else if (section === 'request') {
       db.request_content = content;
-      saveDb(db);
+      await saveDbAsync(db);
       return NextResponse.json({ success: true, message: 'Request form content updated successfully.' });
     }
 

@@ -8,6 +8,7 @@ import { getPublicEventBySlug } from '@/lib/db';
 import { ArrowLeft, Calendar, Clock, MapPin, ExternalLink, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 interface EventDetailPageProps {
@@ -16,7 +17,7 @@ interface EventDetailPageProps {
 
 export async function generateMetadata({ params }: EventDetailPageProps) {
   const { slug } = await params;
-  const result = getPublicEventBySlug(slug);
+  const result = await getPublicEventBySlug(slug);
   if (!result) return { title: 'Event Not Found | AR/VR CoE' };
 
   return {
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: EventDetailPageProps) {
 
 export default async function EventDetailPage({ params }: EventDetailPageProps) {
   const { slug } = await params;
-  const result = getPublicEventBySlug(slug);
+  const result = await getPublicEventBySlug(slug);
 
   if (!result) {
     notFound();

@@ -6,12 +6,15 @@ import AchievementsTrophy3D from '@/components/public/AchievementsTrophy3D';
 import { getPublicAchievements, getPublicProjects, getPublicIndustry } from '@/lib/db';
 import { Trophy, Award, Briefcase, FileText, CheckCircle2 } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default function AchievementsPage() {
-  const achievements = getPublicAchievements();
-  const projects = getPublicProjects();
-  const industry = getPublicIndustry();
+export default async function AchievementsPage() {
+  const [achievements, projects, industry] = await Promise.all([
+    getPublicAchievements(),
+    getPublicProjects(),
+    getPublicIndustry(),
+  ]);
 
   // Calculate verified statistics from database (Spec #36: Do not fabricate statistics)
   const totalProjects = projects.length;

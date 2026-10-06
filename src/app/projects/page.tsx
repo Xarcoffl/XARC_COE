@@ -6,10 +6,11 @@ import ProjectsFilterView from '@/components/public/ProjectsFilterView';
 import ProjectHolodeck3D from '@/components/public/ProjectHolodeck3D';
 import { getPublicProjects } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default function ProjectsPage() {
-  const allProjects = getPublicProjects();
+export default async function ProjectsPage() {
+  const allProjects = await getPublicProjects();
 
   return (
     <div className="public-layout-root" style={{ position: 'relative', overflowX: 'hidden' }}>

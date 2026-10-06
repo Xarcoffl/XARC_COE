@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionAdminFromRequest } from '@/lib/auth';
-import { initDb, saveDb } from '@/lib/db';
+import { initDb, saveDbAsync, hydrateFromMongoIfNeeded } from '@/lib/db';
+import { isMongoConfigured } from '@/lib/mongodb';
 import { IndustryRecord } from '@/lib/types';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(req: NextRequest) {
   const admin = getSessionAdminFromRequest(req);
   if (!admin) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
   }
 
   const db = initDb();
@@ -21,6 +29,9 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json();
+    if (isMongoConfigured()) {
+      await hydrateFromMongoIfNeeded();
+    }
     const db = initDb();
 
     const newRecord: IndustryRecord = {
@@ -37,7 +48,7 @@ export async function POST(req: NextRequest) {
     };
 
     db.industry_records.push(newRecord);
-    saveDb(db);
+    await saveDbAsync(db);
 
     return NextResponse.json({ success: true, record: newRecord }, { status: 201 });
   } catch (err) {
@@ -54,6 +65,9 @@ export async function PUT(req: NextRequest) {
 
   try {
     const body = await req.json();
+    if (isMongoConfigured()) {
+      await hydrateFromMongoIfNeeded();
+    }
     const db = initDb();
 
     const idx = db.industry_records.findIndex((r) => r.id === body.id);
@@ -67,7 +81,7 @@ export async function PUT(req: NextRequest) {
       key_outcomes: Array.isArray(body.key_outcomes) ? body.key_outcomes : (body.key_outcomes || '').split('\n').filter(Boolean),
     };
 
-    saveDb(db);
+    await saveDbAsync(db);
     return NextResponse.json({ success: true, record: db.industry_records[idx] });
   } catch (err) {
     console.error('Error updating industry record:', err);
@@ -87,9 +101,12 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ success: false, message: 'Record ID required' }, { status: 400 });
   }
 
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
   const db = initDb();
   db.industry_records = db.industry_records.filter((r) => r.id !== id);
-  saveDb(db);
+  await saveDbAsync(db);
 
   return NextResponse.json({ success: true, message: 'Industry record removed.' });
 }

@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionAdminFromRequest } from '@/lib/auth';
-import { initDb, saveDb } from '@/lib/db';
+import { initDb, saveDbAsync, hydrateFromMongoIfNeeded } from '@/lib/db';
+import { isMongoConfigured } from '@/lib/mongodb';
 import { Vertical } from '@/lib/types';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(req: NextRequest) {
   const admin = getSessionAdminFromRequest(req);
   if (!admin) {
     return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
   }
 
   const db = initDb();
@@ -21,6 +29,9 @@ export async function PUT(req: NextRequest) {
 
   try {
     const body = await req.json();
+    if (isMongoConfigured()) {
+      await hydrateFromMongoIfNeeded();
+    }
     const db = initDb();
 
     const idx = db.verticals.findIndex((v) => v.id === body.id);
@@ -36,7 +47,7 @@ export async function PUT(req: NextRequest) {
       opportunities: Array.isArray(body.opportunities) ? body.opportunities : (body.opportunities || '').split(',').map((o: string) => o.trim()),
     };
 
-    saveDb(db);
+    await saveDbAsync(db);
     return NextResponse.json({ success: true, vertical: db.verticals[idx] });
   } catch (err) {
     console.error('Error updating vertical:', err);

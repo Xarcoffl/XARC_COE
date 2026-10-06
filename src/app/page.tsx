@@ -10,10 +10,11 @@ import HeroSpatialCockpit from '@/components/public/HeroSpatialCockpit';
 import { getPublicHomeContent } from '@/lib/db';
 import { ArrowRight, Compass, Award, Briefcase, BookOpen, Zap, Cpu } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0; // Dynamic server rendering
 
-export default function HomePage() {
-  const data = getPublicHomeContent();
+export default async function HomePage() {
+  const data = await getPublicHomeContent();
   const { home_content, featured_events, featured_projects, featured_achievements, verticals, settings } = data;
 
   const getVerticalIcon = (iconName: string) => {
