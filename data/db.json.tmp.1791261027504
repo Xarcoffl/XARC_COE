@@ -1,0 +1,1217 @@
+{
+  "admin_users": [
+    {
+      "email": "admin@coe.xarc.online",
+      "created_at": "2026-01-01T00:00:00.000Z",
+      "id": "admin-1",
+      "name": "CoE Administrator",
+      "password_hash": "$2b$10$LUKnnWtTBZLztYwkRMn36.ST8KU8k8j8ChnEnbzj12PHOwl58SfEK",
+      "role": "superadmin",
+      "updated_at": "2026-10-05T09:36:36.878Z"
+    },
+    {
+      "id": "admin-1791252874907",
+      "created_at": "2026-10-06T02:14:34.954Z",
+      "email": "admin@coe.edu",
+      "name": "CoE Admin",
+      "password_hash": "$2b$10$iVz6c01jC2OKVEiL0znI6OMSTiU9Rye/f4mZlV1cXgFg.KU0R63d2",
+      "role": "superadmin",
+      "updated_at": "2026-10-06T02:14:34.955Z"
+    }
+  ],
+  "settings": {
+    "campus_address": "Technology Campus, Innovation Corridor, Chennai - 600001",
+    "coe_name": "Voxel Works Studios",
+    "contact_email": "xarcoffl@gmail.com",
+    "contact_phone": "+91 95979 21052",
+    "favicon_url": "/favicon.ico",
+    "footer_copyright": "All Rights Reserved.",
+    "footer_tagline": "Spatial Computing & Immersive Engineering Digital Ecosystem",
+    "institution_name": "XARC",
+    "meta_description": "A multidisciplinary immersive technology ecosystem for students to learn, collaborate, develop practical skills and build solutions using AR, VR, MR, XR, 3D and related technologies.",
+    "office_location": "Centre of Excellence Block, 2nd Floor, Room COE-204",
+    "site_title": "AR/VR Centre of Excellence | Spatial Computing Lab",
+    "social_links": {
+      "linkedin": "https://linkedin.com",
+      "github": "https://github.com",
+      "youtube": "https://youtube.com",
+      "twitter": "https://twitter.com"
+    },
+    "tagline": "Explore. Learn. Build. Innovate.",
+    "working_hours": "Monday – Saturday: 8:30 AM – 5:00 PM"
+  },
+  "home_content": {
+    "about_preview": {
+      "heading": "Where Learning Meets Immersive Technology",
+      "description": "The AR/VR Centre of Excellence provides an advanced spatial computing environment where students bridge theoretical engineering with hands-on immersive innovation.",
+      "pillars": [
+        {
+          "tag": "MULTIDISCIPLINARY",
+          "title": "Cross-Department Collaboration",
+          "desc": "Bringing together students from CSE, IT, ECE, EEE, Mechanical, and AI/DS to build next-generation immersive systems."
+        },
+        {
+          "tag": "HANDS-ON",
+          "title": "Practical Development",
+          "desc": "Direct access to high-end VR headsets, haptic controllers, spatial sensors, and GPU workstations."
+        },
+        {
+          "tag": "INNOVATION",
+          "title": "Projects & Ideas",
+          "desc": "Incubating original prototypes, technical IP, research publications, and patentable spatial solutions."
+        },
+        {
+          "tag": "INDUSTRY",
+          "title": "Real-World Exposure",
+          "desc": "Working directly with industry partners, MoUs, live consultancy problems, and specialized mentor sessions."
+        }
+      ]
+    },
+    "featured_content": {
+      "heading": "What's Happening"
+    },
+    "hero": {
+      "title": "AR/VR Centre of Excellence",
+      "subtitle": "Explore. Learn. Build. Innovate.",
+      "description": "A multidisciplinary immersive technology ecosystem for students to learn, collaborate, develop practical skills and build solutions using AR, VR, MR, XR, 3D and related technologies.",
+      "primary_cta_label": "Request to Join",
+      "secondary_cta_label": "Explore Verticals"
+    },
+    "join_cta": {
+      "heading": "READY TO EXPLORE IMMERSIVE TECHNOLOGY?",
+      "subheading": "Take your first step into Spatial Computing and Extended Reality.",
+      "description": "Tell us what interests you and join our dynamic ecosystem of builders, designers, and innovators.",
+      "cta_label": "Request to Join"
+    },
+    "journey": {
+      "heading": "Build Your Journey",
+      "description": "Progress through learning, practical development, competitions, projects, internships and industry-oriented opportunities."
+    },
+    "verticals_preview": {
+      "heading": "Five Pathways. One Immersive Ecosystem.",
+      "subheading": "Structured avenues tailored for every stage of your spatial computing journey."
+    }
+  },
+  "about_content": {
+    "coworking_description": "The CoE is designed as a collaborative, modern studio workspace rather than a conventional classroom. High-performance VR test rigs, dedicated tracking bays, and agile huddle areas empower active experimentation.",
+    "coworking_title": "Your Space to Learn and Build",
+    "hero": {
+      "heading": "Beyond a Lab.",
+      "subheading": "An Ecosystem for Immersive Innovation.",
+      "description": "Established to cultivate pioneering engineers in Augmented Reality, Virtual Reality, Mixed Reality, and Spatial Computing at the Centre of Excellence."
+    },
+    "industry_orientation_desc": "Through bilateral MoUs and active industry advisory boards, the curriculum and projects are aligned with prevailing spatial computing standards (OpenXR, WebXR, Apple visionOS, Meta Quest SDKs).",
+    "mission": "To foster an open, multidisciplinary research and development laboratory where students master spatial computing paradigms, solve industry-grade engineering challenges, and build deployable XR solutions.",
+    "multidisciplinary_desc": "Spatial computing requires diverse disciplines: computer vision, 3D spatial audio, kinematics, computer graphics, human-computer interaction, and cloud streaming. Our lab welcomes students across all engineering branches.",
+    "roadmap": [
+      {
+        "phase": "Phase 01",
+        "title": "Foundation & Spatial Literacy",
+        "description": "3D mathematics, spatial scene graphs, linear algebra for graphics, basic asset workflows, and Unity/Unreal fundamentals."
+      },
+      {
+        "phase": "Phase 02",
+        "title": "Applied XR Development",
+        "description": "HMD tracking pipelines, hand tracking & gesture interactions, spatial audio, physics simulation, and shader development."
+      },
+      {
+        "phase": "Phase 03",
+        "title": "Advanced Engineering & Optimization",
+        "description": "OpenXR runtimes, networked multi-user environments, foveated rendering, spatial mesh scanning, and latency tuning."
+      },
+      {
+        "phase": "Phase 04",
+        "title": "Industry Capstones & Incubation",
+        "description": "Commercial prototype delivery, patent filings, research papers, venture competitions, and placement acceleration."
+      }
+    ],
+    "student_development_desc": "From first-year orientation through final-year capstones, students progress through progressive milestones—from fundamental 3D mathematical principles to full-fledged multi-user immersive applications.",
+    "vision": "To emerge as a premier institutional hub for immersive technologies in South India, driving academic excellence, intellectual property creation, and industry-ready engineering talent.",
+    "what_we_do": [
+      "Structured hands-on technical bootcamps in Unity, Unreal Engine 5, WebXR, and Blender",
+      "Industry-sponsored research and development projects addressing real operational challenges",
+      "Continuous mentorship for national and international XR hackathons and competitions",
+      "Facilitating summer and semester-long internships with leading spatial technology firms",
+      "Fostering interdepartmental project teams bridging hardware, software, 3D art, and domain logic"
+    ]
+  },
+  "verticals": [
+    {
+      "slug": "long-term-certification",
+      "full_description": "Structured multi-semester technical progressions designed to take students from absolute zero to production-capable XR engineers. Covering computer graphics mathematics, Unity / Unreal Engine development, OpenXR integrations, 3D asset optimization, spatial audio, and interactive interface design.",
+      "icon": "Award",
+      "id": "vert-1",
+      "is_published": true,
+      "number": "01",
+      "opportunities": [
+        "Software Engineer - XR",
+        "Unity/Unreal Developer",
+        "Graphics Programmer",
+        "Technical Artist"
+      ],
+      "order_index": 1,
+      "outcomes": [
+        "Industry-standard certified skill credentials",
+        "Deep mastery of Unity & Unreal Engine XR toolchains",
+        "Portfolio of 4+ production-level interactive applications",
+        "Fluency in OpenXR, C#, and C++ graphics pipelines"
+      ],
+      "short_description": "Comprehensive curriculum tracks covering foundational to advanced spatial computing and 3D engine development.",
+      "title": "Long-Term Certification Courses",
+      "tools": [
+        "Unity 2023 LTS",
+        "Unreal Engine 5.4",
+        "OpenXR SDK",
+        "Blender 4.x",
+        "Visual Studio 2022"
+      ]
+    },
+    {
+      "slug": "industry-internships",
+      "full_description": "Bridge academic preparation with enterprise execution. Students are paired with corporate mentors to build industrial training simulations, medical visualization platforms, and digital twin interfaces under real development sprints.",
+      "icon": "Briefcase",
+      "id": "vert-2",
+      "is_published": true,
+      "number": "02",
+      "opportunities": [
+        "Enterprise XR Consultant",
+        "Simulation Engineer",
+        "Pre-Placement Offers",
+        "Industrial Designer"
+      ],
+      "order_index": 2,
+      "outcomes": [
+        "Real-world client project demonstrations and delivery",
+        "Direct mentorship from senior XR architects",
+        "Stipend-supported internship positions",
+        "Fast-track Pre-Placement Offers (PPO) upon completion"
+      ],
+      "short_description": "Direct engagement with technology partners on live commercial and industrial XR deliverables.",
+      "title": "Internships with Industry Support",
+      "tools": [
+        "Jira / Git Workflows",
+        "Enterprise Cloud SDKs",
+        "Meta Quest Pro / 3",
+        "Apple Vision Pro Dev Kit"
+      ]
+    },
+    {
+      "slug": "self-learning-courses",
+      "full_description": "Guided asynchronous learning paths tailored for students balancing academic coursework. Structured in three clear tiers (Beginner -> Intermediate -> Advanced), complete with starter repos, step-by-step documentation, and lab test criteria.",
+      "icon": "BookOpen",
+      "id": "vert-3",
+      "is_published": true,
+      "number": "03",
+      "opportunities": [
+        "WebXR Specialist",
+        "Creative Technologist",
+        "Independent XR Creator",
+        "Research Fellow"
+      ],
+      "order_index": 3,
+      "outcomes": [
+        "Self-directed progression tailored to student schedules",
+        "GitHub-backed repository of completed exercises",
+        "Structured peer reviews and automated test checkpoints",
+        "Gateway qualifications for advanced research pods"
+      ],
+      "short_description": "Self-paced modular pathways with code repositories, hands-on tutorials, and assessment checkpoints.",
+      "title": "Self-Learning Courses",
+      "tools": [
+        "WebXR & Three.js",
+        "ShaderLab / HLSL",
+        "A-Frame & Babylon.js",
+        "GitHub Education"
+      ]
+    },
+    {
+      "slug": "skill-development",
+      "full_description": "Competitive, collaborative arenas designed to stretch engineering limits. The CoE sponsors and mentors student squads competing in Smart India Hackathon, global XR game jams, IEEE VR conferences, and student IP disclosures.",
+      "icon": "Cpu",
+      "id": "vert-4",
+      "is_published": true,
+      "number": "04",
+      "opportunities": [
+        "Hackathon Champions",
+        "Patent Holders",
+        "Research Presenters",
+        "Tech Community Leaders"
+      ],
+      "order_index": 4,
+      "outcomes": [
+        "National & international hackathon podium finishes",
+        "Provisional patent filings and institutional IP generation",
+        "Published conference papers in IEEE and Springer venues",
+        "High-stakes presentation and rapid-prototyping skills"
+      ],
+      "short_description": "Intensive hackathons, technical paper symposiums, patent clinics, and national challenge teams.",
+      "title": "Skill Development Activities",
+      "tools": [
+        "Rapid Prototyping Kits",
+        "Haptic Actuators",
+        "Arduino / ESP32 XR Peripherals",
+        "LiDAR Scanners"
+      ]
+    },
+    {
+      "slug": "product-development",
+      "full_description": "Operating like an advanced engineering product laboratory. Interdisciplinary squads design, engineer, stress-test, and deploy end-to-end applications for engineering education, medical training, smart manufacturing, and cultural preservation.",
+      "icon": "Cpu",
+      "id": "vert-5",
+      "is_published": true,
+      "number": "05",
+      "opportunities": [
+        "Product Engineer - XR",
+        "Spatial UX Architect",
+        "Startup Founder",
+        "Hardware/Software Systems Integrator"
+      ],
+      "order_index": 5,
+      "outcomes": [
+        "Fully deployable spatial products with end-user validation",
+        "Exploded engineering CAD-to-XR pipelines",
+        "Campus-wide adoption of developed educational modules",
+        "Foundation for technology spin-offs and startup incubation"
+      ],
+      "short_description": "Incubation of deployable industrial, healthcare, and educational spatial computing solutions.",
+      "title": "Product Development",
+      "tools": [
+        "SolidWorks XR Exporter",
+        "Spatial Anchors",
+        "Multi-user Photon Fusion",
+        "Eye & Face Tracking SDKs"
+      ]
+    }
+  ],
+  "projects": [],
+  "events": [],
+  "achievements": [],
+  "industry_records": [
+    {
+      "id": "ind-1",
+      "category": "Partner",
+      "collaboration_details": "Curriculum mapping with Unity Certified Associate and Professional exams, beta access to Unity XR interaction toolkits, and guest masterclasses.",
+      "date_or_term": "Active MoU (2024 – 2027)",
+      "description": "Official academic engagement providing licensed developer toolchains, curriculum frameworks, and globally recognized student certification pathways.",
+      "is_published": true,
+      "key_outcomes": [
+        "Official Unity student certification center",
+        "Direct access to Unity academic engineering support",
+        "Curriculum credits integrated with university electives"
+      ],
+      "logo": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&auto=format&fit=crop",
+      "name": "Unity Technologies Academic Alliance",
+      "order_index": 1
+    },
+    {
+      "id": "ind-2",
+      "category": "MoU",
+      "collaboration_details": "Enterprise software provisioning of Vuforia Studio and Vuforia Engine for training engineering students on real-world industrial IoT workflows.",
+      "date_or_term": "MoU signed September 2024",
+      "description": "Bilateral partnership focusing on Industrial Augmented Reality, CAD-to-AR digital work instructions, and spatial factory floor optimization.",
+      "is_published": true,
+      "key_outcomes": [
+        "Vuforia Studio industrial AR training lab setup",
+        "Joint capstone projects with manufacturing clients",
+        "Faculty development programs conducted biannually"
+      ],
+      "logo": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=400&auto=format&fit=crop",
+      "name": "PTC Academic & Vuforia Enterprise",
+      "order_index": 2
+    },
+    {
+      "id": "ind-3",
+      "category": "Industrial Visit",
+      "collaboration_details": "Students observed 24-camera Vicon optical tracking volumes, haptic force-feedback simulators, and heavy engineering virtual commissioning.",
+      "date_or_term": "November 14, 2025",
+      "description": "A dedicated one-day exposure visit for 45 CoE student developers to observe live industrial VR training rigs and optical motion capture studios.",
+      "is_published": true,
+      "key_outcomes": [
+        "Observed live motion-capture shoot for game animation",
+        "Interactive Q&A session with Chief Technology Officer",
+        "3 student teams invited for summer internship screenings"
+      ],
+      "logo": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=400&auto=format&fit=crop",
+      "name": "Industrial Visit to Spatial Tech Labs, Chennai",
+      "order_index": 3
+    },
+    {
+      "id": "ind-4",
+      "category": "Expert Session",
+      "collaboration_details": "Covered architectural mechanics of spatial eye tracking, dynamic foveated rendering pipelines, and enterprise application security in headsets.",
+      "date_or_term": "January 10, 2026",
+      "description": "Technical deep-dive delivered by Principal XR Systems Architect from a tier-1 multinational technology consulting corporation.",
+      "is_published": true,
+      "key_outcomes": [
+        "Attended by 110 students and 15 faculty members",
+        "Recorded technical masterclass archived for CoE students"
+      ],
+      "logo": "https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=400&auto=format&fit=crop",
+      "name": "Expert Session: Enterprise OpenXR Runtimes & VisionOS",
+      "order_index": 4
+    }
+  ],
+  "student_requests": [
+    {
+      "id": "req-1791195191515-y5itq",
+      "college_email": "vishhal2009@gmail.com",
+      "custom_field_responses": {},
+      "department": "Computer Science and Engineering",
+      "email": "vishhal2009@gmail.com",
+      "existing_skills": "Python,java",
+      "experience_level": "New to XR",
+      "full_name": "Vishal R",
+      "interests": [
+        "3D Modelling"
+      ],
+      "internal_notes": "",
+      "mobile_number": "9384323016",
+      "motivation": "Eager to learn more about 3 d modeling to improve my skills",
+      "register_number": "CSE26052",
+      "section": "B",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:13:11.516Z",
+      "updated_at": "2026-10-05T10:13:11.516Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791195392407-b24m4",
+      "college_email": "kmreddy9030@gmail.com",
+      "custom_field_responses": {},
+      "department": "Artificial Intelligence and Data Science",
+      "email": "kmreddy9030@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "KALEPALLI SONIYA",
+      "interests": [
+        "Game Development"
+      ],
+      "internal_notes": "",
+      "mobile_number": "9030139020",
+      "motivation": "I WANT TO BECOME A GAME DEVELOPER",
+      "register_number": "26084",
+      "section": "A",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:16:32.407Z",
+      "updated_at": "2026-10-05T10:16:32.407Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791195472399-c3b1v",
+      "college_email": "galetifarhin05432@gmail.com",
+      "custom_field_responses": {},
+      "department": "Artificial Intelligence and Data Science",
+      "email": "galetifarhin05432@gmail.com",
+      "existing_skills": "",
+      "experience_level": "Beginner",
+      "full_name": "Galeti farhi n",
+      "interests": [
+        "Game Development"
+      ],
+      "internal_notes": "",
+      "mobile_number": "7995785732",
+      "motivation": "I  join  to learn and know  about gaming  and 3D models",
+      "register_number": "26016",
+      "section": "A",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:17:52.399Z",
+      "updated_at": "2026-10-05T10:17:52.399Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791195956312-jadbp",
+      "college_email": "kumarthenmozhi4@gmail.com",
+      "custom_field_responses": {},
+      "department": "Computer Science and Business System",
+      "email": "kumarthenmozhi4@gmail.com",
+      "existing_skills": "Python",
+      "experience_level": "New to XR",
+      "full_name": "MUGHILAZHAGAN K . T",
+      "interests": [
+        "Still Exploring",
+        "AR",
+        "VR",
+        "3D Modelling",
+        "Game Development",
+        "UI/UX",
+        "Hackathons",
+        "Industry Projects",
+        "Internships",
+        "Certification",
+        "Self-Learning"
+      ],
+      "internal_notes": "",
+      "mobile_number": "9171191723",
+      "motivation": "Accelerating Innovations collaborative Ecosystem",
+      "register_number": "CSBS26019",
+      "section": "A",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:25:56.312Z",
+      "updated_at": "2026-10-05T10:25:56.312Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791196064767-rqvl3",
+      "college_email": "umadevi9390456307@gmail.com",
+      "custom_field_responses": {},
+      "department": "Bio Technology",
+      "email": "umadevi9390456307@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "UMADEVI.J",
+      "interests": [
+        "3D Modelling"
+      ],
+      "internal_notes": "",
+      "mobile_number": "9390456307",
+      "motivation": "To develop skills",
+      "register_number": "26018",
+      "section": "",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:27:44.767Z",
+      "updated_at": "2026-10-05T10:27:44.767Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791196143589-g38gj",
+      "college_email": "nidhin230709@gmail.com",
+      "custom_field_responses": {},
+      "department": "Computer Science and Engineering",
+      "email": "nidhin230709@gmail.com",
+      "existing_skills": "Python",
+      "experience_level": "New to XR",
+      "full_name": "Nidhin",
+      "interests": [
+        "Game Development",
+        "AR",
+        "VR",
+        "3D Modelling",
+        "UI/UX",
+        "Hackathons",
+        "Industry Projects",
+        "Internships",
+        "Certification",
+        "Self-Learning",
+        "Still Exploring"
+      ],
+      "internal_notes": "",
+      "mobile_number": "7358850138",
+      "motivation": "Innovative",
+      "register_number": "CSE26087",
+      "section": "B",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:29:03.589Z",
+      "updated_at": "2026-10-05T10:29:03.589Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791196618267-8q7da",
+      "college_email": "madhavimokkatla27@gmail.com",
+      "custom_field_responses": {},
+      "department": "Artificial Intelligence and Machine Learning",
+      "email": "madhavimokkatla27@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "Madhavi Mokkatla",
+      "interests": [
+        "Game Development"
+      ],
+      "internal_notes": "",
+      "mobile_number": "7842213352",
+      "motivation": "I join to know about game development and become a game developer",
+      "register_number": "26052",
+      "section": "",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:36:58.267Z",
+      "updated_at": "2026-10-05T10:36:58.267Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791196874575-cclym",
+      "college_email": "annametiyuvathi@gmail.com",
+      "custom_field_responses": {},
+      "department": "Artificial Intelligence and Data Science",
+      "email": "annametiyuvathi@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "ANNAMETI YUVATHI",
+      "interests": [
+        "Game Development"
+      ],
+      "internal_notes": "",
+      "mobile_number": "9014003804",
+      "motivation": "i want to become a game developer",
+      "register_number": "26090",
+      "section": "A",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:41:14.575Z",
+      "updated_at": "2026-10-05T10:41:14.575Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791197143114-4pgzh",
+      "college_email": "katakamvaishu53@gmail.com",
+      "custom_field_responses": {},
+      "department": "Artificial Intelligence and Machine Learning",
+      "email": "katakamvaishu53@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "KATAKAM VAISHNAVI",
+      "interests": [
+        "Game Development"
+      ],
+      "internal_notes": "",
+      "mobile_number": "7093275872",
+      "motivation": "i want to become game developer",
+      "register_number": "26005",
+      "section": "A",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:45:43.114Z",
+      "updated_at": "2026-10-05T10:45:43.114Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791197385317-tb488",
+      "college_email": "nethralakshmi410@gmail.com",
+      "custom_field_responses": {},
+      "department": "Bio Technology",
+      "email": "nethralakshmi410@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "A.NETHRA LAKSHMI",
+      "interests": [
+        "VR"
+      ],
+      "internal_notes": "",
+      "mobile_number": "9959874102",
+      "motivation": "I wanted to make VR as my additional skill",
+      "register_number": "26022",
+      "section": "A",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:49:45.317Z",
+      "updated_at": "2026-10-05T10:49:45.317Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791197500194-rt6zq",
+      "college_email": "balasathish948@gmail.com",
+      "custom_field_responses": {},
+      "department": "Artificial Intelligence and Data Science",
+      "email": "balasathish948@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "Balasaraswathi",
+      "interests": [
+        "Hackathons"
+      ],
+      "internal_notes": "",
+      "mobile_number": "9003380948",
+      "motivation": "I interested in AR/VR",
+      "register_number": "26048",
+      "section": "A",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:51:40.194Z",
+      "updated_at": "2026-10-05T10:51:40.194Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791197565906-nf9cq",
+      "college_email": "pommilakshmi4@gmai.com",
+      "custom_field_responses": {},
+      "department": "Artificial Intelligence and Data Science",
+      "email": "pommilakshmi4@gmai.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "POMMILAKSHMI.P",
+      "interests": [
+        "VR"
+      ],
+      "internal_notes": "",
+      "mobile_number": "7825985167",
+      "motivation": "I WANT VR FOR ADDITIONAL SKILL",
+      "register_number": "26079",
+      "section": "B",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:52:45.906Z",
+      "updated_at": "2026-10-05T10:52:45.906Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791197627745-tpuez",
+      "college_email": "kaviya9072@gmail.com",
+      "custom_field_responses": {},
+      "department": "Artificial Intelligence and Data Science",
+      "email": "kaviya9072@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "M.kaviya",
+      "interests": [
+        "UI/UX"
+      ],
+      "internal_notes": "",
+      "mobile_number": "8072790889",
+      "motivation": "I want to learn things about ui/ux",
+      "register_number": "26011",
+      "section": "A",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:53:47.745Z",
+      "updated_at": "2026-10-05T10:53:47.745Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791197641819-rok2n",
+      "college_email": "sjeyaaishwarya0104@gmail.com",
+      "custom_field_responses": {},
+      "department": "Computer Science and Engineering",
+      "email": "sjeyaaishwarya0104@gmail.com",
+      "existing_skills": "Python, C language",
+      "experience_level": "New to XR",
+      "full_name": "JEYA AISHWARYA S",
+      "interests": [
+        "Game Development",
+        "Product Development",
+        "UI/UX",
+        "Hackathons",
+        "Internships",
+        "Certification",
+        "Self-Learning",
+        "3D Modelling",
+        "AR",
+        "VR",
+        "MR"
+      ],
+      "internal_notes": "",
+      "mobile_number": "8270291296",
+      "motivation": "to improve my skills",
+      "register_number": "26101",
+      "section": "A",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:54:01.819Z",
+      "updated_at": "2026-10-05T10:54:01.819Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791197675400-t64bc",
+      "college_email": "kusuma.keerthi77@gmail.com",
+      "custom_field_responses": {},
+      "department": "Artificial Intelligence and Data Science",
+      "email": "kusuma.keerthi77@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "R KUSUMA KEERTHI",
+      "interests": [
+        "3D Modelling",
+        "Hackathons",
+        "Internships",
+        "Certification",
+        "Self-Learning"
+      ],
+      "internal_notes": "",
+      "mobile_number": "9676189204",
+      "motivation": "INTERESTED IN GAMES AND GAME DEVELOPMENT, INTERNSHIPS AND 3D MODELLING",
+      "register_number": "26087",
+      "section": "B",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:54:35.400Z",
+      "updated_at": "2026-10-05T10:54:35.400Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791197737646-7warl",
+      "college_email": "bathalasaipriya@gmail.com",
+      "custom_field_responses": {},
+      "department": "Artificial Intelligence and Machine Learning",
+      "email": "bathalasaipriya@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "B.SAI PRIYA",
+      "interests": [
+        "Game Development",
+        "3D Modelling"
+      ],
+      "internal_notes": "",
+      "mobile_number": "9121618597",
+      "motivation": "Interest in gaming",
+      "register_number": "26014",
+      "section": "",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:55:37.646Z",
+      "updated_at": "2026-10-05T10:55:37.646Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791197818042-srdgv",
+      "college_email": "gowrisenthil202@gmail.com",
+      "custom_field_responses": {},
+      "department": "Electronics and Communication Engineering",
+      "email": "gowrisenthil202@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "GOWRI S",
+      "interests": [
+        "VR"
+      ],
+      "internal_notes": "",
+      "mobile_number": "7358781556",
+      "motivation": "extra skill devolpement",
+      "register_number": "26065",
+      "section": "A",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T10:56:58.042Z",
+      "updated_at": "2026-10-05T10:56:58.042Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791198723378-ltzck",
+      "college_email": "gunasekarc@rediffmail.com",
+      "custom_field_responses": {},
+      "department": "Electrical and Electronics Engineering",
+      "email": "gunasekarc@rediffmail.com",
+      "existing_skills": "",
+      "experience_level": "Beginner",
+      "full_name": "Nisha Gunashekar. G",
+      "interests": [
+        "AR",
+        "VR",
+        "3D Modelling",
+        "Internships",
+        "Certification",
+        "Research"
+      ],
+      "internal_notes": "",
+      "mobile_number": "9500319439",
+      "motivation": "To learn more and am so curious about this",
+      "register_number": "26047",
+      "section": "A",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T11:12:03.378Z",
+      "updated_at": "2026-10-05T11:12:03.378Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791203311580-y6xuv",
+      "college_email": "darshanagk34@gmail.com",
+      "custom_field_responses": {},
+      "department": "Computer Science and Engineering",
+      "email": "darshanagk34@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "Darshana",
+      "interests": [
+        "AR",
+        "VR",
+        "MR",
+        "XR",
+        "3D Modelling",
+        "Game Development",
+        "Product Development",
+        "Still Exploring",
+        "Self-Learning",
+        "Certification",
+        "Internships",
+        "Industry Projects",
+        "Hackathons",
+        "Research"
+      ],
+      "internal_notes": "",
+      "mobile_number": "6380686970",
+      "motivation": "I want to join the AR/VR CoE to bridge the gap between immersive game mechanics and real-world utility, collaborating with experts to build production-ready spatial experiences.",
+      "register_number": "CSE26013",
+      "section": "A",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T12:28:31.580Z",
+      "updated_at": "2026-10-05T12:28:31.580Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791203494211-jmi7k",
+      "college_email": "yaminiyamuna2008@gmail.com",
+      "custom_field_responses": {},
+      "department": "Artificial Intelligence and Machine Learning",
+      "email": "yaminiyamuna2008@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "Yamuna K",
+      "interests": [
+        "AR",
+        "VR",
+        "MR",
+        "XR",
+        "3D Modelling",
+        "Game Development",
+        "Simulation",
+        "Product Development",
+        "UI/UX",
+        "Research",
+        "Hackathons",
+        "Industry Projects",
+        "Internships",
+        "Certification",
+        "Self-Learning",
+        "Still Exploring"
+      ],
+      "internal_notes": "",
+      "mobile_number": "8438226301",
+      "motivation": "I want to join the AR/VR CoE to bridge the gap between immersive game mechanics and real-world utility, collaborating with experts to build production-ready spatial experiences.",
+      "register_number": "AIML26006",
+      "section": "",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T12:31:34.211Z",
+      "updated_at": "2026-10-05T12:31:34.211Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791205641051-spo8t",
+      "college_email": "akshithavemula38@gmail.com",
+      "custom_field_responses": {},
+      "department": "Artificial Intelligence and Data Science",
+      "email": "akshithavemula38@gmail.com",
+      "existing_skills": "Python",
+      "experience_level": "New to XR",
+      "full_name": "Vemula sindhuja",
+      "interests": [
+        "Still Exploring",
+        "Internships",
+        "Hackathons",
+        "Research",
+        "Game Development",
+        "3D Modelling",
+        "Self-Learning",
+        "Certification",
+        "AR",
+        "VR"
+      ],
+      "internal_notes": "",
+      "mobile_number": "9042785954",
+      "motivation": "Game development",
+      "register_number": "AIDS26021",
+      "section": "B",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T13:07:21.051Z",
+      "updated_at": "2026-10-05T13:07:21.051Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791207997840-4q10q",
+      "college_email": "rithikajayaprakash08@gmail.com",
+      "custom_field_responses": {},
+      "department": "Computer Science and Engineering",
+      "email": "rithikajayaprakash08@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "Rithika J",
+      "interests": [
+        "AR",
+        "VR",
+        "MR",
+        "XR",
+        "3D Modelling",
+        "Game Development",
+        "Simulation",
+        "Product Development",
+        "UI/UX",
+        "Research",
+        "Hackathons",
+        "Industry Projects",
+        "Internships",
+        "Certification",
+        "Self-Learning",
+        "Still Exploring"
+      ],
+      "internal_notes": "",
+      "mobile_number": "7550056478",
+      "motivation": "I’ve always been fascinated by how AR and VR can turn abstract ideas into something you can actually see and interact with . I was very fascinated by the technology since I came for the orientation program for AR/VR . I want to join the CoE to learn the technical tools from scratch, collaborate on real projects, and figure out how to build practical immersive apps rather than just theoretical ones. Being in a community of people already working on this stuff feels like the best place to start.",
+      "register_number": "CSE26118",
+      "section": "B",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T13:46:37.840Z",
+      "updated_at": "2026-10-05T13:46:37.840Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791217012664-glknq",
+      "college_email": "vijaykumar112815@gmail.com",
+      "custom_field_responses": {
+        "portfolio_url": ""
+      },
+      "department": "Computer Science and Engineering",
+      "email": "vijaykumar112815@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "Vijay Kumar",
+      "interests": [
+        "Game Development",
+        "Industry Projects",
+        "Hackathons",
+        "Research",
+        "UI/UX",
+        "Product Development",
+        "Simulation"
+      ],
+      "internal_notes": "",
+      "mobile_number": "8903140815",
+      "motivation": "I want to join the AR/VR CoE to learn about AR/VR technology, improve my programming and 3D skills, and gain practical experience. I hope to create innovative projects, explore Unity, and develop useful AR/VR applications.",
+      "register_number": "CSE26089",
+      "section": "B",
+      "status": "NEW",
+      "submitted_at": "2026-10-05T16:16:52.664Z",
+      "updated_at": "2026-10-05T16:16:52.664Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791251640848-spwj9",
+      "college_email": "livithar04@gmail.com",
+      "custom_field_responses": {},
+      "department": "Artificial Intelligence and Machine Learning",
+      "email": "livithar04@gmail.com",
+      "existing_skills": "",
+      "experience_level": "New to XR",
+      "full_name": "Livitha R",
+      "interests": [
+        "AR",
+        "VR",
+        "MR",
+        "XR",
+        "3D Modelling",
+        "Game Development",
+        "Simulation",
+        "Product Development",
+        "UI/UX",
+        "Research",
+        "Hackathons",
+        "Industry Projects",
+        "Internships",
+        "Certification",
+        "Self-Learning",
+        "Still Exploring"
+      ],
+      "internal_notes": "",
+      "mobile_number": "7538893321",
+      "motivation": "I want to learn  how  immersive technologies can be used to solve real world problems.",
+      "register_number": "26037",
+      "section": "A",
+      "status": "NEW",
+      "submitted_at": "2026-10-06T01:54:00.848Z",
+      "updated_at": "2026-10-06T01:54:00.848Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791251651377-akono",
+      "college_email": "enaveen1005@gmail.com",
+      "custom_field_responses": {},
+      "department": "Computer Science and Engineering",
+      "email": "enaveen1005@gmail.com",
+      "existing_skills": "C++",
+      "experience_level": "New to XR",
+      "full_name": "Naveen E",
+      "interests": [
+        "AR",
+        "3D Modelling",
+        "VR",
+        "Simulation",
+        "Internships",
+        "Certification",
+        "Self-Learning",
+        "Still Exploring"
+      ],
+      "internal_notes": "",
+      "mobile_number": "6385209493",
+      "motivation": "For intership",
+      "register_number": "26081",
+      "section": "B",
+      "status": "NEW",
+      "submitted_at": "2026-10-06T01:54:11.377Z",
+      "updated_at": "2026-10-06T01:54:11.377Z",
+      "year": "1st Year"
+    },
+    {
+      "id": "req-1791252777847-2mcns",
+      "college_email": "vignesh.r@gmail.com",
+      "custom_field_responses": {},
+      "department": "Computer Science and Engineering",
+      "email": "vignesh.r@gmail.com",
+      "existing_skills": "Unity, C#, Blender 3D modeling",
+      "experience_level": "Intermediate",
+      "full_name": "Vigneshwaran R",
+      "interests": [
+        "VR",
+        "AR",
+        "Simulation",
+        "Product Development"
+      ],
+      "internal_notes": "Batch inducted into XR cohort.",
+      "mobile_number": "+91 99401 88888",
+      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
+      "register_number": "111422104088",
+      "section": "B",
+      "status": "JOINED",
+      "submitted_at": "2026-10-06T02:12:57.847Z",
+      "updated_at": "2026-10-06T02:15:21.356Z",
+      "year": "3rd Year",
+      "rejected_at": "2026-10-06T02:15:20.196Z",
+      "joined_at": "2026-10-06T02:15:21.356Z"
+    },
+    {
+      "id": "req-1791255198646-9jzsy",
+      "college_email": "asd@gmail.com",
+      "custom_field_responses": {
+        "portfolio_url": "https://github.com/ILFAN-K"
+      },
+      "department": "Artificial Intelligence and Data Science",
+      "email": "asd@gmail.com",
+      "existing_skills": "",
+      "experience_level": "Beginner",
+      "full_name": "K. MOHHAMED ILFAN",
+      "interests": [
+        "3D Modelling",
+        "Game Development"
+      ],
+      "internal_notes": "",
+      "mobile_number": "9629447618",
+      "motivation": "Just to expore",
+      "register_number": "11142301AD02063",
+      "section": "B",
+      "status": "NEW",
+      "submitted_at": "2026-10-06T02:53:18.646Z",
+      "updated_at": "2026-10-06T02:53:18.646Z",
+      "year": "Final Year"
+    },
+    {
+      "id": "req-1791258793875-6a46b",
+      "college_email": "vignesh.r@gmail.com",
+      "custom_field_responses": {},
+      "department": "Computer Science and Engineering",
+      "email": "vignesh.r@gmail.com",
+      "existing_skills": "Unity, C#, Blender 3D modeling",
+      "experience_level": "Intermediate",
+      "full_name": "Vigneshwaran R",
+      "interests": [
+        "VR",
+        "AR",
+        "Simulation",
+        "Product Development"
+      ],
+      "internal_notes": "Batch inducted into XR cohort.",
+      "mobile_number": "+91 99401 88888",
+      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
+      "register_number": "111422104088",
+      "section": "B",
+      "status": "JOINED",
+      "submitted_at": "2026-10-06T03:53:13.875Z",
+      "updated_at": "2026-10-06T03:53:18.941Z",
+      "year": "3rd Year",
+      "rejected_at": "2026-10-06T03:53:17.740Z",
+      "joined_at": "2026-10-06T03:53:18.941Z"
+    },
+    {
+      "id": "req-1791258852445-wplm3",
+      "college_email": "vignesh.r@gmail.com",
+      "custom_field_responses": {},
+      "department": "Computer Science and Engineering",
+      "email": "vignesh.r@gmail.com",
+      "existing_skills": "Unity, C#, Blender 3D modeling",
+      "experience_level": "Intermediate",
+      "full_name": "Vigneshwaran R",
+      "interests": [
+        "VR",
+        "AR",
+        "Simulation",
+        "Product Development"
+      ],
+      "internal_notes": "Batch inducted into XR cohort.",
+      "mobile_number": "+91 99401 88888",
+      "motivation": "I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.",
+      "register_number": "111422104088",
+      "section": "B",
+      "status": "WAITING",
+      "submitted_at": "2026-10-06T03:54:12.445Z",
+      "updated_at": "2026-10-06T03:54:53.141Z",
+      "year": "3rd Year",
+      "rejected_at": "2026-10-06T03:54:15.435Z",
+      "joined_at": "2026-10-06T03:54:16.830Z"
+    },
+    {
+      "id": "req-1791260809969-eekhw",
+      "college_email": "yuvashree.k.raja@gmail.com",
+      "custom_field_responses": {
+        "portfolio_url": "https://github.com/Yuvashree-KR"
+      },
+      "department": "Artificial Intelligence and Data Science",
+      "email": "yuvashree.k.raja@gmail.com",
+      "existing_skills": "",
+      "experience_level": "Beginner",
+      "full_name": "Yuvashree.K.R",
+      "interests": [
+        "AR",
+        "VR",
+        "3D Modelling",
+        "Game Development"
+      ],
+      "internal_notes": "",
+      "mobile_number": "9629846731",
+      "motivation": "to Explore",
+      "register_number": "11142301AD02121",
+      "section": "B",
+      "status": "JOINED",
+      "submitted_at": "2026-10-06T04:26:49.969Z",
+      "updated_at": "2026-10-06T04:30:27.503Z",
+      "year": "Final Year",
+      "joined_at": "2026-10-06T04:30:27.503Z"
+    }
+  ],
+  "request_content": {
+    "custom_fields": [
+      {
+        "id": "portfolio_url",
+        "label": "Portfolio or GitHub Repository URL",
+        "type": "text",
+        "placeholder": "https://github.com/myusername",
+        "required": false,
+        "help_text": "Share links to your prior 3D, Unity, or code repositories."
+      }
+    ],
+    "departments": [
+      "Artificial Intelligence and Data Science",
+      "Computer Science and Engineering",
+      "Information Technology",
+      "Artificial Intelligence and Machine Learning",
+      "Electronics and Communication Engineering",
+      "Electrical and Electronics Engineering",
+      "Cyber Security",
+      "Computer Science and Business System",
+      "Bio Technology",
+      "Mechanical Engineering"
+    ],
+    "eligibility_criteria": [
+      "Open to all undergraduate & postgraduate engineering students",
+      "Access granted to real hardware: Apple Vision Pro, Meta Quest 3, HoloLens 2, HTC Vive",
+      "Mentorship by leading faculty researchers and XR industry partners"
+    ],
+    "guidelines_description": "Candidates are evaluated continuously based on technical enthusiasm, problem-solving mindset, and commitment. Formal prior XR experience is NOT required — beginner to advanced tracks are supported.",
+    "guidelines_heading": "ADMISSION GUIDELINES & SQUAD ALLOCATION",
+    "interest_options": [
+      "AR",
+      "VR",
+      "MR",
+      "XR",
+      "3D Modelling",
+      "Game Development",
+      "Simulation",
+      "Product Development",
+      "UI/UX",
+      "Research",
+      "Hackathons",
+      "Industry Projects",
+      "Internships",
+      "Certification",
+      "Self-Learning",
+      "Still Exploring"
+    ],
+    "keycard_badge": "REAL-TIME 3D WAFER",
+    "keycard_title": "HOLO_KEYCARD // ADMISSION DOSSIER",
+    "subtitle": "COHORT 2026-2027 INTAKE OPEN",
+    "success_heading": "Welcome to the Frontier.",
+    "success_message": "Your joining application has been securely transmitted to the AR/VR Centre of Excellence faculty committee. Look for an induction briefing sent to your personal email within 72 hours.",
+    "title": "Apply to Join the AR/VR Centre of Excellence"
+  }
+}

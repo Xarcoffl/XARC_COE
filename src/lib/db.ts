@@ -6,6 +6,9 @@ import { getMongoDb, isMongoConfigured } from './mongodb';
 import {
   DatabaseSchema,
   StudentRequest,
+  StudentStatus,
+  RequestStatusConfig,
+  ReviewChecklistItem,
   Project,
   EventItem,
   Achievement,
@@ -15,11 +18,34 @@ import {
   AboutContent,
   RequestFormContent,
   SiteSettings,
-  EventStatus
+  EventStatus,
+  EmailTemplatesSettings,
+  EmailLog,
+  MediaAsset,
+  CustomStudentGroup,
 } from './types';
 
 const DB_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'db.json');
+
+export const DEFAULT_REQUEST_STATUSES: RequestStatusConfig[] = [
+  { key: 'NEW', label: 'New Application', color: '#06b6d4', is_system: true, description: 'Newly received application awaiting review' },
+  { key: 'UNDER_REVIEW', label: 'Under Review', color: '#818cf8', is_system: false, description: 'Faculty committee actively evaluating candidate' },
+  { key: 'SHORTLISTED', label: 'Shortlisted', color: '#c084fc', is_system: false, description: 'Shortlisted for squad interviews or practical challenge' },
+  { key: 'INTERVIEW', label: 'Interview Scheduled', color: '#ec4899', is_system: false, description: 'Candidate invited for lab walkthrough & technical briefing' },
+  { key: 'WAITING', label: 'Priority Waitlist', color: '#f59e0b', is_system: true, description: 'Qualified candidate queued on standby' },
+  { key: 'ON_HOLD', label: 'On Hold', color: '#eab308', is_system: false, description: 'Pending academic verification or additional portfolio items' },
+  { key: 'JOINED', label: 'Joined / Inducted', color: '#10b981', is_system: true, description: 'Officially inducted into an active CoE laboratory squad' },
+  { key: 'REJECTED', label: 'Archived / Rejected', color: '#ef4444', is_system: true, description: 'Candidate not selected for current intake cycle' },
+];
+
+export const DEFAULT_REVIEW_CHECKLIST: ReviewChecklistItem[] = [
+  { id: 'chk-identity', label: 'College ID & Bonafide Status Verified', description: 'Cross-checked with institution ERP / registrar student records', required: true },
+  { id: 'chk-portfolio', label: 'Technical Portfolio & Project Links Screened', description: 'Assessed prior experience with Unity, Unreal, Blender, Three.js, or WebXR', required: false },
+  { id: 'chk-interview', label: 'Faculty / Squad Lead Interaction Completed', description: 'Assessed for motivation, problem-solving, and team collaboration fit', required: true },
+  { id: 'chk-safety', label: 'XR Hardware Lab Safety & Hygiene Agreement Signed', description: 'Candidate acknowledged headset hygiene protocols and optics care', required: true },
+  { id: 'chk-schedule', label: 'Lab Hours & Academic Timetable Clearance', description: 'Verified candidate availability for weekly laboratory sprint commitments', required: false },
+];
 
 // Helper to calculate event status from dates
 export function calculateEventStatus(startDate: string, endDate: string): EventStatus {
@@ -38,12 +64,141 @@ export function calculateEventStatus(startDate: string, endDate: string): EventS
   }
 }
 
+export const DEFAULT_EMAIL_TEMPLATES: EmailTemplatesSettings = {
+  joined: {
+    subject: '🎉 Congratulations! You have been inducted into {{coe_name}}',
+    badge_text: 'STATUS // INDUCTED & JOINED',
+    headline: 'Welcome to the Frontier of Spatial Computing.',
+    body_text: 'We are thrilled to inform you that your application to join the {{coe_name}} has been approved by the faculty committee!\n\nYour passion for hands-on engineering made you a strong match for our upcoming squad intake.',
+    next_steps: [
+      'Squad Allocation: You will be assigned to a specialized vertical based on your indicated interests.',
+      'Hardware Access: Laboratory briefing and VR/AR rig orientation will be scheduled shortly.',
+      'Community Hub: Look out for an invitation to our active student developer channels.',
+    ],
+    action_label: 'Explore CoE Roadmap & Verticals →',
+    action_url: '/about',
+    enabled: true,
+  },
+  waiting: {
+    subject: 'Application Update: {{coe_name}}',
+    badge_text: 'STATUS // PRIORITY WAITLIST',
+    headline: 'Your Application is Under Active Review.',
+    body_text: 'Thank you for your enthusiasm and interest in joining the {{coe_name}}.\n\nDue to high demand and lab equipment capacity limits, your application has been placed on our Priority Waitlist.\n\nAs ongoing project sprints rotate, waitlisted applicants will be evaluated first for vacant squad openings.',
+    action_label: 'View Upcoming Workshops & Events →',
+    action_url: '/events',
+    enabled: true,
+  },
+  rejected: {
+    subject: 'Application Decision: {{coe_name}}',
+    badge_text: 'STATUS // ARCHIVED',
+    headline: 'Application Update for Current Intake Cycle.',
+    body_text: 'Thank you for taking the time to apply to the {{coe_name}}.\n\nAfter reviewing all candidates for this cycle, we regret to inform you that we are unable to offer you an active laboratory squad seat at this time.\n\nPlease note that this does not prevent you from participating in our open competitions and masterclasses, and you are welcome to re-apply during future intake rounds.',
+    action_label: 'Visit Centre of Excellence Portal →',
+    action_url: '/',
+    enabled: true,
+  },
+  announcement: {
+    default_subject: '📢 Announcement: Update from {{coe_name}}',
+    default_badge: 'COE // OFFICIAL ANNOUNCEMENT',
+  },
+  status_templates: {
+    NEW: {
+      subject: 'Application Received: {{coe_name}}',
+      badge_text: 'STATUS // APPLICATION RECEIVED',
+      headline: 'We Have Received Your Application.',
+      body_text: 'Thank you for applying to the {{coe_name}}! Your profile and submitted project interests have been logged into our admissions portal.\n\nThe review committee will evaluate your background shortly.',
+      action_label: 'Explore Lab Verticals →',
+      action_url: '/about',
+      enabled: false,
+    },
+    UNDER_REVIEW: {
+      subject: 'Application Update: Under Faculty Review — {{coe_name}}',
+      badge_text: 'STATUS // UNDER ACTIVE EVALUATION',
+      headline: 'Your Application is Being Evaluated.',
+      body_text: 'The faculty advisory committee and student leads are currently assessing candidate submissions for the upcoming cohort cycle.\n\nWe will notify you with the evaluation outcome soon.',
+      action_label: 'View Lab Projects →',
+      action_url: '/projects',
+      enabled: true,
+    },
+    SHORTLISTED: {
+      subject: '⭐ Congratulations! You are Shortlisted for {{coe_name}}',
+      badge_text: 'STATUS // CANDIDATE SHORTLISTED',
+      headline: 'You Have Been Shortlisted for Lab Selection.',
+      body_text: 'Congratulations! Your profile has cleared preliminary technical screening and you have been shortlisted for the next stage of our selection process.\n\nPlease monitor your email for upcoming interaction slots.',
+      next_steps: [
+        'Prepare your GitHub or project demos for the interaction session.',
+        'Review the CoE verticals and prepare questions regarding active projects.',
+      ],
+      action_label: 'Review Lab Roadmap →',
+      action_url: '/about',
+      enabled: true,
+    },
+    INTERVIEW: {
+      subject: '🎙️ Interview Call: {{coe_name}} Squad Selection',
+      badge_text: 'STATUS // INTERVIEW SCHEDULED',
+      headline: 'Candidate Briefing & Technical Interaction.',
+      body_text: 'You have been invited for a technical briefing and interaction with the {{coe_name}} coordinators.\n\nPlease review your scheduled slot and bring your laptop with any recent work or demos.',
+      next_steps: [
+        'Report to the AR/VR Centre of Excellence lab at your allotted time.',
+        'Bring your college ID card and demo links.',
+      ],
+      action_label: 'Lab Location & Directions →',
+      action_url: '/contact',
+      enabled: true,
+    },
+    WAITING: {
+      subject: 'Application Update: {{coe_name}} Priority Waitlist',
+      badge_text: 'STATUS // PRIORITY WAITLIST',
+      headline: 'Your Application is on Standby.',
+      body_text: 'Due to equipment availability and lab capacity limits, your application has been placed on our Priority Waitlist.\n\nYou will be contacted promptly when squad openings arise.',
+      action_label: 'View Upcoming Events →',
+      action_url: '/events',
+      enabled: true,
+    },
+    ON_HOLD: {
+      subject: 'Application On Hold: {{coe_name}}',
+      badge_text: 'STATUS // ON HOLD',
+      headline: 'Additional Information or Clearance Required.',
+      body_text: 'Your application has been placed on hold pending additional academic verification or schedule clearance.\n\nPlease contact the lab coordinator or reply with any required details.',
+      action_label: 'Contact Lab Team →',
+      action_url: '/contact',
+      enabled: true,
+    },
+    JOINED: {
+      subject: '🎉 Congratulations! You have been inducted into {{coe_name}}',
+      badge_text: 'STATUS // INDUCTED & JOINED',
+      headline: 'Welcome to the Frontier of Spatial Computing.',
+      body_text: 'We are thrilled to inform you that your application to join the {{coe_name}} has been approved by the faculty committee!\n\nYour passion for hands-on engineering made you a strong match for our upcoming squad intake.',
+      next_steps: [
+        'Squad Allocation: You will be assigned to a specialized vertical based on your indicated interests.',
+        'Hardware Access: Laboratory briefing and VR/AR rig orientation will be scheduled shortly.',
+        'Community Hub: Look out for an invitation to our active student developer channels.',
+      ],
+      action_label: 'Explore CoE Roadmap & Verticals →',
+      action_url: '/about',
+      enabled: true,
+    },
+    REJECTED: {
+      subject: 'Application Decision: {{coe_name}}',
+      badge_text: 'STATUS // ARCHIVED',
+      headline: 'Application Update for Current Intake Cycle.',
+      body_text: 'Thank you for taking the time to apply to the {{coe_name}}.\n\nAfter reviewing all candidates for this cycle, we regret to inform you that we are unable to offer you an active laboratory squad seat at this time.\n\nPlease note that this does not prevent you from participating in our open competitions and masterclasses, and you are welcome to re-apply during future intake rounds.',
+      action_label: 'Visit Centre of Excellence Portal →',
+      action_url: '/',
+      enabled: true,
+    },
+  },
+};
+
 // Initial Seed Data
 function getInitialData(): DatabaseSchema {
   const salt = bcrypt.genSaltSync(10);
   const passwordHash = bcrypt.hashSync('Admin@ARVR2026!', salt);
 
   return {
+    email_templates: DEFAULT_EMAIL_TEMPLATES,
+    email_logs: [],
+    media_assets: [],
     admin_users: [
       {
         id: 'admin-1',
@@ -694,17 +849,38 @@ function getInitialData(): DatabaseSchema {
   };
 }
 
-// Default academic departments available for student application
+// Default academic departments available for student application (10 canonical disciplines from request form)
 export const DEFAULT_DEPARTMENTS: string[] = [
+  'Artificial Intelligence and Data Science',
   'Computer Science and Engineering',
   'Information Technology',
+  'Artificial Intelligence and Machine Learning',
   'Electronics and Communication Engineering',
   'Electrical and Electronics Engineering',
-  'Mechanical Engineering',
-  'Artificial Intelligence and Data Science',
   'Cyber Security',
-  'Mechatronics Engineering',
-  'Civil Engineering',
+  'Computer Science and Business System',
+  'Bio Technology',
+  'Mechanical Engineering',
+];
+
+// Default candidate interest and specialization options
+export const DEFAULT_INTEREST_OPTIONS: string[] = [
+  'AR',
+  'VR',
+  'MR',
+  'XR',
+  '3D Modelling',
+  'Game Development',
+  'Simulation',
+  'Product Development',
+  'UI/UX',
+  'Research',
+  'Hackathons',
+  'Industry Projects',
+  'Internships',
+  'Certification',
+  'Self-Learning',
+  'Still Exploring',
 ];
 
 // Ensure database file exists
@@ -719,24 +895,7 @@ export const DEFAULT_REQUEST_CONTENT: RequestFormContent = {
     'Access granted to real hardware: Apple Vision Pro, Meta Quest 3, HoloLens 2, HTC Vive',
     'Mentorship by leading faculty researchers and XR industry partners',
   ],
-  interest_options: [
-    'AR',
-    'VR',
-    'MR',
-    'XR',
-    '3D Modelling',
-    'Game Development',
-    'Simulation',
-    'Product Development',
-    'UI/UX',
-    'Research',
-    'Hackathons',
-    'Industry Projects',
-    'Internships',
-    'Certification',
-    'Self-Learning',
-    'Still Exploring',
-  ],
+  interest_options: DEFAULT_INTEREST_OPTIONS,
   departments: DEFAULT_DEPARTMENTS,
   keycard_title: 'HOLO_KEYCARD // ADMISSION DOSSIER',
   keycard_badge: 'REAL-TIME 3D WAFER',
@@ -775,6 +934,18 @@ export function initDb(): DatabaseSchema {
     try {
       const raw = fs.readFileSync(TMP_DB_FILE, 'utf-8');
       const parsed = JSON.parse(raw);
+      if (!parsed.email_templates) parsed.email_templates = DEFAULT_EMAIL_TEMPLATES;
+      if (!parsed.email_logs) parsed.email_logs = [];
+      if (!parsed.media_assets) parsed.media_assets = [];
+      if (parsed.settings) {
+        if (parsed.settings.registration_open === undefined) parsed.settings.registration_open = true;
+        if (!parsed.settings.custom_statuses || parsed.settings.custom_statuses.length === 0) {
+          parsed.settings.custom_statuses = DEFAULT_REQUEST_STATUSES;
+        }
+        if (!parsed.settings.review_checklist || parsed.settings.review_checklist.length === 0) {
+          parsed.settings.review_checklist = DEFAULT_REVIEW_CHECKLIST;
+        }
+      }
       memoryCache = parsed;
       return parsed;
     } catch {}
@@ -785,6 +956,31 @@ export function initDb(): DatabaseSchema {
     try {
       const raw = fs.readFileSync(DB_FILE, 'utf-8');
       const parsed = JSON.parse(raw);
+      if (!parsed.email_templates) parsed.email_templates = DEFAULT_EMAIL_TEMPLATES;
+      if (!parsed.email_logs) parsed.email_logs = [];
+      if (!parsed.media_assets) parsed.media_assets = [];
+      if (parsed.settings) {
+        if (parsed.settings.registration_open === undefined) parsed.settings.registration_open = true;
+        if (!parsed.settings.custom_statuses || parsed.settings.custom_statuses.length === 0) {
+          parsed.settings.custom_statuses = DEFAULT_REQUEST_STATUSES;
+        }
+        if (!parsed.settings.review_checklist || parsed.settings.review_checklist.length === 0) {
+          parsed.settings.review_checklist = DEFAULT_REVIEW_CHECKLIST;
+        }
+        if (!parsed.settings.departments || parsed.settings.departments.length === 0) {
+          parsed.settings.departments = parsed.request_content?.departments && parsed.request_content.departments.length > 0
+            ? parsed.request_content.departments
+            : [...DEFAULT_DEPARTMENTS];
+        }
+        if (!parsed.settings.interest_options || parsed.settings.interest_options.length === 0) {
+          parsed.settings.interest_options = parsed.request_content?.interest_options && parsed.request_content.interest_options.length > 0
+            ? parsed.request_content.interest_options
+            : [...DEFAULT_INTEREST_OPTIONS];
+        }
+        if (!parsed.custom_student_groups) {
+          parsed.custom_student_groups = [];
+        }
+      }
       memoryCache = parsed;
       return parsed;
     } catch {}
@@ -793,6 +989,18 @@ export function initDb(): DatabaseSchema {
   // 3. Fallback
   const data = getInitialData();
   data.request_content = DEFAULT_REQUEST_CONTENT;
+  data.email_templates = DEFAULT_EMAIL_TEMPLATES;
+  data.email_logs = [];
+  data.media_assets = [];
+  if (data.settings) {
+    if (data.settings.registration_open === undefined) data.settings.registration_open = true;
+    if (!data.settings.custom_statuses || data.settings.custom_statuses.length === 0) {
+      data.settings.custom_statuses = DEFAULT_REQUEST_STATUSES;
+    }
+    if (!data.settings.review_checklist || data.settings.review_checklist.length === 0) {
+      data.settings.review_checklist = DEFAULT_REVIEW_CHECKLIST;
+    }
+  }
   memoryCache = data;
   return data;
 }
@@ -834,6 +1042,13 @@ export async function syncToMongo(data: DatabaseSchema): Promise<void> {
         { upsert: true }
       );
     }
+    if (data.email_templates) {
+      await db.collection('email_templates').updateOne(
+        { _id: 'email_templates' as any },
+        { $set: { ...data.email_templates, _id: 'email_templates' } },
+        { upsert: true }
+      );
+    }
 
     // 3. Collection Lists Helper
     const syncCollection = async (colName: string, items: any[], idField = 'id') => {
@@ -858,6 +1073,9 @@ export async function syncToMongo(data: DatabaseSchema): Promise<void> {
       syncCollection('industry_records', data.industry_records, 'id'),
       syncCollection('student_requests', data.student_requests, 'id'),
       syncCollection('admin_users', data.admin_users, 'id'),
+      syncCollection('email_logs', data.email_logs || [], 'id'),
+      syncCollection('media_assets', data.media_assets || [], 'id'),
+      syncCollection('custom_student_groups', data.custom_student_groups || [], 'id'),
     ]);
   } catch (err: any) {
     console.warn('MongoDB write-through sync notification:', err?.message || err);
@@ -915,11 +1133,28 @@ export async function hydrateFromMongoIfNeeded(): Promise<DatabaseSchema> {
     const db = await getMongoDb();
     if (!db) return current;
 
-    const [settingsDoc, homeDoc, aboutDoc, reqDoc, verticals, projects, events, achievements, industry, student_requests, admin_users] = await Promise.all([
+    const [
+      settingsDoc,
+      homeDoc,
+      aboutDoc,
+      reqDoc,
+      emailTemplatesDoc,
+      verticals,
+      projects,
+      events,
+      achievements,
+      industry,
+      student_requests,
+      admin_users,
+      email_logs,
+      media_assets,
+      custom_student_groups,
+    ] = await Promise.all([
       db.collection('settings').findOne({ _id: 'site_settings' as any }),
       db.collection('home_content').findOne({ _id: 'home_content' as any }),
       db.collection('about_content').findOne({ _id: 'about_content' as any }),
       db.collection('request_content').findOne({ _id: 'request_content' as any }),
+      db.collection('email_templates').findOne({ _id: 'email_templates' as any }),
       db.collection('verticals').find().toArray(),
       db.collection('projects').find().toArray(),
       db.collection('events').find().toArray(),
@@ -927,6 +1162,9 @@ export async function hydrateFromMongoIfNeeded(): Promise<DatabaseSchema> {
       db.collection('industry_records').find().toArray(),
       db.collection('student_requests').find().toArray(),
       db.collection('admin_users').find().toArray(),
+      db.collection('email_logs').find().sort({ timestamp: -1 }).limit(300).toArray(),
+      db.collection('media_assets').find().sort({ created_at: -1 }).toArray(),
+      db.collection('custom_student_groups').find().toArray(),
     ]);
 
     const stripId = (doc: any) => {
@@ -939,10 +1177,18 @@ export async function hydrateFromMongoIfNeeded(): Promise<DatabaseSchema> {
 
     const hydrated: DatabaseSchema = {
       ...current,
-      settings: settingsDoc ? stripId(settingsDoc) : current.settings,
+      settings: settingsDoc
+        ? {
+            ...stripId(settingsDoc),
+            registration_open: stripId(settingsDoc).registration_open ?? true,
+            custom_statuses: stripId(settingsDoc).custom_statuses || DEFAULT_REQUEST_STATUSES,
+            review_checklist: stripId(settingsDoc).review_checklist || DEFAULT_REVIEW_CHECKLIST,
+          }
+        : current.settings,
       home_content: homeDoc ? stripId(homeDoc) : current.home_content,
       about_content: aboutDoc ? stripId(aboutDoc) : current.about_content,
       request_content: reqDoc ? stripId(reqDoc) : current.request_content,
+      email_templates: emailTemplatesDoc ? stripId(emailTemplatesDoc) : (current.email_templates || DEFAULT_EMAIL_TEMPLATES),
       verticals: Array.isArray(verticals) ? stripList(verticals) : current.verticals,
       projects: Array.isArray(projects) ? stripList(projects) : current.projects,
       events: Array.isArray(events) ? stripList(events) : current.events,
@@ -950,6 +1196,9 @@ export async function hydrateFromMongoIfNeeded(): Promise<DatabaseSchema> {
       industry_records: Array.isArray(industry) ? stripList(industry) : current.industry_records,
       student_requests: Array.isArray(student_requests) ? stripList(student_requests) : current.student_requests,
       admin_users: Array.isArray(admin_users) && admin_users.length > 0 ? stripList(admin_users) : current.admin_users,
+      email_logs: Array.isArray(email_logs) && email_logs.length > 0 ? stripList(email_logs) : (current.email_logs || []),
+      media_assets: Array.isArray(media_assets) && media_assets.length > 0 ? stripList(media_assets) : (current.media_assets || []),
+      custom_student_groups: Array.isArray(custom_student_groups) ? stripList(custom_student_groups) : (current.custom_student_groups || []),
     };
 
     memoryCache = hydrated;
@@ -1032,8 +1281,15 @@ export async function getPublicRequestContent(): Promise<RequestFormContent> {
   }
   const db = initDb();
   const content = db.request_content || DEFAULT_REQUEST_CONTENT;
-  if (!content.departments || !Array.isArray(content.departments) || content.departments.length === 0) {
+  if (db.settings?.departments && Array.isArray(db.settings.departments) && db.settings.departments.length > 0) {
+    content.departments = db.settings.departments;
+  } else if (!content.departments || !Array.isArray(content.departments) || content.departments.length === 0) {
     content.departments = [...DEFAULT_DEPARTMENTS];
+  }
+  if (db.settings?.interest_options && Array.isArray(db.settings.interest_options) && db.settings.interest_options.length > 0) {
+    content.interest_options = db.settings.interest_options;
+  } else if (!content.interest_options || !Array.isArray(content.interest_options) || content.interest_options.length === 0) {
+    content.interest_options = [...DEFAULT_INTEREST_OPTIONS];
   }
   return content;
 }
@@ -1160,33 +1416,43 @@ export async function getPublicSettings() {
     social_links: db.settings.social_links,
     footer_copyright: db.settings.footer_copyright || 'All Rights Reserved.',
     footer_tagline: db.settings.footer_tagline || '',
+    registration_open: db.settings.registration_open ?? true,
+    custom_statuses: db.settings.custom_statuses || DEFAULT_REQUEST_STATUSES,
+    review_checklist: db.settings.review_checklist || DEFAULT_REVIEW_CHECKLIST,
+    departments: db.settings.departments || db.request_content?.departments || DEFAULT_DEPARTMENTS,
+    interest_options: db.settings.interest_options || db.request_content?.interest_options || DEFAULT_INTEREST_OPTIONS,
   };
 }
 
 // ---------------- STUDENT REQUEST SUBMISSION (PUBLIC API) ----------------
 
-export async function submitStudentRequest(data: Omit<StudentRequest, 'id' | 'status' | 'internal_notes' | 'submitted_at' | 'updated_at'>): Promise<{ success: boolean; message: string; duplicate?: boolean }> {
+export async function submitStudentRequest(data: Omit<StudentRequest, 'id' | 'status' | 'internal_notes' | 'submitted_at' | 'updated_at'>): Promise<{ success: boolean; message: string; duplicate?: boolean; form_type?: 'REQUEST' | 'INTEREST' }> {
   if (isMongoConfigured()) {
     await hydrateFromMongoIfNeeded();
   }
   const db = initDb();
+  const isRegOpen = db.settings.registration_open ?? true;
+  const formType: 'REQUEST' | 'INTEREST' = isRegOpen ? 'REQUEST' : 'INTEREST';
+  const initialStatus: StudentStatus = isRegOpen ? 'NEW' : 'INTEREST';
 
   const reqEmail = (data.email || data.college_email || '').trim().toLowerCase();
 
-  // Check for active duplicate request by Register Number or Email (in NEW or WAITING state)
+  // Check for active duplicate request by Register Number or Email (in reviewable state or interest pool)
   const existing = db.student_requests.find(
     (r) =>
       (r.register_number.trim().toLowerCase() === data.register_number.trim().toLowerCase() ||
        (r.email && r.email.trim().toLowerCase() === reqEmail) ||
        (r.college_email && r.college_email.trim().toLowerCase() === reqEmail)) &&
-      (r.status === 'NEW' || r.status === 'WAITING')
+      (r.status === 'NEW' || r.status === 'WAITING' || r.status === 'UNDER_REVIEW' || r.status === 'INTEREST')
   );
 
   if (existing) {
     return {
       success: false,
       duplicate: true,
-      message: 'An active request with this Register Number or Personal Email has already been received and is currently under review by the AR/VR CoE committee.',
+      message: isRegOpen
+        ? 'An active application with this Register Number or Email has already been received and is currently under review by the AR/VR CoE committee.'
+        : 'An Expression of Interest with this Register Number or Email has already been logged and is awaiting the next cohort opening.',
     };
   }
 
@@ -1194,8 +1460,9 @@ export async function submitStudentRequest(data: Omit<StudentRequest, 'id' | 'st
     ...data,
     email: reqEmail,
     id: `req-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-    status: 'NEW',
-    internal_notes: '',
+    form_type: formType,
+    status: initialStatus,
+    internal_notes: isRegOpen ? '' : 'Submitted via Expression of Interest while public intake was paused.',
     submitted_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
@@ -1205,7 +1472,10 @@ export async function submitStudentRequest(data: Omit<StudentRequest, 'id' | 'st
 
   return {
     success: true,
-    message: 'Your request has been successfully submitted for AR/VR Centre of Excellence review.',
+    form_type: formType,
+    message: isRegOpen
+      ? 'Your request has been successfully submitted for AR/VR Centre of Excellence review.'
+      : 'Your Expression of Interest has been recorded! When registrations open, the administration will review your submission.',
   };
 }
 
@@ -1247,15 +1517,29 @@ export async function getAdminDashboardStats() {
   };
 }
 
-export async function getAdminStudentRequests(filterStatus?: string, search?: string, department?: string, year?: string, interest?: string): Promise<StudentRequest[]> {
+export async function getAdminStudentRequests(
+  filterStatus?: string,
+  search?: string,
+  department?: string,
+  year?: string,
+  interest?: string,
+  formType?: string
+): Promise<StudentRequest[]> {
   if (isMongoConfigured()) {
     await hydrateFromMongoIfNeeded();
   }
   const db = initDb();
   let list = db.student_requests;
 
-  if (filterStatus && filterStatus !== 'ALL') {
-    list = list.filter((r) => r.status === filterStatus);
+  if (formType === 'INTEREST' || filterStatus === 'INTEREST') {
+    // Interest pool forms
+    list = list.filter((r) => r.form_type === 'INTEREST' || r.status === 'INTEREST');
+  } else {
+    // Regular applicant tabs exclude interest forms
+    list = list.filter((r) => r.form_type !== 'INTEREST' && r.status !== 'INTEREST');
+    if (filterStatus && filterStatus !== 'ALL') {
+      list = list.filter((r) => r.status === filterStatus);
+    }
   }
 
   if (search) {
@@ -1285,7 +1569,119 @@ export async function getAdminStudentRequests(filterStatus?: string, search?: st
   return list.sort((a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime());
 }
 
-export async function updateStudentRequestStatus(id: string, newStatus: 'NEW' | 'WAITING' | 'JOINED' | 'REJECTED', internalNotes?: string): Promise<StudentRequest | null> {
+export async function getAdminStudentRequestsCounts(): Promise<{
+  all: number;
+  interest: number;
+  [statusKey: string]: number;
+}> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  const allRequests = db.student_requests;
+
+  const interestCount = allRequests.filter(
+    (r) => r.form_type === 'INTEREST' || r.status === 'INTEREST'
+  ).length;
+
+  const activeRequests = allRequests.filter(
+    (r) => r.form_type !== 'INTEREST' && r.status !== 'INTEREST'
+  );
+
+  const counts: {
+    all: number;
+    interest: number;
+    [statusKey: string]: number;
+  } = {
+    all: activeRequests.length,
+    interest: interestCount,
+  };
+
+  // Seed configured statuses
+  const statuses = db.settings.custom_statuses || DEFAULT_REQUEST_STATUSES;
+  for (const st of statuses) {
+    counts[st.key] = 0;
+  }
+  counts['NEW'] = counts['NEW'] || 0;
+  counts['WAITING'] = counts['WAITING'] || 0;
+  counts['JOINED'] = counts['JOINED'] || 0;
+  counts['REJECTED'] = counts['REJECTED'] || 0;
+
+  for (const req of activeRequests) {
+    const key = req.status;
+    counts[key] = (counts[key] || 0) + 1;
+  }
+
+  return counts;
+}
+
+export async function promoteInterestToRequest(
+  id: string,
+  targetStatus: StudentStatus = 'NEW',
+  internalNotes?: string
+): Promise<StudentRequest | null> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  const index = db.student_requests.findIndex((r) => r.id === id);
+  if (index === -1) return null;
+
+  const req = db.student_requests[index];
+  req.form_type = 'REQUEST';
+  req.status = targetStatus;
+  req.updated_at = new Date().toISOString();
+  if (internalNotes !== undefined) {
+    req.internal_notes = internalNotes;
+  } else if (!req.internal_notes) {
+    req.internal_notes = 'Promoted from Expression of Interest into active applicant pipeline.';
+  }
+
+  db.student_requests[index] = req;
+  await saveDbAsync(db);
+  return req;
+}
+
+export async function batchPromoteInterestToRequests(
+  ids: string[],
+  targetStatus: StudentStatus = 'NEW',
+  internalNotes?: string
+): Promise<StudentRequest[]> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  const updatedList: StudentRequest[] = [];
+  const now = new Date().toISOString();
+
+  for (const id of ids) {
+    const index = db.student_requests.findIndex((r) => r.id === id);
+    if (index !== -1) {
+      const req = db.student_requests[index];
+      req.form_type = 'REQUEST';
+      req.status = targetStatus;
+      req.updated_at = now;
+      if (internalNotes !== undefined) {
+        req.internal_notes = internalNotes;
+      } else if (!req.internal_notes) {
+        req.internal_notes = 'Promoted from Expression of Interest into active applicant pipeline.';
+      }
+      db.student_requests[index] = req;
+      updatedList.push(req);
+    }
+  }
+
+  if (updatedList.length > 0) {
+    await saveDbAsync(db);
+  }
+  return updatedList;
+}
+
+export async function updateStudentRequestStatus(
+  id: string,
+  newStatus: StudentStatus,
+  internalNotes?: string
+): Promise<StudentRequest | null> {
   if (isMongoConfigured()) {
     await hydrateFromMongoIfNeeded();
   }
@@ -1295,6 +1691,10 @@ export async function updateStudentRequestStatus(id: string, newStatus: 'NEW' | 
 
   const req = db.student_requests[index];
   req.status = newStatus;
+  // If promoting out of interest
+  if (req.form_type === 'INTEREST' && newStatus !== 'INTEREST') {
+    req.form_type = 'REQUEST';
+  }
   req.updated_at = new Date().toISOString();
   if (newStatus === 'JOINED' && !req.joined_at) {
     req.joined_at = new Date().toISOString();
@@ -1313,7 +1713,7 @@ export async function updateStudentRequestStatus(id: string, newStatus: 'NEW' | 
 
 export async function batchUpdateStudentRequestStatus(
   ids: string[],
-  newStatus: 'NEW' | 'WAITING' | 'JOINED' | 'REJECTED',
+  newStatus: StudentStatus,
   internalNotes?: string
 ): Promise<StudentRequest[]> {
   if (isMongoConfigured()) {
@@ -1328,6 +1728,9 @@ export async function batchUpdateStudentRequestStatus(
     if (index !== -1) {
       const req = db.student_requests[index];
       req.status = newStatus;
+      if (req.form_type === 'INTEREST' && newStatus !== 'INTEREST') {
+        req.form_type = 'REQUEST';
+      }
       req.updated_at = now;
       if (newStatus === 'JOINED' && !req.joined_at) {
         req.joined_at = now;
@@ -1349,8 +1752,241 @@ export async function batchUpdateStudentRequestStatus(
   return updatedList;
 }
 
+export async function updateStudentChecklistProgress(
+  id: string,
+  progress: Record<string, boolean>
+): Promise<StudentRequest | null> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  const index = db.student_requests.findIndex((r) => r.id === id);
+  if (index === -1) return null;
+
+  const req = db.student_requests[index];
+  req.checklist_progress = { ...(req.checklist_progress || {}), ...progress };
+  req.updated_at = new Date().toISOString();
+
+  db.student_requests[index] = req;
+  await saveDbAsync(db);
+  return req;
+}
+
+export async function getAdminDepartmentsList(): Promise<string[]> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  const configuredDepts = db.settings?.departments || db.request_content?.departments;
+  if (configuredDepts && Array.isArray(configuredDepts) && configuredDepts.length > 0) {
+    return configuredDepts;
+  }
+  return [...DEFAULT_DEPARTMENTS];
+}
+
+export async function getAdminInterestsList(): Promise<string[]> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  const configuredInterests = db.settings?.interest_options || db.request_content?.interest_options;
+  if (configuredInterests && Array.isArray(configuredInterests) && configuredInterests.length > 0) {
+    return configuredInterests;
+  }
+  return [...DEFAULT_INTEREST_OPTIONS];
+}
+
+// ---------------- CUSTOM STUDENT GROUPS (WHATSAPP-STYLE BROADCASTS) ----------------
+
+export async function getCustomStudentGroups(): Promise<CustomStudentGroup[]> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  return db.custom_student_groups || [];
+}
+
+export async function saveCustomStudentGroup(
+  group: Partial<CustomStudentGroup> & { name: string }
+): Promise<CustomStudentGroup> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  if (!db.custom_student_groups) {
+    db.custom_student_groups = [];
+  }
+
+  const now = new Date().toISOString();
+  let existingIndex = -1;
+  if (group.id) {
+    existingIndex = db.custom_student_groups.findIndex((g) => g.id === group.id);
+  }
+
+  if (existingIndex !== -1) {
+    const updated: CustomStudentGroup = {
+      ...db.custom_student_groups[existingIndex],
+      ...group,
+      updated_at: now,
+    };
+    db.custom_student_groups[existingIndex] = updated;
+    await saveDbAsync(db);
+    return updated;
+  } else {
+    const newGroup: CustomStudentGroup = {
+      id: group.id || `grp-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      name: group.name.trim(),
+      description: group.description?.trim() || '',
+      color: group.color || '#06b6d4',
+      student_ids: Array.isArray(group.student_ids) ? group.student_ids : [],
+      created_at: now,
+      updated_at: now,
+    };
+    db.custom_student_groups.push(newGroup);
+    await saveDbAsync(db);
+    return newGroup;
+  }
+}
+
+export async function deleteCustomStudentGroup(id: string): Promise<boolean> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  if (!db.custom_student_groups) return false;
+  const initialLen = db.custom_student_groups.length;
+  db.custom_student_groups = db.custom_student_groups.filter((g) => g.id !== id);
+  if (db.custom_student_groups.length !== initialLen) {
+    await saveDbAsync(db);
+    return true;
+  }
+  return false;
+}
+
 // Student requests cannot be deleted; they can only be rejected.
 export function deleteStudentRequest(_id: string): boolean {
   return false;
 }
+
+// ---------------- EMAIL TEMPLATES & LOGS ACCESSORS ----------------
+
+export async function getEmailTemplates(): Promise<EmailTemplatesSettings> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  if (!db.email_templates) {
+    db.email_templates = DEFAULT_EMAIL_TEMPLATES;
+    await saveDbAsync(db);
+    return db.email_templates;
+  }
+  // Ensure status_templates is always present and seeded with defaults
+  const existingStatusTemplates = db.email_templates.status_templates || {};
+  db.email_templates.status_templates = {
+    ...(DEFAULT_EMAIL_TEMPLATES.status_templates || {}),
+    ...existingStatusTemplates,
+  };
+  return db.email_templates;
+}
+
+export async function updateEmailTemplates(templates: EmailTemplatesSettings): Promise<EmailTemplatesSettings> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  db.email_templates = templates;
+  await saveDbAsync(db);
+  return db.email_templates;
+}
+
+export async function logEmailTransmission(
+  log: Omit<EmailLog, 'id' | 'timestamp'>
+): Promise<EmailLog> {
+  const db = initDb();
+  if (!db.email_logs) db.email_logs = [];
+
+  const newLog: EmailLog = {
+    ...log,
+    id: `log-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    timestamp: new Date().toISOString(),
+  };
+
+  db.email_logs.unshift(newLog);
+  // Cap at last 500 logs to preserve storage
+  if (db.email_logs.length > 500) {
+    db.email_logs = db.email_logs.slice(0, 500);
+  }
+
+  await saveDbAsync(db);
+  return newLog;
+}
+
+export async function getEmailLogs(limit: number = 100): Promise<EmailLog[]> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  const logs = db.email_logs || [];
+  return logs.slice(0, limit);
+}
+
+export async function clearEmailLogs(): Promise<void> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  db.email_logs = [];
+  await saveDbAsync(db);
+}
+
+// ---------------- MEDIA ASSETS ACCESSORS ----------------
+
+export async function getMediaAssets(category?: string): Promise<MediaAsset[]> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  const assets = db.media_assets || [];
+  if (category && category !== 'ALL') {
+    return assets.filter((a) => a.category === category);
+  }
+  return assets;
+}
+
+export async function saveMediaAsset(
+  assetData: Omit<MediaAsset, 'id' | 'created_at'>
+): Promise<MediaAsset> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  if (!db.media_assets) db.media_assets = [];
+
+  const newAsset: MediaAsset = {
+    ...assetData,
+    id: `asset-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    created_at: new Date().toISOString(),
+  };
+
+  db.media_assets.unshift(newAsset);
+  await saveDbAsync(db);
+  return newAsset;
+}
+
+export async function deleteMediaAsset(id: string): Promise<boolean> {
+  if (isMongoConfigured()) {
+    await hydrateFromMongoIfNeeded();
+  }
+  const db = initDb();
+  if (!db.media_assets) return false;
+
+  const initialLength = db.media_assets.length;
+  db.media_assets = db.media_assets.filter((a) => a.id !== id);
+  if (db.media_assets.length < initialLength) {
+    await saveDbAsync(db);
+    return true;
+  }
+  return false;
+}
+
 

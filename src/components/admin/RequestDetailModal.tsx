@@ -1,14 +1,42 @@
 'use client';
 
 import React, { useState } from 'react';
-import { StudentRequest, StudentStatus } from '@/lib/types';
-import { X, CheckCircle2, Clock, XCircle, Mail, Phone, Calendar, BookOpen, ShieldCheck, QrCode } from 'lucide-react';
+import { StudentRequest, StudentStatus, RequestStatusConfig, ReviewChecklistItem } from '@/lib/types';
+import { X, CheckCircle2, Clock, XCircle, Mail, Phone, Calendar, BookOpen, ShieldCheck, QrCode, ArrowUpRight, Sparkles, CheckSquare, Square, Check } from 'lucide-react';
 import { soundFx } from '@/lib/soundFx';
+
+const FALLBACK_MODAL_STATUSES: RequestStatusConfig[] = [
+  { key: 'NEW', label: 'New Application', color: '#06b6d4', description: 'Newly received application awaiting review' },
+  { key: 'UNDER_REVIEW', label: 'Under Review', color: '#818cf8', description: 'Faculty committee actively evaluating candidate' },
+  { key: 'SHORTLISTED', label: 'Shortlisted', color: '#c084fc', description: 'Shortlisted for squad interviews or practical challenge' },
+  { key: 'INTERVIEW', label: 'Interview Scheduled', color: '#ec4899', description: 'Candidate invited for lab walkthrough & technical briefing' },
+  { key: 'WAITING', label: 'Priority Waitlist', color: '#f59e0b', description: 'Qualified candidate queued on standby' },
+  { key: 'ON_HOLD', label: 'On Hold', color: '#eab308', description: 'Pending academic verification or additional portfolio items' },
+  { key: 'JOINED', label: 'Joined / Inducted', color: '#10b981', description: 'Officially inducted into an active CoE laboratory squad' },
+  { key: 'REJECTED', label: 'Archived / Rejected', color: '#ef4444', description: 'Candidate not selected for current intake cycle' },
+];
+
+const DEFAULT_MODAL_CHECKLIST: ReviewChecklistItem[] = [
+  { id: 'chk-identity', label: 'College ID & Bonafide Status Verified', description: 'Cross-checked with institution ERP / registrar student records', required: true },
+  { id: 'chk-portfolio', label: 'Technical Portfolio & Project Links Screened', description: 'Assessed prior experience with Unity, Unreal, Blender, Three.js, or WebXR', required: false },
+  { id: 'chk-interview', label: 'Faculty / Squad Lead Interaction Completed', description: 'Assessed for motivation, problem-solving, and team collaboration fit', required: true },
+  { id: 'chk-safety', label: 'XR Hardware Lab Safety & Hygiene Agreement Signed', description: 'Candidate acknowledged headset hygiene protocols and optics care', required: true },
+  { id: 'chk-schedule', label: 'Lab Hours & Academic Timetable Clearance', description: 'Verified candidate availability for weekly laboratory sprint commitments', required: false },
+];
 
 interface RequestDetailModalProps {
   request: StudentRequest;
   onClose: () => void;
-  onStatusChange: (id: string, newStatus: StudentStatus, notes?: string) => Promise<void>;
+  onStatusChange: (
+    id: string,
+    newStatus: StudentStatus,
+    notes?: string,
+    notifyStudent?: boolean,
+    emailNote?: string
+  ) => Promise<void>;
+  onPromoteInterest?: (id: string, targetStatus?: StudentStatus) => Promise<void>;
+  statuses?: RequestStatusConfig[];
+  checklistItems?: ReviewChecklistItem[];
   onRequestDelete?: (request: StudentRequest) => void;
 }
 
@@ -16,40 +44,94 @@ export default function RequestDetailModal({
   request,
   onClose,
   onStatusChange,
+  onPromoteInterest,
+  statuses = [],
+  checklistItems = [],
 }: RequestDetailModalProps) {
   const [viewMode, setViewMode] = useState<'dossier' | 'keycard'>('dossier');
   const [internalNotes, setInternalNotes] = useState(request.internal_notes || '');
+  const [selectedStatus, setSelectedStatus] = useState<StudentStatus>(request.status);
   const [savingNotes, setSavingNotes] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [notesSavedMsg, setNotesSavedMsg] = useState(false);
+  const [notifyStudent, setNotifyStudent] = useState(true);
+  const [emailNote, setEmailNote] = useState('');
+
+  // Checklist state
+  const [checklistProgress, setChecklistProgress] = useState<Record<string, boolean>>(
+    request.checklist_progress || {}
+  );
+  const [savingChecklist, setSavingChecklist] = useState(false);
+
+  const effectiveStatuses = statuses && statuses.length > 0 ? statuses : FALLBACK_MODAL_STATUSES;
+  const effectiveChecklist = checklistItems && checklistItems.length > 0 ? checklistItems : DEFAULT_MODAL_CHECKLIST;
+
+  const currentStatusConfig = effectiveStatuses.find((s) => s.key === request.status);
+  const completedChecklistCount = effectiveChecklist.filter((item) => checklistProgress[item.id]).length;
+  const totalChecklistCount = effectiveChecklist.length;
+  const checklistPercent = totalChecklistCount > 0 ? Math.round((completedChecklistCount / totalChecklistCount) * 100) : 0;
+
+  const handleToggleChecklistItem = async (itemId: string) => {
+    const updated = {
+      ...checklistProgress,
+      [itemId]: !checklistProgress[itemId],
+    };
+    setChecklistProgress(updated);
+    try {
+      setSavingChecklist(true);
+      await fetch('/api/admin/requests', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'update_checklist',
+          id: request.id,
+          checklist_progress: updated,
+        }),
+      });
+    } catch (err) {
+      console.error('Failed to update student checklist progress:', err);
+    } finally {
+      setSavingChecklist(false);
+    }
+  };
+
+  const isInterestForm = request.form_type === 'INTEREST' || request.status === 'INTEREST';
+
+  const handlePromote = async () => {
+    if (!onPromoteInterest) return;
+    setActionLoading(true);
+    await onPromoteInterest(request.id, 'NEW');
+    setActionLoading(false);
+  };
+
+  const handleApplyStatusChange = async (targetStatus: StudentStatus) => {
+    setActionLoading(true);
+    await onStatusChange(request.id, targetStatus, internalNotes, notifyStudent, emailNote);
+    setSelectedStatus(targetStatus);
+    setActionLoading(false);
+  };
 
   const handleSaveNotes = async () => {
     setSavingNotes(true);
-    await onStatusChange(request.id, request.status, internalNotes);
+    await onStatusChange(request.id, request.status, internalNotes, false);
     setSavingNotes(false);
     setNotesSavedMsg(true);
     setTimeout(() => setNotesSavedMsg(false), 2500);
   };
 
   const handleJoin = async () => {
-    setActionLoading(true);
-    await onStatusChange(request.id, 'JOINED', internalNotes);
-    setActionLoading(false);
+    await handleApplyStatusChange('JOINED');
   };
 
   const handleWait = async () => {
-    setActionLoading(true);
-    await onStatusChange(request.id, 'WAITING', internalNotes);
-    setActionLoading(false);
+    await handleApplyStatusChange('WAITING');
   };
 
   const handleReject = async () => {
     if (!confirm(`Are you sure you want to mark ${request.full_name}'s application as REJECTED? Student records cannot be deleted and will remain archived as Rejected.`)) {
       return;
     }
-    setActionLoading(true);
-    await onStatusChange(request.id, 'REJECTED', internalNotes);
-    setActionLoading(false);
+    await handleApplyStatusChange('REJECTED');
   };
 
   const formatDate = (iso: string) => {
@@ -86,6 +168,11 @@ export default function RequestDetailModal({
               >
                 {request.status}
               </span>
+              {isInterestForm && (
+                <span className="badge" style={{ background: 'rgba(234, 179, 8, 0.15)', color: '#fde047', border: '1px solid rgba(234, 179, 8, 0.3)' }}>
+                  INTEREST FORM
+                </span>
+              )}
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginTop: '2px' }}>
               REG: {request.register_number} • {request.department} ({request.year}, Sec {request.section || 'N/A'})
@@ -98,6 +185,26 @@ export default function RequestDetailModal({
             <X size={20} />
           </button>
         </div>
+
+        {/* Expression of Interest Callout Banner */}
+        {isInterestForm && (
+          <div style={{ padding: '10px 16px', background: 'rgba(234, 179, 8, 0.1)', borderBottom: '1px solid rgba(234, 179, 8, 0.25)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: '#fde047' }}>
+              <Sparkles size={14} />
+              <span>Received as <strong>Expression of Interest</strong> while registration intake was paused.</span>
+            </div>
+            <button
+              type="button"
+              onClick={handlePromote}
+              disabled={actionLoading}
+              className="admin-btn admin-btn-primary admin-btn-sm"
+              style={{ fontSize: '0.75rem', padding: '4px 12px' }}
+            >
+              <ArrowUpRight size={13} />
+              <span>Add to Requests (Promote)</span>
+            </button>
+          </div>
+        )}
 
         {/* View Mode Switcher Tabs */}
         <div style={{ display: 'flex', gap: '8px', padding: '12px 24px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--surface-card-alt)' }}>
@@ -299,6 +406,125 @@ export default function RequestDetailModal({
                 )}
               </div>
 
+              {/* SECTION: CANDIDATE VERIFICATION & AUDIT CHECKLIST */}
+              <div
+                style={{
+                  background: 'var(--surface-card-alt)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '8px',
+                  padding: '16px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <ShieldCheck size={16} style={{ color: 'var(--accent-cyan)' }} />
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', fontWeight: 700, color: 'var(--accent-cyan)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                      VERIFICATION & AUDIT CHECKLIST
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {savingChecklist && (
+                      <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Saving...</span>
+                    )}
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        color: checklistPercent === 100 ? '#10b981' : '#94a3b8',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                      }}
+                    >
+                      {completedChecklistCount} / {totalChecklistCount} COMPLETED ({checklistPercent}%)
+                    </span>
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                <div style={{ height: '4px', background: 'rgba(255, 255, 255, 0.08)', borderRadius: '2px', overflow: 'hidden', marginBottom: '14px' }}>
+                  <div
+                    style={{
+                      height: '100%',
+                      width: `${checklistPercent}%`,
+                      background: checklistPercent === 100 ? '#10b981' : 'linear-gradient(90deg, #06b6d4, #3b82f6)',
+                      transition: 'width 0.25s ease',
+                    }}
+                  />
+                </div>
+
+                {/* Checklist Items */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {effectiveChecklist.map((item) => {
+                    const isChecked = Boolean(checklistProgress[item.id]);
+                    return (
+                      <label
+                        key={item.id}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: '12px',
+                          padding: '10px 12px',
+                          borderRadius: '6px',
+                          background: isChecked ? 'rgba(16, 185, 129, 0.08)' : 'rgba(255, 255, 255, 0.02)',
+                          border: isChecked ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid var(--border-subtle)',
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease',
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => handleToggleChecklistItem(item.id)}
+                          style={{
+                            marginTop: '2px',
+                            width: '16px',
+                            height: '16px',
+                            cursor: 'pointer',
+                            accentColor: '#10b981',
+                          }}
+                        />
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                            <span
+                              style={{
+                                fontSize: '0.86rem',
+                                fontWeight: isChecked ? 600 : 500,
+                                color: isChecked ? 'var(--text-primary)' : 'var(--text-secondary)',
+                              }}
+                            >
+                              {item.label}
+                            </span>
+                            {item.required && (
+                              <span
+                                style={{
+                                  fontSize: '0.62rem',
+                                  fontFamily: 'var(--font-mono)',
+                                  color: '#f59e0b',
+                                  background: 'rgba(245, 158, 11, 0.12)',
+                                  border: '1px solid rgba(245, 158, 11, 0.3)',
+                                  padding: '1px 6px',
+                                  borderRadius: '3px',
+                                  letterSpacing: '0.04em',
+                                }}
+                              >
+                                REQUIRED
+                              </span>
+                            )}
+                          </div>
+                          {item.description && (
+                            <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)', marginTop: '2px', lineHeight: 1.4 }}>
+                              {item.description}
+                            </div>
+                          )}
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Private Admin Internal Notes */}
               <div style={{ background: 'var(--surface-card-alt)', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -327,56 +553,201 @@ export default function RequestDetailModal({
                   </button>
                 </div>
               </div>
+
+              {/* Student Automated Email Notification Section */}
+              <div
+                style={{
+                  background: 'rgba(6, 182, 212, 0.05)',
+                  border: '1px solid rgba(6, 182, 212, 0.25)',
+                  borderRadius: '6px',
+                  padding: '16px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+                  <label
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      cursor: 'pointer',
+                      fontSize: '0.85rem',
+                      fontWeight: 600,
+                      color: 'var(--text-primary)',
+                      userSelect: 'none',
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={notifyStudent}
+                      onChange={(e) => setNotifyStudent(e.target.checked)}
+                      style={{ accentColor: 'var(--accent-cyan)', width: '16px', height: '16px', cursor: 'pointer' }}
+                    />
+                    <span>Transmit automated status email to student</span>
+                  </label>
+                  <span
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'var(--accent-cyan)',
+                      fontFamily: 'var(--font-mono)',
+                      background: 'rgba(6, 182, 212, 0.1)',
+                      padding: '2px 8px',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    {request.email || request.college_email}
+                  </span>
+                </div>
+
+                {notifyStudent && (
+                  <div style={{ marginTop: '12px' }}>
+                    <label
+                      style={{
+                        display: 'block',
+                        fontSize: '0.72rem',
+                        color: 'var(--text-muted)',
+                        marginBottom: '6px',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                      }}
+                    >
+                      Optional Coordinator Note / Instructions (appended to student email):
+                    </label>
+                    <input
+                      type="text"
+                      className="admin-input"
+                      placeholder="e.g. Please report to the XR Lab on Monday at 4:00 PM with your laptop."
+                      value={emailNote}
+                      onChange={(e) => setEmailNote(e.target.value)}
+                      style={{ fontSize: '0.82rem' }}
+                    />
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ color: 'var(--accent-cyan)' }}>ℹ</span>
+                      <span>An official branded HTML email using the configured template for the chosen status will be dispatched via SMTP.</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* SECTION: WORKFLOW STATUS TRANSITION BUTTONS (Rendered as Buttons With Allotted Color Codes) */}
+              <div
+                style={{
+                  background: 'var(--surface-card-alt)',
+                  border: '1px solid var(--border-subtle)',
+                  borderRadius: '8px',
+                  padding: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span className="beacon-dot" style={{ background: currentStatusConfig?.color || '#06b6d4' }} />
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                      CANDIDATE STATUS TRANSITIONS
+                    </span>
+                  </div>
+
+                  {isInterestForm && (
+                    <button
+                      type="button"
+                      onClick={handlePromote}
+                      disabled={actionLoading}
+                      className="admin-btn admin-btn-primary admin-btn-sm"
+                      style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'linear-gradient(135deg, #06b6d4, #3b82f6)' }}
+                    >
+                      <ArrowUpRight size={14} />
+                      <span>Promote to Active Requests</span>
+                    </button>
+                  )}
+                </div>
+
+                <div style={{ fontSize: '0.76rem', color: 'var(--text-muted)' }}>
+                  Click any status button below to apply that status immediately. All statuses available in the admin panel are presented with their allotted color codes.
+                </div>
+
+                {/* Status Buttons Grid */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                  {effectiveStatuses.map((st) => {
+                    const isActive = request.status === st.key;
+                    return (
+                      <button
+                        key={st.key}
+                        type="button"
+                        disabled={actionLoading}
+                        onClick={() => {
+                          if (st.key === 'REJECTED') {
+                            if (!confirm(`Mark ${request.full_name}'s application as REJECTED? Student records cannot be deleted and will remain archived.`)) return;
+                          }
+                          handleApplyStatusChange(st.key as StudentStatus);
+                        }}
+                        title={st.description || `Set candidate status to ${st.label}`}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          padding: '10px 16px',
+                          borderRadius: '8px',
+                          fontSize: '0.82rem',
+                          fontWeight: 700,
+                          letterSpacing: '0.03em',
+                          cursor: actionLoading ? 'not-allowed' : 'pointer',
+                          transition: 'all 0.15s ease',
+                          border: `1.5px solid ${st.color}`,
+                          background: isActive ? st.color : `${st.color}15`,
+                          color: isActive ? '#000' : st.color,
+                          boxShadow: isActive ? `0 0 16px ${st.color}55` : 'none',
+                          transform: isActive ? 'scale(1.02)' : 'scale(1)',
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: '8px',
+                            height: '8px',
+                            borderRadius: '50%',
+                            background: isActive ? '#000' : st.color,
+                            display: 'inline-block',
+                          }}
+                        />
+                        <span>{st.label}</span>
+                        {isActive && (
+                          <span
+                            style={{
+                              fontSize: '0.68rem',
+                              padding: '1px 6px',
+                              borderRadius: '3px',
+                              background: 'rgba(0, 0, 0, 0.25)',
+                              color: '#000',
+                              fontWeight: 800,
+                            }}
+                          >
+                            CURRENT
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </>
           )}
         </div>
 
-        {/* Footer Actions: Join CoE, Keep Waiting, Reject Request (No Deletion) */}
-        <div className="modal-footer" style={{ justifyContent: 'space-between' }}>
-          {/* Reject Request button (Students cannot be deleted, only rejected) */}
-          {request.status !== 'REJECTED' ? (
-            <button
-              type="button"
-              onClick={handleReject}
-              disabled={actionLoading}
-              className="admin-btn admin-btn-danger"
-              title="Mark Student Request as Rejected"
-            >
-              <XCircle size={15} />
-              <span>Reject Request</span>
-            </button>
-          ) : (
-            <span style={{ fontSize: '0.8rem', color: '#ef4444', fontWeight: 600 }}>
-              Status: REJECTED (Archived)
+        {/* Modal Footer */}
+        <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+              Candidate ID: {request.id.slice(0, 12)}...
             </span>
-          )}
-
-          {/* Status Transitions */}
-          <div style={{ display: 'flex', gap: '10px' }}>
-            {request.status !== 'WAITING' && request.status !== 'REJECTED' && (
-              <button
-                type="button"
-                onClick={handleWait}
-                disabled={actionLoading}
-                className="admin-btn admin-btn-warning"
-              >
-                <Clock size={15} />
-                <span>Keep Waiting</span>
-              </button>
-            )}
-
-            {request.status !== 'JOINED' && (
-              <button
-                type="button"
-                onClick={handleJoin}
-                disabled={actionLoading}
-                className="admin-btn admin-btn-success"
-              >
-                <CheckCircle2 size={15} />
-                <span>Join CoE</span>
-              </button>
-            )}
           </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="admin-btn admin-btn-secondary"
+          >
+            Close Dossier
+          </button>
         </div>
       </div>
     </div>

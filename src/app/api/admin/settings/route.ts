@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { getSessionAdminFromRequest, signAdminToken, COOKIE_NAME } from '@/lib/auth';
-import { initDb, saveDbAsync, hydrateFromMongoIfNeeded } from '@/lib/db';
+import {
+  initDb,
+  saveDbAsync,
+  hydrateFromMongoIfNeeded,
+  DEFAULT_DEPARTMENTS,
+  DEFAULT_INTEREST_OPTIONS,
+  DEFAULT_REQUEST_CONTENT,
+} from '@/lib/db';
 import { isMongoConfigured } from '@/lib/mongodb';
 
 export const dynamic = 'force-dynamic';
@@ -18,9 +25,17 @@ export async function GET(req: NextRequest) {
   }
 
   const db = initDb();
+  const configuredDepts = db.settings?.departments || db.request_content?.departments || DEFAULT_DEPARTMENTS;
+  const configuredInterests = db.settings?.interest_options || db.request_content?.interest_options || DEFAULT_INTEREST_OPTIONS;
+  const hydratedSettings = {
+    ...db.settings,
+    departments: configuredDepts,
+    interest_options: configuredInterests,
+  };
+
   return NextResponse.json({
     success: true,
-    settings: db.settings,
+    settings: hydratedSettings,
     admin_profile: {
       id: admin.id,
       name: admin.name,
@@ -49,6 +64,14 @@ export async function POST(req: NextRequest) {
         ...db.settings,
         ...settings,
       };
+      if (settings.departments && Array.isArray(settings.departments)) {
+        if (!db.request_content) db.request_content = { ...DEFAULT_REQUEST_CONTENT };
+        db.request_content.departments = settings.departments;
+      }
+      if (settings.interest_options && Array.isArray(settings.interest_options)) {
+        if (!db.request_content) db.request_content = { ...DEFAULT_REQUEST_CONTENT };
+        db.request_content.interest_options = settings.interest_options;
+      }
     }
 
     const adminIdx = db.admin_users.findIndex((u) => u.id === admin.id);

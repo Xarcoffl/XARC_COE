@@ -8,6 +8,7 @@ import { ExperienceLevel, CustomFormField } from '@/lib/types';
 import { CheckCircle2, ArrowRight, Home, AlertCircle, Sparkles, Check } from 'lucide-react';
 import Link from 'next/link';
 import StudentHoloKeycard3D from '@/components/public/StudentHoloKeycard3D';
+import VrDeviceLoader from '@/components/VrDeviceLoader';
 import { soundFx } from '@/lib/soundFx';
 
 export default function RequestPage() {
@@ -54,15 +55,16 @@ export default function RequestPage() {
       'Still Exploring',
     ],
     departments: [
+      'Artificial Intelligence and Data Science',
       'Computer Science and Engineering',
       'Information Technology',
+      'Artificial Intelligence and Machine Learning',
       'Electronics and Communication Engineering',
       'Electrical and Electronics Engineering',
-      'Mechanical Engineering',
-      'Artificial Intelligence and Data Science',
       'Cyber Security',
-      'Mechatronics Engineering',
-      'Civil Engineering',
+      'Computer Science and Business System',
+      'Bio Technology',
+      'Mechanical Engineering',
     ],
     keycard_title: 'HOLO_KEYCARD // ADMISSION DOSSIER',
     keycard_badge: 'REAL-TIME 3D WAFER',
@@ -72,6 +74,7 @@ export default function RequestPage() {
   });
 
   const [customResponses, setCustomResponses] = useState<Record<string, string>>({});
+  const [registrationOpen, setRegistrationOpen] = useState(true);
 
   useEffect(() => {
     fetch('/api/public/content?section=request')
@@ -87,6 +90,15 @@ export default function RequestPage() {
               return prev;
             });
           }
+        }
+      })
+      .catch(() => {});
+
+    fetch('/api/public/settings')
+      .then((res) => res.json())
+      .then((res) => {
+        if (res?.success && res.settings && res.settings.registration_open !== undefined) {
+          setRegistrationOpen(res.settings.registration_open);
         }
       })
       .catch(() => {});
@@ -254,6 +266,15 @@ export default function RequestPage() {
     <div className="public-layout-root" style={{ position: 'relative', overflowX: 'hidden' }}>
       <Navbar />
 
+      {loading && (
+        <VrDeviceLoader
+          mode="fullscreen"
+          title={`TRANSMITTING ${registrationOpen ? 'CANDIDATE DOSSIER' : 'EXPRESSION OF INTEREST'}...`}
+          subtext="Encrypting payload and synchronizing with AR/VR Centre of Excellence cloud registry"
+          badge="ADMISSIONS DISPATCH"
+        />
+      )}
+
       <section className="section-spacing" style={{ paddingTop: 'calc(var(--header-height) + 40px)', minHeight: '85vh' }}>
         <div className="container">
           {/* Successful Request Submission State (Spec #47) */}
@@ -290,18 +311,20 @@ export default function RequestPage() {
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px' }}>
-                <span className="beacon-dot" />
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--accent-cyan)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-                  ADMISSION DOSSIER LOGGED
+                <span className="beacon-dot" style={{ background: registrationOpen ? 'var(--accent-cyan)' : '#f59e0b' }} />
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: registrationOpen ? 'var(--accent-cyan)' : '#fde047', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                  {registrationOpen ? 'ADMISSION DOSSIER LOGGED' : 'EXPRESSION OF INTEREST RECORDED'}
                 </span>
               </div>
 
               <h2 style={{ fontSize: '2.2rem', marginBottom: '16px', color: 'var(--text-primary)' }}>
-                {content.success_heading || 'Welcome to the Frontier.'}
+                {registrationOpen ? (content.success_heading || 'Welcome to the Frontier.') : 'Expression of Interest Logged.'}
               </h2>
 
               <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.65', maxWidth: '520px', margin: '0 auto 24px auto' }}>
-                {content.success_message || 'Your joining application has been securely transmitted to the AR/VR Centre of Excellence faculty committee.'}
+                {registrationOpen
+                  ? (content.success_message || 'Your joining application has been securely transmitted to the AR/VR Centre of Excellence faculty committee.')
+                  : 'Your interest dossier has been logged in our priority candidate pool. When regular cohort intake resumes, the committee will evaluate your profile first.'}
               </p>
 
               {/* 3D Holographic Candidate Keycard (Locked / Submitted with all candidate details) */}
@@ -369,6 +392,42 @@ export default function RequestPage() {
                 <p style={{ color: 'var(--text-secondary)', fontSize: '1.02rem', lineHeight: '1.6', marginBottom: '24px' }}>
                   {content.subtitle}
                 </p>
+
+                {/* Notice banner if registration intake is turned off */}
+                {!registrationOpen && (
+                  <div
+                    style={{
+                      marginBottom: '24px',
+                      padding: '14px 16px',
+                      borderRadius: 'var(--radius-md)',
+                      background: 'rgba(245, 158, 11, 0.08)',
+                      border: '1px solid rgba(245, 158, 11, 0.35)',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '12px',
+                    }}
+                  >
+                    <span style={{ color: '#f59e0b', fontSize: '1.1rem', lineHeight: 1.2 }}>⚠</span>
+                    <div>
+                      <div
+                        style={{
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: '0.78rem',
+                          fontWeight: 700,
+                          color: '#f59e0b',
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          marginBottom: '4px',
+                        }}
+                      >
+                        DIRECT INTAKE PAUSED // EXPRESSION OF INTEREST ACTIVE
+                      </div>
+                      <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                        Cohort admissions are currently paused. Your submission will be recorded under priority Interest Forms and queued for admin review when regular intake resumes.
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Telemetry Strip */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '24px' }}>
@@ -795,13 +854,24 @@ export default function RequestPage() {
                       type="submit"
                       disabled={loading}
                       className="btn-primary"
-                      style={{ width: '100%', padding: '14px 28px', fontSize: '1.05rem' }}
+                      style={{
+                        width: '100%',
+                        padding: '14px 28px',
+                        fontSize: '1.05rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '10px',
+                      }}
                     >
                       {loading ? (
-                        <span>Processing Request...</span>
+                        <>
+                          <VrDeviceLoader mode="mini" />
+                          <span>Transmitting {registrationOpen ? 'Request' : 'Expression'}...</span>
+                        </>
                       ) : (
                         <>
-                          <span>Submit Request</span>
+                          <span>{registrationOpen ? 'Submit Request' : 'Submit Expression of Interest'}</span>
                           <ArrowRight size={18} />
                         </>
                       )}

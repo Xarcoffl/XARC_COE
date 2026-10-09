@@ -21,14 +21,12 @@ async function runTests() {
   }
 
   // 1. Verify Public HTML Pages
-  const pages = [
+  const basePages = [
     { path: '/', label: 'Home Page' },
     { path: '/about', label: 'About Page' },
     { path: '/verticals', label: 'Verticals Page' },
     { path: '/projects', label: 'Projects Showcase' },
-    { path: '/projects/industrial-safety-training-vr', label: 'Individual Project Detail' },
     { path: '/events', label: 'Events Showcase' },
-    { path: '/events/spatial-computing-hackathon-2026', label: 'Individual Event Detail' },
     { path: '/achievements', label: 'Achievements Showcase' },
     { path: '/industry', label: 'Industry Alliances' },
     { path: '/request', label: 'Request to Join Form' },
@@ -37,7 +35,7 @@ async function runTests() {
     { path: '/control/content/footer', label: 'Admin Footer Content Editor' },
   ];
 
-  for (const page of pages) {
+  for (const page of basePages) {
     await check(`Public/Admin Page (${page.path}) returns HTTP 200`, async () => {
       const res = await fetch(`${BASE}${page.path}`);
       if (res.status !== 200) throw new Error(`Expected HTTP 200, got ${res.status}`);
@@ -45,6 +43,25 @@ async function runTests() {
       if (!text.includes('AR/VR') && !text.includes('Excellence')) {
         throw new Error('Page missing branding markup');
       }
+    });
+  }
+
+  // Check dynamic detail pages if records exist
+  const pubProjects = await fetch(`${BASE}/api/public/projects`).then((r) => r.json()).catch(() => ({ projects: [] }));
+  if (pubProjects.projects?.length > 0) {
+    const slug = pubProjects.projects[0].slug;
+    await check(`Dynamic Project Detail (/projects/${slug}) returns HTTP 200`, async () => {
+      const res = await fetch(`${BASE}/projects/${slug}`);
+      if (res.status !== 200) throw new Error(`Expected HTTP 200, got ${res.status}`);
+    });
+  }
+
+  const pubEvents = await fetch(`${BASE}/api/public/events`).then((r) => r.json()).catch(() => ({ events: [] }));
+  if (pubEvents.events?.length > 0) {
+    const slug = pubEvents.events[0].slug;
+    await check(`Dynamic Event Detail (/events/${slug}) returns HTTP 200`, async () => {
+      const res = await fetch(`${BASE}/events/${slug}`);
+      if (res.status !== 200) throw new Error(`Expected HTTP 200, got ${res.status}`);
     });
   }
 
@@ -58,19 +75,20 @@ async function runTests() {
   });
 
   // 2. Student Request Submission (Public API)
+  // RFC 2606 compliant test payload with zero personal PII
   const testStudent = {
-    full_name: 'Vigneshwaran R',
-    register_number: '111422104088',
+    full_name: 'Automated E2E Candidate',
+    register_number: 'TESTREG999901',
     department: 'Computer Science and Engineering',
     year: '3rd Year',
-    section: 'B',
-    email: 'vignesh.r@gmail.com',
-    college_email: 'vignesh.r@gmail.com',
-    mobile_number: '+91 99401 88888',
+    section: 'A',
+    email: 'e2e.candidate@example.com',
+    college_email: 'e2e.candidate@example.edu',
+    mobile_number: '+91 90000 00000',
     interests: ['VR', 'AR', 'Simulation', 'Product Development'],
     experience_level: 'Intermediate',
     existing_skills: 'Unity, C#, Blender 3D modeling',
-    motivation: 'I want to build surgical simulation tools and collaborate with the multidisciplinary medical team at the AR/VR CoE.',
+    motivation: 'Automated E2E regression verification payload for student admissions cohort.',
   };
 
   await check('Student Request Submission (POST /api/public/requests)', async () => {
@@ -109,12 +127,24 @@ async function runTests() {
   // 5. Admin Authentication
   let sessionCookie = '';
   await check('Admin Login (POST /api/auth/login)', async () => {
+    let adminEmail = process.env.ADMIN_EMAIL;
+    if (!adminEmail) {
+      try {
+        const fs = await import('fs');
+        const db = JSON.parse(fs.readFileSync('data/db.json', 'utf8'));
+        if (db.admin_users?.[0]?.email) {
+          adminEmail = db.admin_users[0].email;
+        }
+      } catch {}
+    }
+    adminEmail = adminEmail || 'admin@example.edu';
+
     const res = await fetch(`${BASE}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: 'admin@coe.edu',
-        password: 'Admin@ARVR2026!',
+        email: adminEmail,
+        password: process.env.ADMIN_PASSWORD || 'DevTestPass@2026!',
       }),
     });
     if (res.status !== 200) {
@@ -141,7 +171,7 @@ async function runTests() {
   // 7. Student Request Review & Status Workflow
   let targetRequestId = '';
   await check('Admin Pipeline: Retrieve submitted student request', async () => {
-    const res = await fetch(`${BASE}/api/admin/requests?search=Vigneshwaran`, {
+    const res = await fetch(`${BASE}/api/admin/requests?search=${encodeURIComponent(testStudent.full_name)}`, {
       headers: { Cookie: sessionCookie },
     });
     if (res.status !== 200) throw new Error(`Expected 200, got ${res.status}`);

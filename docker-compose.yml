@@ -13,7 +13,7 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - JWT_SECRET=${JWT_SECRET:-arvr-coe-pec-super-secret-jwt-key-2026}
-      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-https://arvr.coe.edu}
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-https://coe.xarc.online}
     volumes:
       # Persistent JSON database volume - survives container rebuilds
       - ./data:/app/data

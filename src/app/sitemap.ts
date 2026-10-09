@@ -10,7 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     await hydrateFromMongoIfNeeded();
   }
   const db = initDb();
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://arvr.coe.edu';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://coe.xarc.online';
   const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [

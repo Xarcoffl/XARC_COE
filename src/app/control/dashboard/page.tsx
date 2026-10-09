@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
 import RequestDetailModal from '@/components/admin/RequestDetailModal';
+import VrDeviceLoader from '@/components/VrDeviceLoader';
 import { StudentRequest, EventItem, StudentStatus } from '@/lib/types';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -75,9 +76,12 @@ export default function AdminDashboardPage() {
 
         <div className="admin-content">
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>
-              Loading operational metrics...
-            </div>
+            <VrDeviceLoader
+              mode="card"
+              title="CALIBRATING LAB TELEMETRY..."
+              subtext="Streaming live operational metrics, pipeline admissions, and lab inventory"
+              badge="EXECUTIVE HUD CORE"
+            />
           ) : stats ? (
             <>
               {/* High-Performance 2D Telemetry & Operations HUD (100% 2D) */}

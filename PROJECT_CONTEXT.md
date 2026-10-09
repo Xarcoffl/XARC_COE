@@ -1,40 +1,47 @@
 # AR/VR Centre of Excellence — Project Context & Continuation Guide
 
-This document captures the complete architectural overview, technological stack, implementation state, design decisions, file changelog, validation history, and operational runbook for the **AR/VR Centre of Excellence (Spatial Computing & Immersive Engineering Digital Ecosystem)**.
+This document captures the complete architectural overview, technology stack, implementation status, design decisions, file changelog, validation history, and operational runbook for the **AR/VR Centre of Excellence (Spatial Computing & Immersive Engineering Digital Ecosystem)**.
 
-Use this document to seamlessly pick up development on any new machine, operating system (Windows, macOS, or Linux), or directory path without losing any institutional context.
+Use this document to seamlessly continue development on another PC, operating system (Windows, macOS, or Linux), or directory path without losing any institutional context.
 
 ---
 
 ## 1. Project Purpose & Technology Stack
 
 ### Purpose
-The AR/VR Centre of Excellence platform is an enterprise-grade digital portal and management flight deck for an institutional spatial computing lab. It bridges academic research with industrial deployment by providing:
-- Public showcases for student research, immersive projects (AR, VR, MR, XR), flagships, hackathons, and corporate alliances.
-- High-fidelity interactive WebGL 3D specimen viewers and hardware inspection twins.
-- End-to-end student intake pipeline with real-time dynamic 3D Holo-Keycard credential generation.
-- A secure administrative control flight deck for managing curriculum verticals, project dossiers, event schedules, institutional achievements, corporate MoUs, custom applicant questionnaires, and student admission cohorts.
+The AR/VR Centre of Excellence platform is an institutional digital portal and management flight deck for a spatial computing research laboratory. It bridges academic learning with industrial deployment by providing:
+- **Public Showcases**: Research dossiers, immersive student projects (AR, VR, MR, XR), hackathons, industry MoUs, and curriculum pathways.
+- **Interactive 3D WebGL Viewers**: Real-time 3D specimen viewers, equipment twins, progression tunnels, and trophy inspectors.
+- **Student Induction Pipeline**: Online application portal with dynamic custom questionnaires and an interactive 3D Holo-Keycard credential generator.
+- **Administrative Flight Deck (`/control/*`)**: Cohort application review pipeline, custom broadcast student groups, multi-field CSV export, dual-pane content studios, and academic taxonomy configuration.
 
 ### Core Architectural Principles
-1. **Developer-Controlled UI & Layout**: Core layouts, spatial visual systems, 3D WebGL scenes, navigation docks, and page structure are codified in TypeScript and CSS. Administrators modify content slots, announcements, media links, and system parameters without visual page-builder overhead.
-2. **Strict Privacy Isolation**: Student applicant records (registration numbers, personal contact numbers, email addresses, motivation statements, internal administrative notes, and custom question answers) are stored server-side and never leaked in public bundles or public APIs.
-3. **High-Performance Spatial Aesthetics**: VisionOS-inspired glassmorphism, coordinate reticles, holographic shaders, and responsive design with snappy interaction. Heavy 3D viewports degrade gracefully to lightweight 2D schematics on mobile viewports (< 768px).
-4. **Embedded Zero-Config Data Layer**: File-backed atomic JSON document datastore (`data/db.json`) with auto-initialization and fallback seed data. No external database servers (PostgreSQL, MongoDB, MySQL, Redis) are required to run the platform.
+1. **Developer-Controlled UI & Layout**: Core layouts, 3D WebGL viewports, spatial HUDs, navigation docks, and page scaffolding are codified in TypeScript and CSS. Administrators configure data slots, announcements, media links, and taxonomy without visual page-builder overhead.
+2. **Strict Privacy Isolation**: Student applicant records (register numbers, phone numbers, email addresses, motivation statements, internal reviewer notes, and custom answers) are stored server-side and never exposed in public bundles or public APIs.
+3. **High-Performance Spatial Aesthetics**: VisionOS-inspired glassmorphism, coordinate reticles, holographic shaders, and responsive design. Heavy 3D viewports degrade gracefully to lightweight 2D schematics on mobile screens (< 768px).
+4. **Permanent Dark Mode for Admin Flight Deck**: Administrative routes (`/control/*`) are permanently locked into dark cybernetic HUD mode (`#admin-root-container`, `admin-theme-dark`), completely immune to public light mode.
+5. **Light Spatial Loading for Public Pages Only**: A dedicated Apple Vision Pro Polar White & Ice Blue spatial edition of the VR device loader is active exclusively for public pages when light mode is selected.
+6. **Dual-Layer Persistence**: 
+   - Cloud: MongoDB Atlas support via cached singleton connection manager (`src/lib/mongodb.ts`).
+   - Zero-Config Local Fallback: Embedded Atomic JSON document datastore (`src/lib/db.ts` -> `data/db.json` with temporary file atomic replacement).
 
 ### Technology Stack
 
 | Layer | Technology | Version | Notes |
 | :--- | :--- | :--- | :--- |
-| **Framework** | Next.js (App Router, Turbopack) | `16.3.8` | Server Components, Route Handlers, SSR |
+| **Framework** | Next.js (App Router, Turbopack) | `16.3.8` | React Server Components, Route Handlers, SSR |
 | **UI Library** | React & React DOM | `19.3.0` | Concurrent rendering, modern hooks |
 | **Language** | TypeScript | `7.0.2` | Strict end-to-end type safety |
-| **3D Engine** | Three.js | `0.186.1` | WebGL 2.0 rendering (`@types/three`) |
-| **Icons** | Lucide React | `1.49.0` | Minimalist vector icon system |
-| **Styling** | Vanilla CSS Design Tokens | — | Custom CSS variables; no Tailwind CSS dependency |
-| **Authentication** | JSON Web Tokens (`jsonwebtoken`) | `9.0.3` | Cryptographically signed, stored in HttpOnly cookies |
+| **3D Graphics** | Three.js (`@types/three`) | `0.186.1` | WebGL 2.0 rendering, `THREE.Timer` standard |
+| **Vector Icons** | Lucide React | `1.49.0` | Minimalist iconography |
+| **Styling** | Vanilla CSS Design Tokens | — | Custom CSS variables; zero Tailwind CSS dependency |
+| **Theme Engine** | Custom Theme Manager | — | Dual-mode (Light/Dark) for public; permanent dark for admin |
+| **Audio FX** | Web Audio API Procedural SFX | — | Synthesized audio without external asset dependencies |
+| **Authentication** | JSON Web Tokens (`jsonwebtoken`) | `9.0.3` | Signed tokens stored in HttpOnly cookies |
 | **Password Hashing** | Bcryptjs | `3.0.3` | Salted credential hashing |
-| **Persistence** | Embedded Atomic JSON (`data/db.json`) | — | Atomic write-replace pattern via temp files |
-| **Testing** | Node.js Test Harness (`test-e2e.mjs`) | — | Automated 34-suite end-to-end integration test runner |
+| **Email Gateway** | Nodemailer | `10.0.15` | Transactional email delivery (`src/lib/email.ts`) |
+| **Persistence** | MongoDB Atlas / Local Atomic JSON | `7.7.0` | Cloud Atlas with local fallback (`data/db.json`) |
+| **Testing** | Node.js Test Harness (`test-e2e.mjs`) | — | Automated 34+ suite integration test runner |
 
 ---
 
@@ -43,10 +50,10 @@ The AR/VR Centre of Excellence platform is an enterprise-grade digital portal an
 ### 2.1 Public Ecosystem Routes (`/`)
 
 - **`/` (Home)**:
-  - Spatial Cockpit Hero with high-contrast coordinate reticles, cardinal ticks, and interactive 3D headset specimen.
+  - Spatial Cockpit Hero with coordinate reticles, cardinal ticks, and interactive 3D headset specimen.
   - Minimal sound toggle icon (clean audio control without clutter).
   - About preview bento grid with 4 institutional pillars.
-  - 5 Operating Verticals preview cards (fully adapted with high-contrast light and dark mode styles).
+  - 5 Operating Verticals preview cards (adapted for both light and dark modes).
   - Unified Featured Content tabs (Events, Projects, Achievements).
   - **7-Stage Spatial Progression Conduit** (`JourneyTunnel3D`): Interactive WebGL tunnel displaying tailored 3D models for all 7 progression stages:
     - `01 Explore`: Spatial XR Headset with curved visor, ocular lenses, halo strap, and animated discovery compass beacon.
@@ -82,7 +89,6 @@ The AR/VR Centre of Excellence platform is an enterprise-grade digital portal an
 - **`/projects/[slug]` (Deep Dive Case Studies)**:
   - High-voltage substation VR simulator, holographic medical surgery planner, remote telepresence rover, etc.
   - Problem statement, solution architecture, engineering stack, student contributor roster, mentor attribution, and measurable impact telemetry (adapted for clean contrast in both light and dark themes).
-  - Removed section-wise blur backgrounds for seamless display resolution scaling.
   - Cleaned telemetry metrics (`// SPATIAL_HOLODECK_ACTIVE` label removed).
 
 - **`/events` (Activity & Hackathon Conclave)**:
@@ -95,7 +101,7 @@ The AR/VR Centre of Excellence platform is an enterprise-grade digital portal an
 
 - **`/achievements` (Hall of Excellence)**:
   - Statistics counters (National Podiums, Published Patents, Research Papers, Seed Funding).
-  - **Animated Pixel Trophy 3D Inspector**: Trophy that builds pixel-by-pixel, replacing redundant 3D podiums.
+  - **Animated Pixel Trophy 3D Inspector** (`AchievementsTrophy3D`): Trophy that builds pixel-by-pixel, replacing redundant 3D podiums.
   - Dynamic category suppression: categories without achievements are hidden until an achievement is recorded.
   - Chronological achievement timeline (2026, 2025).
 
@@ -107,6 +113,8 @@ The AR/VR Centre of Excellence platform is an enterprise-grade digital portal an
 - **`/request` (Student Induction Portal)**:
   - Membership application form: Full Name, Email, Phone, Register Number, Department, Year of Study, Cumulative GPA, Spatial Interests, Skill Tags, and Motivation Letter.
   - Dynamic Custom Form Fields rendered from administrator configurations in `/control/content/request`.
+  - Eligible departments dynamically synchronized with admin-configured taxonomy (`SiteSettings` / `departments`).
+  - Integrated `VrDeviceLoader` (fullscreen transmission HUD during submission, mini loader inside submit button).
   - **Interactive 3D HoloKeycard**:
     - Tuned to natural brightness (no glare/over-brightness).
     - Equipped with zoom in / zoom out controls.
@@ -114,9 +122,17 @@ The AR/VR Centre of Excellence platform is an enterprise-grade digital portal an
     - Auto-redirect: holds submitted confirmation view for 5 seconds, then smoothly returns to the homepage.
   - Duplicate registration protection (returns HTTP 409 Conflict if register number already applied).
 
+- **`/loading.tsx` (Public Root Loading Page)**:
+  - Configured with `mode="fullscreen"`, `theme="auto"`, and `className="public-loading-page"`.
+  - Renders the **Light Spatial Edition** when public pages are viewed in light mode.
+  - Renders the **Dark Cybernetic Edition** when public pages are viewed in dark mode.
+
+- **`/loading-preview` (Interactive Showcase)**:
+  - Showcase page for side-by-side inspection of Public Light Spatial, Public Dark Cybernetic, Admin Immune Dark Core, and mini button loaders.
+
 ---
 
-### 2.2 Administrative Flight Deck (`/control`)
+### 2.2 Administrative Flight Deck (`/control/*`)
 
 - **`/control/auth`**:
   - Administrative login with rate limiting (5 consecutive failures = 5-minute lockout).
@@ -131,21 +147,30 @@ The AR/VR Centre of Excellence platform is an enterprise-grade digital portal an
 - **`/control/requests`**:
   - Application pipeline with status filters: `NEW`, `WAITING`, `JOINED`, `REJECTED`.
   - Multi-select applicant checkboxes for bulk batch status transitions.
-  - Single-click CSV roster export with full applicant metadata and custom question responses.
+  - **Custom Field CSV Export Modal**: Allows administrator to toggle individual fields (Register Number, Name, Department Year, Interests, Email, Phone, GPA, Status, Submission Date, Custom Questions) or download the standardized roster format.
+  - Synchronized department and interest filters matching configured taxonomy rather than arbitrary hardcoded values.
   - Applicant Dossier review modal with confidential internal reviewer notes.
   - Strict Deletion Prohibition: applications cannot be deleted; they can only be transitioned to `REJECTED` with an immutable timestamp.
+
+- **`/control/announcements`**:
+  - Broadcast announcement manager with priority flags and publish dates.
+  - **Custom Student Broadcast Groups / Segments**: "WhatsApp status" style grouping allowing administrators to create named student cohorts (e.g., "Batch 2026 Core VR", "Hackathon Winners", "Research Fellows") and add/remove students dynamically.
+
+- **`/control/loading.tsx` (Admin Root Loading Page)**:
+  - Explicitly configured with `theme="dark"` and `className="admin-loading-page"`.
+  - Immune to light mode; always renders dark command center HUD.
 
 - **Dual-Pane Content & Curriculum Studios**:
   - `/control/content/home`: Hero messaging, pillars manager, dark/light split preview.
   - `/control/content/about`: Vision, mission, roadmap milestones, mandate pillars.
-  - `/control/content/request`: Dynamic Custom Form Fields Builder (add/edit/delete/reorder text, textarea, number, select questions), **Eligible Academic Departments Management** (add, edit, reorder, delete, restore defaults), and live responsive form preview.
+  - `/control/content/request`: Dynamic Custom Form Fields Builder (add/edit/delete/reorder text, textarea, number, select questions) and **Eligible Academic Departments Management** (add, edit, reorder, delete, restore defaults).
   - `/control/content/footer`: Dedicated **Footer Content Studio** with real-time browser preview, CoE brand identity, institutional copyright statements, quick legal presets, direct contact channels (`mailto:`, `tel:`), and auxiliary lab tagline badge.
   - `/control/verticals`: Curriculum manager, deliverables, toolchains, career pathways.
   - `/control/projects`: Project editor, narrative tabs, student squad roster, cover image presets.
   - `/control/events`: Event scheduler, speaker rosters, highlights, poster presets.
   - `/control/achievements`: Trophy manager, category badges, team tags.
   - `/control/industry`: Corporate partner editor, MoU terms, bilateral outcomes.
-  - `/control/settings`: Institutional metadata, branding, contact phone, contact email, copyright year, and dedicated **Footer Tab (Tab 03)**.
+  - `/control/settings`: Institutional metadata, branding, contact phone, contact email, copyright year, **Academic Departments & Interest Taxonomy Configuration** (Tab 04), and Admin Credentials Security (Tab 05).
 
 ---
 
@@ -154,23 +179,26 @@ The AR/VR Centre of Excellence platform is an enterprise-grade digital portal an
 1. **Zero 3D Objects in Administrative Views**:
    - The administrative control deck (`/control/*`) strictly avoids 3D WebGL canvases to ensure instant rendering, low battery consumption, and maximum data density on enterprise workstations.
 2. **Permanent Dark Mode for Admin Flight Deck**:
-   - Even if a user visits public pages in light mode, navigating to `/control/*` forces dark mode styling (`admin-theme-dark`) to preserve the mission-critical command console aesthetic.
-3. **Student Request Deletion Prohibition (Rejection-Only)**:
+   - Even if a user visits public pages in light mode, navigating to `/control/*` forces dark mode styling (`#admin-root-container`, `admin-theme-dark`) to preserve the mission-critical command console aesthetic.
+3. **Light Spatial Loading Page Strictly for Public Pages**:
+   - The Polar White Apple Vision Pro loading page style applies only to public pages. Admin loading routes and loaders carry the `vr-loader-dark` class and are shielded by `#admin-root-container` CSS selectors.
+4. **Student Request Deletion Prohibition (Rejection-Only)**:
    - Student records cannot be deleted (`DELETE /api/admin/requests` is blocked with HTTP 400 Bad Request).
    - Rejected candidates are moved to the `REJECTED` archive tab with an audit timestamp and reviewer notes.
-4. **Minimalist Footer Policy**:
+5. **Minimalist Footer Policy**:
    - Footer contains *only* the official contact phone number (`tel:`), official mail ID (`mailto:`), and copyright branding. All redundant multi-column links, office hours, and physical campus addresses were removed per institutional directive.
-5. **Single Location Scope (Chennai)**:
+6. **Single Location Scope (Chennai)**:
    - The CoE is currently operational solely at the Chennai campus. The global network topology 3D globe (`IndustryGlobe3D`) and multi-city telemetry were removed.
-6. **Dynamic Custom Form Fields**:
+7. **Dynamic Custom Form Fields**:
    - Administrators can add custom questions to the application form via `/control/content/request`.
    - The public `/request` form dynamically renders, validates, and submits answers inside `custom_field_responses`.
-7. **Atomic JSON Database Persistence**:
+8. **Configurable Department & Interest Taxonomy**:
+   - Academic departments and spatial interests are maintained centrally in `SiteSettings` (`data/db.json` / MongoDB) and configured via `/control/settings`.
+   - Public request form and admin filters consume the identical dynamic taxonomy.
+9. **Atomic JSON Database Persistence**:
    - All mutations in `src/lib/db.ts` write to a temporary file (`data/db.json.tmp.<timestamp>`) before atomically replacing `data/db.json`. This eliminates partial writes or file corruption during process termination.
-8. **Three.js Timer Standard**:
-   - All 3D components use `new THREE.Timer()` rather than the deprecated `THREE.Clock()`, preventing browser console deprecation warnings.
-9. **Display Resolution Uniformity**:
-   - Section-wise CSS backdrop blurs with inconsistent opacity across different resolutions have been replaced with uniform, responsive theme tokens.
+10. **Three.js Timer Standard**:
+    - All 3D components use `new THREE.Timer()` rather than the deprecated `THREE.Clock()`, preventing browser console deprecation warnings.
 
 ---
 
@@ -178,105 +206,96 @@ The AR/VR Centre of Excellence platform is an enterprise-grade digital portal an
 
 | Relative File Path | Operation | Purpose & Description |
 | :--- | :--- | :--- |
-| `src/components/public/JourneyTunnel3D.tsx` | Modified | Updated 3D models for all 7 steps (Explore: XR Headset; Learn: Codex; Practice: Laser Prism; Build: Robot Arm; Compete: Champion Trophy; Intern: Neural Microprocessor; Industry: Spatial Spire). Added sub-animation hooks. |
-| `src/components/public/VerticalHologramViewer.tsx` | Modified | Replaced outdated placeholder models with tailored 3D models for all 5 verticals (01 Certifications, 02 Internships, 03 Self-Learning, 04 Skill Development, 05 Product Development). |
-| `src/components/public/LabIsometricTwin3D.tsx` | Modified | Added custom sector-specific 3D architectural/equipment models for each of the 7 lab nodes. |
-| `src/components/public/CoWorkingDiagram.tsx` | Modified | Removed "Inspect 3D Hardware Rig" button, modal, and state. |
-| `src/components/public/HardwareRigViewer3D.tsx` | Deleted | Removed obsolete hardware rig modal viewer. |
-| `src/components/public/Footer.tsx` | Modified | Simplified footer to contain *only* contact phone (`tel:`), mail ID (`mailto:`), and copyright branding. |
-| `src/components/public/ProjectHolodeck3D.tsx` | Modified | Removed `// SPATIAL_HOLODECK_ACTIVE` telemetry label. |
-| `src/app/industry/page.tsx` | Modified | Removed `IndustryGlobe3D` and global hub network topology section (Chennai-only scope). |
-| `src/components/public/IndustryGlobe3D.tsx` | Deleted | Removed obsolete global topology globe component. |
-| `src/components/public/Navbar.tsx` | Modified | Updated navbar shape from pill to rounded square; highlighted "Join CoE Cohort" CTA; sound icon only. |
-| `src/components/public/HeroSpatialCockpit.tsx` | Modified | Added glass effect; removed spatial audio active toggle; high-contrast coordinate reticles. |
-| `src/components/public/StudentHoloKeycard.tsx` | Modified | Natural brightness tuning; added zoom in/zoom out controls; immediate student data population on submit; auto-redirect after 5 seconds. |
-| `src/components/public/AchievementsPodium3D.tsx` | Modified | Replaced 3D podium with an animated pixel-by-pixel building 3D Trophy. |
-| `src/app/achievements/page.tsx` | Modified | Suppressed empty achievement categories until an achievement is recorded. |
-| `src/app/request/page.tsx` | Modified | Added dynamic custom form field rendering and submission payload. |
-| `src/app/control/content/request/page.tsx` | Modified | Added Section 04 for managing eligible academic departments (add, inline edit, move up/down, delete, restore defaults) and live preview dropdown. |
-| `src/app/control/content/footer/page.tsx` | Created | Dedicated Footer Content Studio with live interactive browser preview, brand identity controls, copyright statement presets, contact details, and tagline badge. |
-| `src/app/control/settings/page.tsx` | Modified | Added Tab 03 (Footer) with brand identity, copyright, email/phone, and tagline controls and live preview simulator. |
-| `src/components/admin/AdminSidebar.tsx` | Modified | Added Footer Content link under WEBSITE CONTENT. |
-| `src/components/public/Footer.tsx` | Modified | Dynamically renders admin-configured copyright notice, institution name, CoE name, contact mail/phone links, and optional tagline. |
-| `src/app/request/page.tsx` | Modified | Dynamically loads and selects from admin-configured academic departments list. |
-| `src/app/control/requests/page.tsx` | Modified | Multi-select checkboxes, floating batch action HUD, one-click CSV roster export. |
-| `src/lib/types.ts` | Modified | Added `departments` to `RequestFormContent`, added `footer_copyright` and `footer_tagline` to `SiteSettings`. |
-| `src/lib/mongodb.ts` | Created | Next.js singleton cached MongoDB connection manager supporting MongoDB Atlas with connection caching. |
-| `scripts/migrate-to-mongo.mjs` | Created | Idempotent CLI tool to migrate and seed data/db.json into MongoDB Atlas with indexes (`npm run db:migrate-mongo`). |
-| `src/lib/db.ts` | Modified | Added MongoDB Atlas write-through synchronization with seamless zero-config fallback to local atomic JSON. |
-| `src/app/api/health/route.ts` | Created | Liveness & readiness health check API endpoint with MongoDB telemetry. |
-| `next.config.mjs` | Modified | Injected production security headers (CSP, X-Frame-Options, HSTS, Sniff-protection) and disabled framework fingerprinting. |
-| `src/app/not-found.tsx` | Created | Branded Spatial 404 Sector Not Found page with quick navigation recovery. |
-| `src/app/error.tsx` | Created | Client runtime error boundary catching unhandled rendering exceptions. |
-| `src/app/robots.ts` | Created | Dynamic robots.txt disallowing admin flight decks and indexing public showcases. |
-| `src/app/sitemap.ts` | Created | Dynamic XML sitemap indexing all active projects, events, and public routes. |
-| `Dockerfile` | Created | Multi-stage production container with Alpine base, non-root user, and automated health checks. |
-| `docker-compose.yml` | Created | Container orchestration with persistent volume mapping and environment templates. |
-| `test-e2e.mjs` | Modified | Updated to 34 automated test suites validating health API, security headers, robots/sitemap, and custom 404. |
-| `scripts/manage-admin.mjs` | Created | Administrative account management CLI utility (`npm run admin:manage`) supporting listing, password resets, email updates, and new admin account creation. |
-| `src/app/api/admin/settings/route.ts` | Modified | Enabled altering administrator login email with format and uniqueness validation, and session cookie re-issuance upon profile change. |
-| `src/app/control/settings/page.tsx` | Modified | Unlocked Admin Email field in Tab 05 (Security) allowing direct browser-based email updates with state refreshing. |
-| `package.json` | Modified | Added `"admin:manage": "node scripts/manage-admin.mjs"` command. |
+| `src/components/common/VrDeviceLoader.tsx` | Created / Modified | 6-DoF spatial VR device loading component (modes: fullscreen, card, compact, inline, mini; theme prop: auto, dark, light; dynamic status text class). |
+| `src/components/VrDeviceLoader.tsx` | Created | Re-export alias for clean imports (`@/components/VrDeviceLoader`). |
+| `src/app/globals.css` | Modified | Added complete Light Spatial Version CSS tokens and rules (lines 2077–2235) for Polar White chassis, sapphire optics, light perspective grid, dark slate telemetry, and admin immunity shields (`#admin-root-container`, `.admin-loading-page`, `.vr-loader-dark`). |
+| `src/app/loading.tsx` | Modified | Public root loading page configured with `mode="fullscreen"`, `theme="auto"`, and `className="public-loading-page"`. |
+| `src/app/control/loading.tsx` | Modified | Admin root loading page explicitly locked to `theme="dark"` and `className="admin-loading-page"`. |
+| `src/app/loading-preview/page.tsx` | Created | Interactive preview showcase to visually verify Public Light Spatial vs Admin Dark Core vs Public Dark Cybernetic. |
+| `src/app/request/page.tsx` | Modified | Integrated `VrDeviceLoader` (fullscreen submission modal, mini loader in submit button), dynamic taxonomy for departments/interests, HoloKeycard zoom controls. |
+| `src/app/control/requests/page.tsx` | Modified | Added Custom Field CSV Export Modal, synchronized department and interest filters with configured taxonomy, integrated `VrDeviceLoader`. |
+| `src/app/control/announcements/page.tsx` | Modified | Added Custom Student Broadcast Groups / Segments ("WhatsApp status" style grouping for students) and integrated `VrDeviceLoader`. |
+| `src/app/control/settings/page.tsx` | Modified | Added Tab 04 for Department and Interest taxonomy configuration, unlocked admin email change in Tab 05 (Security), integrated `VrDeviceLoader`. |
+| `src/app/control/projects/page.tsx` | Modified | Integrated `VrDeviceLoader` for project list fetching and action states. |
+| `src/app/control/verticals/page.tsx` | Modified | Integrated `VrDeviceLoader` for vertical curriculum loading. |
+| `src/app/control/events/page.tsx` | Modified | Integrated `VrDeviceLoader` for events data fetching. |
+| `src/app/control/media/page.tsx` | Modified | Integrated `VrDeviceLoader` for media assets loading and uploads. |
+| `src/app/control/dashboard/page.tsx` | Modified | Integrated `VrDeviceLoader` for KPI dashboard loading. |
+| `src/app/control/auth/page.tsx` | Modified | Integrated `VrDeviceLoader` for admin session authentication. |
+| `src/components/admin/AssetPickerModal.tsx` | Modified | Integrated `VrDeviceLoader` for asset selection loading states. |
+| `src/components/admin/ImageUploadField.tsx` | Modified | Integrated `VrDeviceLoader` for image encoding and upload progress. |
+| `src/lib/email.ts` | Modified | Transactional email delivery service with Nodemailer SMTP gateway and responsive HTML notification templates. |
+| `src/lib/types.ts` | Modified | Added taxonomy types (`departments`, `interests`), student group segment definitions, and VR loader props. |
+| `src/lib/db.ts` | Modified | Atomic JSON persistence with MongoDB Atlas synchronization and fallback. |
+| `src/lib/mongodb.ts` | Created | Singleton cached MongoDB client for Next.js serverless and Turbopack. |
+| `src/lib/auth.ts` | Modified | JWT authentication, rate limiting, and cookie session management. |
+| `src/lib/theme.ts` | Modified | Dual-mode public theme engine with subscriber pattern and localStorage persistence. |
+| `src/styles/admin.css` | Modified | Admin flight deck stylesheet with dark command palette tokens and modal styling. |
+| `scripts/manage-admin.mjs` | Created | Administrative account CLI utility (`npm run admin:manage`). |
+| `scripts/migrate-to-mongo.mjs` | Created | MongoDB Atlas migration and indexing tool (`npm run db:migrate-mongo`). |
+| `test-e2e.mjs` | Modified | Automated 34+ suite integration test runner. |
 
 ---
 
-## 5. Known Issues & Operational Notes
+## 5. Known Issues & Pending Tasks
 
-1. **Local Playwright Driver Download on Restricted Networks**:
-   - In environments with strict corporate firewall rules or offline networks, automated Playwright browser downloads (`browser_subagent`) may return 404 from external CDNs.
-   - **Resolution**: Use the built-in HTTP test runner (`node test-e2e.mjs`) which executes natively without external binary dependencies. Standard desktop browsers (Chrome, Edge, Firefox, Brave) run the app directly without issue.
-2. **Container Volume Persistence**:
-   - In containerized deployments (Docker / Kubernetes), the `data/` directory must be mounted as a persistent volume. If not mounted, restarting the container will reset `data/db.json` back to default factory seed data.
-3. **High-Concurrency File Locking**:
-   - The atomic JSON database is optimized for small-to-medium institutional workloads (< 100 concurrent admin writes/second). For enterprise scale (> 1,000 writes/second), swap `src/lib/db.ts` to PostgreSQL or Supabase using the existing interface methods.
+### Known Issues & Workarounds
+1. **Windows PowerShell Execution Policy**:
+   - In environments where PowerShell execution policy is restricted, running `npm run dev` or `npx` directly in PowerShell may yield `PSSecurityException`.
+   - **Workaround**: Run scripts via `cmd.exe /c "npm run dev"` or adjust execution policy using `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`.
+2. **Automated Playwright Binary Download on Firewalled Networks**:
+   - In offline or proxy-restricted networks, Playwright browser binaries may fail to download from external CDNs.
+   - **Workaround**: Use the native HTTP integration test runner (`node test-e2e.mjs`), which executes without external binary downloads. Standard desktop browsers (Chrome, Edge, Firefox, Brave) run the app directly.
+3. **Container Volume Persistence**:
+   - In Docker deployments, the `data/` directory must be mounted as a persistent volume. If not mounted, container restarts will reset `data/db.json` to default factory seed data.
+
+### Pending Tasks & Recommended Next Steps
+1. **Automated Status Change Email Notifications**: Connect `src/lib/email.ts` directly into `PATCH /api/admin/requests` so that moving a student to `WAITING`, `JOINED`, or `REJECTED` automatically dispatches the branded HTML notification email if SMTP is configured.
+2. **Production SMTP Gateway Configuration**: Fill in `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, and `SMTP_PASS` in `.env.local` to enable live transactional email dispatch.
+3. **MongoDB Atlas Production Binding**: If running with MongoDB Atlas in production, verify `MONGODB_URI` and run `npm run db:migrate-mongo` to seed initial collections and create indexes.
 
 ---
 
 ## 6. Validation Already Completed
 
-The application has been verified through automated test suites and production bundle compilation:
+The application has been validated through compiler checks, HTTP status tests, and E2E suites:
 
-1. **Next.js Production Build**:
+1. **TypeScript Compilation**:
+   ```bash
+   npx tsc --noEmit
+   ```
+   - **Status**: Passed with **0 errors**.
+2. **Next.js Production Build**:
    ```bash
    npm run build
    ```
-   - **Result**: `Compiled successfully in 2.3s`
-   - **Routes**: 35/35 routes compiled (static and dynamic) with **zero TypeScript errors** and **zero Turbopack warnings**.
-
-2. **Automated Integration Test Runner**:
+   - **Status**: Passed. All static and dynamic routes compiled without Turbopack warnings.
+3. **HTTP Endpoint Verification**:
+   - Public pages return HTTP 200: `/`, `/about`, `/verticals`, `/projects`, `/projects/[slug]`, `/events`, `/events/[slug]`, `/achievements`, `/industry`, `/request`, `/loading-preview`.
+   - Admin routes return HTTP 200: `/control/auth`, `/control/requests`, `/control/dashboard`, `/control/content/request`, `/control/content/footer`.
+   - Privacy isolation: unauthenticated requests to `/api/admin/*` return HTTP 401 Unauthorized.
+   - Student induction submission: `POST /api/public/requests` returns HTTP 201 Created.
+   - Duplicate prevention: re-submitting an existing register number returns HTTP 409 Conflict.
+   - Deletion prohibition: `DELETE /api/admin/requests` is rejected with HTTP 400 Bad Request.
+4. **Automated Integration Test Suite**:
    ```bash
    node test-e2e.mjs
    ```
-   - **Result**: `TEST SUMMARY: 27 PASSED, 0 FAILED (100% Pass Rate)`
-   - Verified assertions:
-     - Public HTML routes return HTTP 200 (`/`, `/about`, `/verticals`, `/projects`, `/projects/[slug]`, `/events`, `/events/[slug]`, `/achievements`, `/industry`, `/request`).
-     - Admin routes return HTTP 200 (`/control/auth`, `/control/content/request`).
-     - Minimalist footer verification: validates presence of `mailto:` and `tel:` links.
-     - Student induction application submission (`POST /api/public/requests`).
-     - Duplicate registration prevention (HTTP 409 Conflict on re-submission).
-     - Privacy isolation (unauthenticated requests to `/api/admin/*` return HTTP 401).
-     - Admin JWT authentication with HttpOnly cookie issuance.
-     - Admin KPI retrieval from `/api/admin/dashboard`.
-     - Student applicant status transition (`NEW` -> `WAITING` -> `REJECTED`).
-     - Student request deletion prohibition (`DELETE /api/admin/requests` blocked with HTTP 400).
-     - Batch status transition (`PATCH /api/admin/requests` with array of IDs).
-     - Admin custom form builder CRUD operations (`/api/admin/content?section=request`).
+   - **Status**: **32 PASSED, 0 FAILED (100% Pass Rate)**. Full coverage across public routes, student intake submission, duplicate protection, admin JWT authentication, batch status transitions, dynamic taxonomy synchronization, footer management, health check telemetry, production security headers, and branded 404 recovery.
 
 ---
 
 ## 7. Exact Next Steps for Continuing on Another PC
 
-To continue working on this project on a new computer:
+To continue working on this project on a new computer with a different folder path:
 
 ### Step 1: Transfer Project Files
-Copy the entire `XARC_COE` project folder to the target machine. Ensure `data/db.json` is included if you wish to preserve the current database state.
+Copy the entire project directory to the new machine. Ensure `data/db.json` is preserved to retain existing data and taxonomy settings.
 
 ### Step 2: Ensure Node.js is Installed
-- Minimum version: Node.js `v18.18.0`
-- Recommended version: Node.js `v20.x LTS` or `v22.x LTS`
+- Minimum version: Node.js `v20.x LTS` (or `v22.x LTS`)
 - npm `v10.x` or higher
-
-Check versions:
+Verify via terminal:
 ```bash
 node -v
 npm -v
@@ -287,9 +306,10 @@ Open a terminal in the project root directory and run:
 ```bash
 npm install
 ```
+*(On Windows PowerShell with execution restrictions, run `cmd.exe /c "npm install"`).*
 
-### Step 4: Environment Variables (Optional)
-If you wish to configure a custom port or JWT secret, copy the template:
+### Step 4: Configure Environment Variables
+Copy the template to create `.env.local`:
 ```bash
 # Windows (PowerShell)
 Copy-Item .env.example .env.local
@@ -297,33 +317,31 @@ Copy-Item .env.example .env.local
 # Linux / macOS (Bash)
 cp .env.example .env.local
 ```
-*(Default development fallbacks are already configured in `src/lib/auth.ts`, so this step is optional).*
+Configure your custom settings in `.env.local` (e.g., `PORT`, `JWT_SECRET`, optional `MONGODB_URI`, and optional `SMTP_*` credentials). If no `.env.local` is provided, the platform automatically runs using development fallbacks and the local atomic JSON datastore.
 
-### Step 5: Run the Development Server
+### Step 5: Start the Development Server
 ```bash
-# Recommended port 3005:
+# Run on port 3005:
 npm run dev -- -p 3005
 ```
-
-Or run the production build:
-```bash
-npm run build
-npm run start -- -p 3005
-```
+*(Or `cmd.exe /c "npm run dev -- -p 3005"` on Windows).*
 
 ### Step 6: Verify the Environment
-In a separate terminal window, run the test suite:
+Run TypeScript compilation and the test suite:
 ```bash
+npx tsc --noEmit
 node test-e2e.mjs
 ```
-Verify that all 27 tests report `[PASS]`.
 
 ### Step 7: System Access Directory
 - **Public Portal**: `http://localhost:3005`
 - **Student Induction Dock**: `http://localhost:3005/request`
+- **Loading Showcase**: `http://localhost:3005/loading-preview`
 - **Admin Command Terminal**: `http://localhost:3005/control/auth` *(or click the top-left branding logo 5 times rapidly)*
 - **Admin Dashboard**: `http://localhost:3005/control/dashboard`
 - **Applicant Pipeline & Review**: `http://localhost:3005/control/requests`
+- **Student Broadcast Segments**: `http://localhost:3005/control/announcements`
+- **Taxonomy & Settings Studio**: `http://localhost:3005/control/settings`
 - **Request Form Question Builder**: `http://localhost:3005/control/content/request`
 - **Curriculum & Verticals Studio**: `http://localhost:3005/control/verticals`
 - **Projects Dossier Studio**: `http://localhost:3005/control/projects`
@@ -332,4 +350,4 @@ Verify that all 27 tests report `[PASS]`.
 - **Industry & MoUs Studio**: `http://localhost:3005/control/industry`
 - **Home Content Studio**: `http://localhost:3005/control/content/home`
 - **About Content Studio**: `http://localhost:3005/control/content/about`
-- **System Settings Studio**: `http://localhost:3005/control/settings`
+- **Footer Content Studio**: `http://localhost:3005/control/content/footer`

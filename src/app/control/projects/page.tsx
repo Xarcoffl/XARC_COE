@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
+import ImageUploadField from '@/components/admin/ImageUploadField';
+import VrDeviceLoader from '@/components/VrDeviceLoader';
 import { Project, ProjectCategory } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import {
@@ -330,9 +332,12 @@ export default function AdminProjectsPage() {
           </div>
 
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>
-              Loading project showcase...
-            </div>
+            <VrDeviceLoader
+              mode="card"
+              title="LOADING PROJECT SHOWCASE..."
+              subtext="Syncing 3D assets, project categories, and engineering specs"
+              badge="PROJECT REGISTRY"
+            />
           ) : selectedProject ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'minmax(460px, 1.2fr) minmax(380px, 1fr)', gap: '24px', alignItems: 'start' }}>
               
@@ -482,12 +487,12 @@ export default function AdminProjectsPage() {
 
                       {/* Cover Image Selector */}
                       <div>
-                        <label className="admin-field-label">Cover Image URL</label>
-                        <input
-                          type="url"
-                          className="admin-input"
-                          value={selectedProject.cover_image}
-                          onChange={(e) => setSelectedProject({ ...selectedProject, cover_image: e.target.value })}
+                        <ImageUploadField
+                          label="Cover Image Banner"
+                          value={selectedProject.cover_image || ''}
+                          onChange={(url) => setSelectedProject({ ...selectedProject, cover_image: url })}
+                          category="projects"
+                          helpText="Primary card banner and case study hero graphic."
                         />
                         <div style={{ display: 'flex', gap: '8px', marginTop: '10px', alignItems: 'center' }}>
                           <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Quick Presets:</span>

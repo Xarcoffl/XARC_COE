@@ -18,6 +18,8 @@ import {
   LogOut,
   ExternalLink,
   PanelBottom,
+  Megaphone,
+  Image as ImageIcon,
 } from 'lucide-react';
 
 export default function AdminSidebar() {
@@ -58,11 +60,13 @@ export default function AdminSidebar() {
       title: 'STUDENT PIPELINE',
       items: [
         { label: 'Student Requests', href: '/control/requests', icon: UserCheck },
+        { label: 'Announcements', href: '/control/announcements', icon: Megaphone },
       ],
     },
     {
       title: 'SYSTEM',
       items: [
+        { label: 'Media Library', href: '/control/media', icon: ImageIcon },
         { label: 'Settings & Profile', href: '/control/settings', icon: Settings },
       ],
     },

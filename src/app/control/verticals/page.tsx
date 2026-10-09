@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
+import VrDeviceLoader from '@/components/VrDeviceLoader';
 import { Vertical } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import {
@@ -263,9 +264,12 @@ export default function AdminVerticalsPage() {
           </div>
 
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>
-              Loading verticals...
-            </div>
+            <VrDeviceLoader
+              mode="card"
+              title="LOADING IMMERSIVE VERTICALS..."
+              subtext="Syncing 7 core lab domains and technological pillars"
+              badge="VERTICALS REPOSITORY"
+            />
           ) : selectedVertical ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'minmax(440px, 1.15fr) minmax(400px, 1fr)', gap: '24px', alignItems: 'start' }}>
               

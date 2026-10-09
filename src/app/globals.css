@@ -1632,3 +1632,633 @@ h1, h2, h3, h4, h5, h6 {
   border: 2px solid #f8fafc;
 }
 
+/* ==========================================================
+   SPATIAL VR DEVICE LOADING SUBSYSTEM (VisionOS / 6-DoF HUD)
+   ========================================================== */
+
+.vr-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 45%, rgba(6, 12, 30, 0.94) 0%, rgba(2, 4, 12, 0.98) 100%);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  padding: 24px;
+  overflow: hidden;
+}
+
+.vr-loader-card {
+  position: relative;
+  width: 100%;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 50%, rgba(15, 23, 46, 0.6) 0%, rgba(8, 12, 28, 0.8) 100%);
+  border-radius: var(--radius-md, 12px);
+  padding: 36px 20px;
+  overflow: hidden;
+}
+
+.vr-loader-compact {
+  position: relative;
+  width: 100%;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.vr-loader-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8rem;
+  color: var(--accent-cyan, #00FFFF);
+}
+
+/* Ambient 3D Perspective Grid Background */
+.vr-spatial-grid-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, rgba(0, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(123, 97, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.8) 0%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.8) 0%, transparent 75%);
+  animation: vr-grid-pan 25s linear infinite;
+}
+
+@keyframes vr-grid-pan {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(40px); }
+}
+
+/* 3D VR Headset Assembly Stage */
+.vr-stage-wrapper {
+  position: relative;
+  width: 220px;
+  height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 900px;
+}
+
+.vr-stage-compact {
+  width: 140px;
+  height: 110px;
+  transform: scale(0.75);
+}
+
+.vr-stage-mini {
+  width: 38px;
+  height: 38px;
+  transform: scale(0.24);
+  transform-origin: center center;
+}
+
+.vr-headset-rig {
+  position: relative;
+  width: 160px;
+  height: 100px;
+  transform-style: preserve-3d;
+  animation: vr-float-3d 4s ease-in-out infinite;
+}
+
+@keyframes vr-float-3d {
+  0%, 100% {
+    transform: translateY(0px) rotateX(4deg) rotateY(-3deg);
+  }
+  50% {
+    transform: translateY(-8px) rotateX(-3deg) rotateY(4deg);
+  }
+}
+
+/* Outer Orbit Gyrorings (6-DoF Tracking Gizmo) */
+.vr-orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+
+.vr-orbit-ring-1 {
+  width: 200px;
+  height: 200px;
+  top: -50px;
+  left: -20px;
+  border: 1px dashed rgba(0, 255, 255, 0.35);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.12);
+  animation: vr-gyro-spin-1 8s linear infinite;
+}
+
+.vr-orbit-ring-2 {
+  width: 180px;
+  height: 180px;
+  top: -40px;
+  left: -10px;
+  border: 1px solid rgba(123, 97, 255, 0.35);
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  animation: vr-gyro-spin-2 6s ease-in-out infinite alternate;
+}
+
+.vr-orbit-ring-3 {
+  width: 220px;
+  height: 220px;
+  top: -60px;
+  left: -30px;
+  border: 1px dotted rgba(255, 0, 255, 0.25);
+  animation: vr-gyro-spin-3 12s linear infinite reverse;
+}
+
+@keyframes vr-gyro-spin-1 {
+  0% { transform: rotateX(65deg) rotateY(15deg) rotateZ(0deg); }
+  100% { transform: rotateX(65deg) rotateY(15deg) rotateZ(360deg); }
+}
+
+@keyframes vr-gyro-spin-2 {
+  0% { transform: rotateX(-45deg) rotateY(40deg) rotateZ(0deg); }
+  100% { transform: rotateX(-45deg) rotateY(40deg) rotateZ(180deg); }
+}
+
+@keyframes vr-gyro-spin-3 {
+  0% { transform: rotateX(20deg) rotateY(-60deg) rotateZ(0deg); }
+  100% { transform: rotateX(20deg) rotateY(-60deg) rotateZ(360deg); }
+}
+
+/* Headset Visor Faceplate Chassis */
+.vr-chassis-body {
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #0b1126 0%, #060914 100%);
+  border: 1.5px solid rgba(0, 255, 255, 0.4);
+  box-shadow: 
+    0 0 25px rgba(0, 255, 255, 0.25),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 8px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Side Headstrap Mounts */
+.vr-strap-left,
+.vr-strap-right {
+  position: absolute;
+  top: 36px;
+  width: 24px;
+  height: 18px;
+  background: #111a36;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  z-index: -1;
+}
+
+.vr-strap-left {
+  left: -18px;
+  transform: skewY(-10deg);
+}
+
+.vr-strap-right {
+  right: -18px;
+  transform: skewY(10deg);
+}
+
+/* Visor Specular Glass Reflection */
+.vr-visor-glass {
+  position: absolute;
+  inset: 3px;
+  border-radius: 24px;
+  background: radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.6) 70%);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.vr-glass-reflection {
+  position: absolute;
+  top: -40%;
+  left: -20%;
+  width: 140%;
+  height: 80%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+  transform: rotate(-18deg);
+  pointer-events: none;
+}
+
+/* Stereoscopic Dual Fresnel Optical Lenses */
+.vr-lenses-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 104px;
+  height: 48px;
+  z-index: 2;
+}
+
+.vr-optical-lens {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(0, 255, 255, 0.25) 0%, #03081a 75%);
+  border: 1.5px solid rgba(0, 255, 255, 0.6);
+  box-shadow: 
+    0 0 14px rgba(0, 255, 255, 0.4),
+    inset 0 0 10px rgba(0, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: vr-lens-pulse 2.4s ease-in-out infinite;
+}
+
+.vr-optical-lens-right {
+  animation-delay: 0.25s;
+}
+
+@keyframes vr-lens-pulse {
+  0%, 100% {
+    border-color: rgba(0, 255, 255, 0.6);
+    box-shadow: 0 0 14px rgba(0, 255, 255, 0.4), inset 0 0 10px rgba(0, 255, 255, 0.3);
+  }
+  50% {
+    border-color: rgba(123, 97, 255, 0.8);
+    box-shadow: 0 0 20px rgba(123, 97, 255, 0.55), inset 0 0 14px rgba(123, 97, 255, 0.45);
+  }
+}
+
+/* Lens Pupil Core & Reticle Crosshairs */
+.vr-lens-pupil {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 8px #00FFFF, 0 0 16px #00FFFF;
+}
+
+.vr-lens-crosshair-h {
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background: rgba(0, 255, 255, 0.25);
+}
+
+.vr-lens-crosshair-v {
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  background: rgba(0, 255, 255, 0.25);
+}
+
+/* Vertical Laser Scanline Sweep */
+.vr-scanner-beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00FFFF 25%, #FFFFFF 50%, #00FFFF 75%, transparent);
+  box-shadow: 0 0 12px #00FFFF, 0 0 4px #FFFFFF;
+  z-index: 5;
+  animation: vr-scan-laser 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes vr-scan-laser {
+  0% { top: 4%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 94%; opacity: 0; }
+}
+
+/* 4x Inside-Out Optical Tracking Sensor Cameras (LiDAR) */
+.vr-sensor-dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #00FFFF;
+  box-shadow: 0 0 6px #00FFFF;
+  z-index: 6;
+  animation: vr-sensor-flicker 1.5s infinite;
+}
+
+.vr-sensor-tl { top: 8px; left: 14px; animation-delay: 0s; }
+.vr-sensor-tr { top: 8px; right: 14px; animation-delay: 0.4s; }
+.vr-sensor-bl { bottom: 8px; left: 14px; animation-delay: 0.8s; }
+.vr-sensor-br { bottom: 8px; right: 14px; animation-delay: 1.2s; }
+
+@keyframes vr-sensor-flicker {
+  0%, 100% { opacity: 0.3; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 8px #00FFFF; }
+}
+
+/* Front Edge Dynamic RGB Status Bar */
+.vr-status-lightbar {
+  position: absolute;
+  bottom: 0px;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #00FFFF, #7B61FF, #FF00FF, #00FFFF);
+  background-size: 200% 100%;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+  animation: vr-lightbar-shift 3s linear infinite;
+  z-index: 6;
+}
+
+@keyframes vr-lightbar-shift {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Spatial Telemetry HUD & Status Readout */
+.vr-hud-telemetry {
+  position: relative;
+  margin-top: 20px;
+  text-align: center;
+  max-width: 480px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.vr-hud-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(0, 255, 255, 0.08);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  color: var(--accent-cyan, #00FFFF);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vr-hud-title {
+  font-family: var(--font-heading, sans-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #F8FAFC;
+  letter-spacing: -0.01em;
+  margin: 0;
+  text-shadow: 0 0 16px rgba(0, 255, 255, 0.2);
+}
+
+.vr-hud-subtitle {
+  font-family: var(--font-body, sans-serif);
+  font-size: 0.8rem;
+  color: var(--text-muted, #94A3B8);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Live Equalizer Activity Bars */
+.vr-hud-bars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 14px;
+}
+
+.vr-hud-bar {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--accent-cyan, #00FFFF);
+  animation: vr-bar-equalizer 1.2s ease-in-out infinite;
+}
+
+.vr-hud-bar:nth-child(1) { height: 6px; animation-delay: 0.1s; }
+.vr-hud-bar:nth-child(2) { height: 12px; animation-delay: 0.3s; }
+.vr-hud-bar:nth-child(3) { height: 8px; animation-delay: 0.5s; }
+.vr-hud-bar:nth-child(4) { height: 14px; animation-delay: 0.2s; }
+.vr-hud-bar:nth-child(5) { height: 7px; animation-delay: 0.4s; }
+
+@keyframes vr-bar-equalizer {
+  0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
+  50% { transform: scaleY(1.3); opacity: 1; box-shadow: 0 0 6px #00FFFF; }
+}
+
+/* Spatial Coordinates & Stream Metrics */
+.vr-hud-coords {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+  letter-spacing: 0.04em;
+}
+
+.vr-hud-coords span {
+  color: #94A3B8;
+}
+
+/* ==========================================================
+   LIGHT SPATIAL VERSION (VisionOS Polar White / Public Only)
+   ========================================================== */
+
+.vr-hud-status-text {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  color: var(--accent-cyan, #00FFFF);
+  letter-spacing: 0.04em;
+}
+
+/* 1. Containers & Backdrops (Public only, Admin strictly immune) */
+[data-theme='light'] .vr-loader-overlay:not(.vr-loader-dark),
+.vr-loader-light.vr-loader-overlay {
+  background: radial-gradient(circle at 50% 45%, rgba(248, 250, 252, 0.97) 0%, rgba(241, 245, 249, 0.98) 100%) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+}
+
+[data-theme='light'] .vr-loader-card:not(.vr-loader-dark),
+.vr-loader-light.vr-loader-card {
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.94) 0%, rgba(241, 245, 249, 0.98) 100%) !important;
+  border: 1px solid rgba(2, 132, 199, 0.18) !important;
+  box-shadow: 0 16px 36px -12px rgba(2, 132, 199, 0.14) !important;
+}
+
+[data-theme='light'] .vr-loader-inline:not(.vr-loader-dark),
+.vr-loader-light.vr-loader-inline {
+  color: #0284c7 !important;
+}
+
+/* 2. Light Ambient Perspective Grid */
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-spatial-grid-bg,
+.vr-loader-light .vr-spatial-grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(2, 132, 199, 0.09) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(124, 58, 237, 0.07) 1px, transparent 1px) !important;
+  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.92) 0%, transparent 75%) !important;
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.92) 0%, transparent 75%) !important;
+}
+
+/* 3. Polar White Aluminum Visor Chassis */
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact, .vr-stage-wrapper):not(.vr-loader-dark) .vr-chassis-body,
+.vr-loader-light .vr-chassis-body {
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%) !important;
+  border: 1.5px solid rgba(2, 132, 199, 0.45) !important;
+  box-shadow: 
+    0 12px 32px rgba(2, 132, 199, 0.16),
+    inset 0 2px 3px #ffffff,
+    inset 0 -2px 6px rgba(15, 23, 42, 0.08) !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-strap-left,
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-strap-right,
+.vr-loader-light .vr-strap-left,
+.vr-loader-light .vr-strap-right {
+  background: #cbd5e1 !important;
+  border: 1px solid rgba(15, 23, 42, 0.1) !important;
+}
+
+/* 4. Visor Glass & Reflection */
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-visor-glass,
+.vr-loader-light .vr-visor-glass {
+  background: radial-gradient(ellipse at 50% 20%, rgba(2, 132, 199, 0.1) 0%, rgba(15, 23, 42, 0.04) 70%) !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-glass-reflection,
+.vr-loader-light .vr-glass-reflection {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 70%) !important;
+}
+
+/* 5. Stereoscopic Optical Lenses */
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact, .vr-stage-wrapper):not(.vr-loader-dark) .vr-optical-lens,
+.vr-loader-light .vr-optical-lens {
+  background: radial-gradient(circle at center, rgba(2, 132, 199, 0.24) 0%, #f8fafc 80%) !important;
+  border: 1.5px solid rgba(2, 132, 199, 0.75) !important;
+  box-shadow: 
+    0 0 12px rgba(2, 132, 199, 0.35),
+    inset 0 0 8px rgba(2, 132, 199, 0.2) !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact, .vr-stage-wrapper):not(.vr-loader-dark) .vr-lens-pupil,
+.vr-loader-light .vr-lens-pupil {
+  background: #0284c7 !important;
+  box-shadow: 0 0 10px #0284c7, 0 0 18px rgba(2, 132, 199, 0.6) !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact, .vr-stage-wrapper):not(.vr-loader-dark) .vr-lens-crosshair-h,
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact, .vr-stage-wrapper):not(.vr-loader-dark) .vr-lens-crosshair-v,
+.vr-loader-light .vr-lens-crosshair-h,
+.vr-loader-light .vr-lens-crosshair-v {
+  background: rgba(2, 132, 199, 0.35) !important;
+}
+
+/* 6. Laser Scanner Beam */
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact, .vr-stage-wrapper):not(.vr-loader-dark) .vr-scanner-beam,
+.vr-loader-light .vr-scanner-beam {
+  background: linear-gradient(90deg, transparent, #0284c7 25%, #38bdf8 50%, #0284c7 75%, transparent) !important;
+  box-shadow: 0 0 10px #0284c7, 0 0 4px #38bdf8 !important;
+}
+
+/* 7. LiDAR Tracking Cameras */
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-sensor-dot,
+.vr-loader-light .vr-sensor-dot {
+  background: #0284c7 !important;
+  box-shadow: 0 0 6px #0284c7 !important;
+}
+
+/* 8. Lightbar & Orbiting Rings */
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-status-lightbar,
+.vr-loader-light .vr-status-lightbar {
+  background: linear-gradient(90deg, #0284c7, #7c3aed, #ec4899, #0284c7) !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-orbit-ring-1,
+.vr-loader-light .vr-orbit-ring-1 {
+  border: 1px dashed rgba(2, 132, 199, 0.45) !important;
+  box-shadow: 0 0 12px rgba(2, 132, 199, 0.15) !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-orbit-ring-2,
+.vr-loader-light .vr-orbit-ring-2 {
+  border: 1px solid rgba(124, 58, 237, 0.4) !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-orbit-ring-3,
+.vr-loader-light .vr-orbit-ring-3 {
+  border: 1px dotted rgba(236, 72, 153, 0.35) !important;
+}
+
+/* 9. Telemetry Readout & HUD */
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-hud-badge,
+.vr-loader-light .vr-hud-badge {
+  background: rgba(2, 132, 199, 0.1) !important;
+  border: 1px solid rgba(2, 132, 199, 0.35) !important;
+  color: #0284c7 !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-hud-badge .beacon-dot,
+.vr-loader-light .vr-hud-badge .beacon-dot {
+  background: #0284c7 !important;
+  box-shadow: 0 0 8px rgba(2, 132, 199, 0.7) !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-hud-title,
+.vr-loader-light .vr-hud-title {
+  color: #0f172a !important;
+  text-shadow: none !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-hud-subtitle,
+.vr-loader-light .vr-hud-subtitle {
+  color: #475569 !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-hud-bar,
+.vr-loader-light .vr-hud-bar {
+  background: #0284c7 !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-hud-status-text,
+.vr-loader-light .vr-hud-status-text {
+  color: #0284c7 !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-hud-coords,
+.vr-loader-light .vr-hud-coords {
+  color: #64748b !important;
+}
+
+[data-theme='light'] :is(.vr-loader-overlay, .vr-loader-card, .vr-loader-compact):not(.vr-loader-dark) .vr-hud-coords span,
+.vr-loader-light .vr-hud-coords span {
+  color: #0284c7 !important;
+}
+
+/* 10. Strict Admin Immunity Shield */
+#admin-root-container .vr-loader-overlay,
+#admin-root-container .vr-loader-card,
+#admin-root-container .vr-loader-compact,
+#admin-root-container .vr-loader-inline,
+#admin-root-container .vr-stage-wrapper,
+.admin-loading-page {
+  /* Enforces cybernetic dark palette across admin panel */
+  color-scheme: dark;
+}
+
+
+

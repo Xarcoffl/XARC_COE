@@ -1,4 +1,14 @@
-export type StudentStatus = 'NEW' | 'WAITING' | 'JOINED' | 'REJECTED';
+export type StudentStatus =
+  | 'NEW'
+  | 'WAITING'
+  | 'JOINED'
+  | 'REJECTED'
+  | 'UNDER_REVIEW'
+  | 'SHORTLISTED'
+  | 'INTERVIEW'
+  | 'ON_HOLD'
+  | 'INTEREST'
+  | (string & {});
 
 export type ExperienceLevel = 'New to XR' | 'Beginner' | 'Intermediate' | 'Experienced';
 
@@ -6,23 +16,23 @@ export type ProjectCategory = 'ALL' | 'AR' | 'VR' | 'MR' | 'XR' | '3D' | 'SIMULA
 
 export type EventStatus = 'upcoming' | 'ongoing' | 'completed';
 
-export type AchievementCategory = 
-  | 'Hackathon' 
-  | 'Competition' 
-  | 'Conference' 
-  | 'Internship' 
-  | 'Patent' 
-  | 'Award' 
-  | 'Certification' 
-  | 'Project' 
+export type AchievementCategory =
+  | 'Hackathon'
+  | 'Competition'
+  | 'Conference'
+  | 'Internship'
+  | 'Patent'
+  | 'Award'
+  | 'Certification'
+  | 'Project'
   | 'Placement / PPO';
 
-export type IndustryCategory = 
-  | 'Partner' 
-  | 'MoU' 
-  | 'Industrial Visit' 
-  | 'Expert Session' 
-  | 'Internship Collaboration' 
+export type IndustryCategory =
+  | 'Partner'
+  | 'MoU'
+  | 'Industrial Visit'
+  | 'Expert Session'
+  | 'Internship Collaboration'
   | 'Consultancy Project';
 
 export interface AdminUser {
@@ -33,6 +43,21 @@ export interface AdminUser {
   role: 'superadmin' | 'admin';
   created_at: string;
   updated_at: string;
+}
+
+export interface RequestStatusConfig {
+  key: string;
+  label: string;
+  color: string;
+  description?: string;
+  is_system?: boolean;
+}
+
+export interface ReviewChecklistItem {
+  id: string;
+  label: string;
+  description?: string;
+  required?: boolean;
 }
 
 export interface StudentRequest {
@@ -50,12 +75,14 @@ export interface StudentRequest {
   existing_skills: string;
   motivation: string;
   status: StudentStatus;
+  form_type?: 'REQUEST' | 'INTEREST';
   internal_notes: string;
   submitted_at: string;
   updated_at: string;
   joined_at?: string;
   rejected_at?: string;
   custom_field_responses?: Record<string, string>;
+  checklist_progress?: Record<string, boolean>;
 }
 
 export interface Vertical {
@@ -222,6 +249,11 @@ export interface SiteSettings {
   };
   footer_copyright?: string;
   footer_tagline?: string;
+  registration_open?: boolean;
+  custom_statuses?: RequestStatusConfig[];
+  review_checklist?: ReviewChecklistItem[];
+  departments?: string[];
+  interest_options?: string[];
 }
 
 export interface CustomFormField {
@@ -249,6 +281,53 @@ export interface RequestFormContent {
   custom_fields?: CustomFormField[];
 }
 
+export interface EmailTemplateConfig {
+  subject: string;
+  badge_text: string;
+  headline: string;
+  body_text?: string;
+  next_steps?: string[];
+  action_label?: string;
+  action_url?: string;
+  enabled?: boolean;
+}
+
+export interface EmailTemplatesSettings {
+  joined: EmailTemplateConfig;
+  waiting: EmailTemplateConfig;
+  rejected: EmailTemplateConfig;
+  announcement?: {
+    default_subject: string;
+    default_badge: string;
+  };
+  status_templates?: Record<string, EmailTemplateConfig>;
+  [key: string]: any;
+}
+
+export interface EmailLog {
+  id: string;
+  recipient: string;
+  student_name?: string;
+  trigger_type: string;
+  subject: string;
+  status: 'SENT' | 'FAILED';
+  message_id?: string;
+  error?: string;
+  sent_by?: string;
+  timestamp: string;
+}
+
+export interface MediaAsset {
+  id: string;
+  name: string;
+  original_name: string;
+  mime_type: string;
+  size_bytes: number;
+  data_url: string; // Base64 data URL e.g. data:image/png;base64,...
+  category?: 'projects' | 'events' | 'achievements' | 'branding' | 'general';
+  created_at: string;
+}
+
 export interface DatabaseSchema {
   admin_users: AdminUser[];
   home_content: HomeContent;
@@ -261,4 +340,19 @@ export interface DatabaseSchema {
   achievements: Achievement[];
   industry_records: IndustryRecord[];
   student_requests: StudentRequest[];
+  email_templates?: EmailTemplatesSettings;
+  email_logs?: EmailLog[];
+  media_assets?: MediaAsset[];
+  custom_student_groups?: CustomStudentGroup[];
 }
+
+export interface CustomStudentGroup {
+  id: string;
+  name: string;
+  description?: string;
+  color?: string;
+  student_ids: string[];
+  created_at: string;
+  updated_at?: string;
+}
+

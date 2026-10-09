@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
+import ImageUploadField from '@/components/admin/ImageUploadField';
+import VrDeviceLoader from '@/components/VrDeviceLoader';
 import { EventItem, EventStatus } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import {
@@ -334,7 +336,7 @@ export default function AdminEventsStudioPage() {
                   {/* Horizontal Event Selector Chips */}
                   <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '6px' }}>
                     {loading ? (
-                      <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>Loading events...</span>
+                      <VrDeviceLoader mode="inline" title="Loading events catalog..." />
                     ) : filteredEvents.length === 0 ? (
                       <span style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>No matching events found.</span>
                     ) : (
@@ -492,22 +494,13 @@ export default function AdminEventsStudioPage() {
                       </div>
                       <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
                         <div>
-                          <label className="admin-field-label">Poster Image URL</label>
-                          <div style={{ display: 'flex', gap: '8px' }}>
-                            <input
-                              type="url"
-                              className="admin-input"
-                              value={selectedEvent.poster || ''}
-                              onChange={(e) => setSelectedEvent({ ...selectedEvent, poster: e.target.value })}
-                            />
-                            {selectedEvent.poster && (
-                              <img
-                                src={selectedEvent.poster}
-                                alt="Preview"
-                                style={{ width: '40px', height: '40px', borderRadius: '6px', objectFit: 'cover' }}
-                              />
-                            )}
-                          </div>
+                          <ImageUploadField
+                            label="Event Poster Banner"
+                            value={selectedEvent.poster || ''}
+                            onChange={(url) => setSelectedEvent({ ...selectedEvent, poster: url })}
+                            category="events"
+                            helpText="Event promotional visual displayed on cards and event detail pages."
+                          />
                         </div>
 
                         <div>

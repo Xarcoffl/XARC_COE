@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Shield, Lock, Mail, AlertCircle, ArrowRight } from 'lucide-react';
+import VrDeviceLoader from '@/components/VrDeviceLoader';
 
 export default function AdminAuthPage() {
   const [email, setEmail] = useState('');
@@ -50,6 +51,15 @@ export default function AdminAuthPage() {
         fontFamily: 'var(--font-body)',
       }}
     >
+      {loading && (
+        <VrDeviceLoader
+          mode="fullscreen"
+          title="AUTHENTICATING SPATIAL CREDENTIALS..."
+          subtext="Verifying administrative token and establishing secure control session..."
+          badge="SECURITY CORE"
+        />
+      )}
+
       <div
         style={{
           width: '100%',
@@ -150,10 +160,21 @@ export default function AdminAuthPage() {
             type="submit"
             disabled={loading}
             className="admin-btn admin-btn-primary"
-            style={{ width: '100%', justifyContent: 'center', padding: '12px', fontSize: '0.92rem' }}
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              padding: '12px',
+              fontSize: '0.92rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
           >
             {loading ? (
-              <span>Authenticating...</span>
+              <>
+                <VrDeviceLoader mode="mini" />
+                <span>Authenticating...</span>
+              </>
             ) : (
               <>
                 <span>Sign In</span>

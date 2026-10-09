@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminHeader from '@/components/admin/AdminHeader';
+import ImageUploadField from '@/components/admin/ImageUploadField';
 import { Achievement, AchievementCategory } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import {
@@ -462,22 +463,13 @@ export default function AdminAchievementsStudioPage() {
                       </div>
                       <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
                         <div>
-                          <label className="admin-field-label">Image URL</label>
-                          <div style={{ display: 'flex', gap: '8px' }}>
-                            <input
-                              type="url"
-                              className="admin-input"
-                              value={selectedAch.image || ''}
-                              onChange={(e) => setSelectedAch({ ...selectedAch, image: e.target.value })}
-                            />
-                            {selectedAch.image && (
-                              <img
-                                src={selectedAch.image}
-                                alt="Preview"
-                                style={{ width: '40px', height: '40px', borderRadius: '6px', objectFit: 'cover' }}
-                              />
-                            )}
-                          </div>
+                          <ImageUploadField
+                            label="Certificate & Trophy Visual"
+                            value={selectedAch.image || ''}
+                            onChange={(url) => setSelectedAch({ ...selectedAch, image: url })}
+                            category="achievements"
+                            helpText="Certificate, medal, or award photograph celebrating student excellence."
+                          />
                         </div>
 
                         <div>
